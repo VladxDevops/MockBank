@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: bank_mongo_local
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: #Pull password from Secret manager # LOCAL DEV ONLY - Not for Prod
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
