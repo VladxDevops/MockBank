@@ -7,7 +7,7 @@ Build a "Money Transfer" microservice that simulates a Banking Identity Journey.
 
 ## 2. Architecture
 *   **Service:** Node.js (Express) API.
-*   **Database:** MongoDB (running locally via Docker).
+*   **Database:** MongoDB Atlas (M0 free tier).
 *   **Role:** Simulates the backend "Risk Engine" and "Audit Logger".
 
 ## 3. The "Journey" Flow (Orchestration)
@@ -79,3 +79,19 @@ db.journeys.find({
 1.  Initialize Node.js project in `2/`.
 2.  Create `docker-compose.yml` for MongoDB.
 3.  Implement `POST /transfer` endpoint with the logic above.
+
+## 7. Connecting to the Database
+
+The MongoDB database is deployed on MongoDB Atlas. The Terraform configuration will create a new project and a free-tier cluster. It will also create a database user with read/write access to the `transaction-db` database.
+
+The credentials for the database user are generated randomly by Terraform. You can get the connection string from the MongoDB Atlas UI.
+
+**Important:** The Node.js application will need the database connection string to connect to the database. This should be passed to the application as an environment variable (e.g., `MONGO_URI`). Do not hardcode the connection string in the application code.
+
+The connection string will look something like this:
+
+```
+mongodb+srv://user:<password>@<cluster-url>/transaction-db?retryWrites=true&w=majority
+```
+
+You will need to replace `<password>` and `<cluster-url>` with the values from your Atlas cluster. The password will be available in the output of the `terraform apply` command.

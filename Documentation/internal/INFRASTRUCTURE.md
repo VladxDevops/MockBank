@@ -1,5 +1,9 @@
 # Common Infrastructure (Shared)
 
+We will be working in one single GCP project. Please keep in mind that this is a brand new GCP project, thus GCP services may need to be enabled. Most infrastructure will need to be build/deployed. 
+
+Terraform state will be backup at a GCS bucket.
+
 **CLASSIFICATION: INTERNAL**
 
 This document lists the foundational Google Cloud Platform (GCP) infrastructure components required by all three banking simulation projects. These resources form the "Landing Zone" for the applications.

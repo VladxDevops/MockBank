@@ -36,6 +36,20 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - Implementation of Keycloak on Cloud Run.
 - Creation of Terraform scripts for base infrastructure.
 
+## [0.3.0] - Infrastructure Hardening
+### Added
+- **Terraform**: Created `secret_manager` module to create empty secrets in GCP Secret Manager.
+- **Terraform**: Added `gcp_services.tf` to enable necessary GCP APIs.
+- **Terraform**: Added `network.tf` to create a custom VPC and VPC connector.
+- **Terraform**: Added `artifact_registry.tf` to create a Docker repository.
+- **Terraform**: Added `backend.tf` to configure remote state (commented by default).
+
+### Changed
+- **Terraform**: Updated `project2` module to use the VPC connector.
+- **Terraform**: Updated `mongodbatlas` provider to read API keys from GCP Secret Manager.
+- **Terraform**: Added `prevent_destroy` to `google_project_service`, `google_artifact_registry_repository`, and `google_secret_manager_secret` resources to prevent accidental data loss.
+- **Documentation**: Updated `README.md` and `terraform/terraform-internal-README.MD` with the new infrastructure and secret management workflow.
+
 ## [0.2.0] - Project 2 Kickoff (Transaction Journey)
 ### Added
 - **Service Definition**: Initiated "Transaction Service" to simulate orchestration logic.
@@ -46,3 +60,5 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Implementation**: Initialized Node.js project (`package.json`) and Docker Compose for Project 2.
 - **Architecture**: Defined standard directory structure in `Architecture.md`, mandating a `container/` directory for Docker assets.
 - **Refactor**: Moved `docker-compose.yml` to `2/container/` and created `2/container/Dockerfile` to comply with directory standards.
+- **Terraform**: Created Terraform module for Project 2 to deploy the transaction service to Cloud Run.
+- **Documentation**: Updated `README.md`, `terraform/terraform-internal-README.MD`, and `BNKprojects/2/PROJECT_DETAILS.md` with MongoDB Atlas instructions and deployment details for Project 2.

@@ -1,0 +1,32 @@
+variable "gcp_project_id" {
+  description = "The GCP project ID."
+  type        = string
+}
+
+variable "gcp_region" {
+  description = "The GCP region to deploy resources in."
+  type        = string
+  default     = "us-central1"
+}
+
+variable "service_name" {
+  description = "The name of the Cloud Run service."
+  type        = string
+  default     = "transaction-service"
+}
+
+variable "docker_image" {
+  description = "The Docker image for the Cloud Run service."
+  type        = string
+}
+
+variable "atlas_org_id" {
+  description = "MongoDB Atlas organization ID."
+  type        = string
+}
+
+variable "vpc_connector_id" {
+  description = "The ID of the VPC connector."
+  type        = string
+  default     = ""
+}

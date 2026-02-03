@@ -32,6 +32,7 @@ start_local.sh
 !nodemon.json
 !manifest.json
 gcp-key.json
+bankproject-486308-34dfd0dbef72.json
 
 # --- IDE & OS ---
 .idea/
@@ -43,3 +44,6 @@ Thumbs.db
 logs/
 *.log
 data/db/
+
+#.md files: 
+internalREADME.md
