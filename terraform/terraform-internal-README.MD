@@ -104,3 +104,12 @@ It is also highly recommended to protect your Terraform state GCS bucket from de
 
 
 
+Terraform: 
+
+terraform init -backend-config="bucket=terraform_state_bckup_bnk-project" && \
+terraform plan -var-file="dev.tfvars" && \
+terraform apply -auto-approve -var-file="dev.tfvars"
+
+#unlock Terraform State: 
+
+terraform force-unlock 1770119740925764
