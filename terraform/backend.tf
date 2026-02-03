@@ -6,9 +6,9 @@
 # 3. **Important:** Do not delete this bucket manually or through any other means.
 # 4. Run `terraform init` to initialize the backend.
 
-# terraform {
-#   backend "gcs" {
-#     bucket  = "your-terraform-state-bucket-name"
-#     prefix  = "terraform/state"
-#   }
-# }
+terraform {
+  backend "gcs" {
+    bucket = "terraform_state_bckup_bnk-project"
+    prefix = "terraform/state"
+  }
+}
