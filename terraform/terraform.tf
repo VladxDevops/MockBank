@@ -16,7 +16,6 @@ terraform {
   backend "gcs" {
     bucket = "terraform_state_bckup_bnk-project"
     prefix = "terraform/state/dev"
-    depends_on
   }
 
 }
