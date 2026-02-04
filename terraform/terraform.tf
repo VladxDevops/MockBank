@@ -16,7 +16,9 @@ terraform {
   backend "gcs" {
     bucket = "terraform_state_bckup_bnk-project"
     prefix = "terraform/state/dev"
-    depends_on
+    depends_on = [
+      google_storage_bucket.app_data
+    ]
   }
 
 }
