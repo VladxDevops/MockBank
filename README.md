@@ -94,10 +94,7 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
         ```
     *   Go to the GCP Console -> Secret Manager and add the values for `atlas_public_key` and `atlas_private_key` manually.
 
-5.  **Update `terraform/project2.tf`:**
-    *   Open `terraform/project2.tf` and replace the `docker_image` placeholder with the correct URL of your Docker image in the `main-repository` Artifact Registry repository.
-
-6.  **Deploy the Infrastructure:**
+5.  **Deploy the Infrastructure:**
     *   Navigate to the `terraform` directory and run the following commands:
         ```bash
         terraform init

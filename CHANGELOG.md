@@ -50,6 +50,12 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Terraform**: Added `prevent_destroy` to `google_project_service`, `google_artifact_registry_repository`, and `google_secret_manager_secret` resources to prevent accidental data loss.
 - **Documentation**: Updated `README.md` and `terraform/terraform-internal-README.MD` with the new infrastructure and secret management workflow.
 
+## [0.3.1] - Deployment Automation & Fixes
+### Fixed
+- **Terraform**: Automated `docker_image` URL construction in `project2.tf` to reference the Artifact Registry dynamically, removing manual configuration.
+- **Terraform**: Added `random_id` suffix to MongoDB Atlas project names to prevent `GROUP_ALREADY_EXISTS` conflicts.
+- **Terraform**: Standardized `compute_region` variable usage across modules.
+
 ## [0.2.0] - Project 2 Kickoff (Transaction Journey)
 ### Added
 - **Service Definition**: Initiated "Transaction Service" to simulate orchestration logic.
