@@ -15,23 +15,36 @@ terraform {
   }
 }
 
+variable "compute_region" {
+  description = "The GCP region to deploy resources to"
+  type        = string
+  default     = "us-central1"
+}
+
 provider "google" {
   project = var.compute_project_id
-  region  = "us-central1" # Replace with your desired GCP region
+  region  = var.compute_region
+}
+
+variable "bootstrap" {
+  description = "Set to true to skip secret lookup during initial secret creation"
+  type        = bool
+  default     = false
 }
 
 provider "mongodbatlas" {
-  org_id      = var.atlas_org_id
-  public_key  = data.google_secret_manager_secret_version.atlas_public_key.secret_data
-  private_key = data.google_secret_manager_secret_version.atlas_private_key.secret_data
+  public_key  = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data
+  private_key = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_private_key[0].secret_data
 }
 
 data "google_secret_manager_secret_version" "atlas_public_key" {
+  count   = var.bootstrap ? 0 : 1
   project = var.compute_project_id
   secret  = "atlas_public_key"
 }
 
 data "google_secret_manager_secret_version" "atlas_private_key" {
+  count   = var.bootstrap ? 0 : 1
   project = var.compute_project_id
   secret  = "atlas_private_key"
 }

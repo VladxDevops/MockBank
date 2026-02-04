@@ -74,22 +74,25 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
     *   To use it, you need to create a GCS bucket and then uncomment the content of the file, replacing `"your-terraform-state-bucket-name"` with the name of your bucket.
     *   Run `terraform init` to initialize the backend.
 
-2.  **Enable GCP Services:**
-    *   The `terraform/gcp_services.tf` file will enable the necessary GCP APIs for the project.
-
-3.  **Store your Atlas API Keys in Secret Manager:**
-    *   Run the following command to create empty secrets for your Atlas API keys:
-        ```bash
-        terraform apply -target=module.atlas_public_key_secret -target=module.atlas_private_key_secret
-        ```
-    *   Go to the GCP Console -> Secret Manager and add the values for `atlas_public_key` and `atlas_private_key` manually.
-
-4.  **Update `terraform/dev.tfvars`:**
+2.  **Update `terraform/dev.tfvars`:**
     *   Open the `terraform/dev.tfvars` file and fill in the following values:
         ```hcl
         compute_project_id = "your-gcp-project-id"
         atlas_org_id       = "your-atlas-organization-id"
         ```
+
+3.  **Enable GCP Services:**
+    *   Run the following command to enable the necessary GCP APIs (requires `bootstrap=true` to skip secret validation):
+        ```bash
+        terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=google_project_service.gcp_services
+        ```
+
+4.  **Store your Atlas API Keys in Secret Manager:**
+    *   Run the following command to create empty secrets for your Atlas API keys (using bootstrap mode):
+        ```bash
+        terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.atlas_public_key_secret -target=module.atlas_private_key_secret
+        ```
+    *   Go to the GCP Console -> Secret Manager and add the values for `atlas_public_key` and `atlas_private_key` manually.
 
 5.  **Update `terraform/project2.tf`:**
     *   Open `terraform/project2.tf` and replace the `docker_image` placeholder with the correct URL of your Docker image in the `main-repository` Artifact Registry repository.
