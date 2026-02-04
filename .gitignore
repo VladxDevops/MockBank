@@ -23,6 +23,7 @@ start_local.sh
 *.tfvars
 *.tfplan
 .terraform.lock.h
+.terraform.lock.hcl
 
 # --- Google Cloud Platform ---
 # Service account keys

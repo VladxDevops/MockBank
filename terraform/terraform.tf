@@ -6,28 +6,13 @@ terraform {
     }
     mongodbatlas = {
       source  = "mongodb/mongodbatlas"
-      version = "1.16.0"
+      version = "~> 1.15.0" # Changed from 1.15.4 to a valid constraint
     }
     random = {
       source  = "hashicorp/random"
       version = "3.6.0"
     }
   }
-<<<<<<< HEAD
-  backend "gcs" {
-    bucket = "terraform_state_bckup_bnk-project"
-    prefix = "terraform/state/dev"
-    depends_on = [
-      google_storage_bucket.app_data
-    ]
-  }
-=======
-  #backend "gcs" { ###Duplicated, here and backend.tfs
-  #  bucket = "terraform_state_bckup_bnk-project"
-  #  prefix = "terraform/state/dev"
-  #}
->>>>>>> 06c821a962eb4de7c6c36522dc980c6c49752626
-
 }
 
 provider "google" {

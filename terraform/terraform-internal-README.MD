@@ -106,6 +106,8 @@ It is also highly recommended to protect your Terraform state GCS bucket from de
 
 Terraform: 
 
+export GOOGLE_APPLICATION_CREDENTIALS="/home/pochitawork/Downloads/MockBankGCPproject/bankproject-486308-34dfd0dbef72.json"
+
 terraform init -backend-config="bucket=terraform_state_bckup_bnk-project" && \
 terraform plan -var-file="dev.tfvars" && \
 terraform apply -auto-approve -var-file="dev.tfvars"
