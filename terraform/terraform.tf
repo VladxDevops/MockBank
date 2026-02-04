@@ -6,13 +6,14 @@ terraform {
     }
     mongodbatlas = {
       source  = "mongodb/mongodbatlas"
-      version = "1.15.4"
+      version = "1.16.0"
     }
     random = {
       source  = "hashicorp/random"
       version = "3.6.0"
     }
   }
+<<<<<<< HEAD
   backend "gcs" {
     bucket = "terraform_state_bckup_bnk-project"
     prefix = "terraform/state/dev"
@@ -20,6 +21,12 @@ terraform {
       google_storage_bucket.app_data
     ]
   }
+=======
+  #backend "gcs" { ###Duplicated, here and backend.tfs
+  #  bucket = "terraform_state_bckup_bnk-project"
+  #  prefix = "terraform/state/dev"
+  #}
+>>>>>>> 06c821a962eb4de7c6c36522dc980c6c49752626
 
 }
 
