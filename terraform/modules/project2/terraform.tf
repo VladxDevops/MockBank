@@ -3,5 +3,8 @@ terraform {
     mongodbatlas = {
       source = "mongodb/mongodbatlas"
     }
+    http = {
+      source = "hashicorp/http"
+    }
   }
 }

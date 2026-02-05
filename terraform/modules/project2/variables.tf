@@ -24,6 +24,11 @@ variable "atlas_org_id" {
   type        = string
 }
 
+variable "mongodb_atlas_project_id" {
+  description = "MongoDB Atlas project ID."
+  type        = string
+}
+
 variable "vpc_connector_id" {
   description = "The ID of the VPC connector."
   type        = string
