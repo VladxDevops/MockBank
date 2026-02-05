@@ -94,7 +94,13 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
         ```
     *   Go to the GCP Console -> Secret Manager and add the values for `atlas_public_key` and `atlas_private_key` manually.
 
-5.  **Deploy the Infrastructure:**
+5.  **Import Existing Atlas Project (Optional):**
+    *   If you want Terraform to use the project you created manually in the UI instead of creating a new one, you must import it into the Terraform state.
+    *   Identify the resource name in your Terraform code (e.g., `mongodbatlas_project.atlas_project`) and get the Project ID from the Atlas UI.
+    *   Run: `terraform import mongodbatlas_project.atlas_project <your-atlas-project-id>`
+    *   **Note:** Ensure the project name in your Terraform configuration matches the existing project name to avoid renaming.
+
+6.  **Deploy the Infrastructure:**
     *   Navigate to the `terraform` directory and run the following commands:
         ```bash
         terraform init

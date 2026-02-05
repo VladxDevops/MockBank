@@ -5,10 +5,12 @@ This guide will help you troubleshoot and resolve common errors when using the M
 ## Error: IP_ADDRESS_NOT_ON_ACCESS_LIST
 
 This is the most common error and it means that the IP address of the machine running Terraform is not allowed to connect to your MongoDB Atlas project.
+This error can occur in two contexts: connecting to the database (Application) or managing the account (Terraform).
 
 ### 1. Find Your Public IP Address
 
 To allow your machine to connect to MongoDB Atlas, you need to find its public IP address. You can do this by running the following command in your terminal:
+To allow your machine to connect, find your public IP:
 
 ```bash
 curl -s ifconfig.me
@@ -85,3 +87,8 @@ The MongoDB Atlas API key you are using must have the **Project Owner** role for
 
 Conclusion: 
 The atlas_org_id value listed in the dev.tfvars was wrong. 
+
+Fix: 
+If there is a terraform error stating that Mongo has issues with the IP: 
+Go to: 
+Mongodb atlas UI/website > Select project name > Security >  Project identity and Access > Applications > API Keys > Edit access List > "Add access list entry" > Add IP > Save > done. 

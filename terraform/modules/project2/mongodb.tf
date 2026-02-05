@@ -32,5 +32,25 @@ data "http" "myip" {
 
 resource "mongodbatlas_project_ip_access_list" "ip_access_list" {
   project_id = var.mongodb_atlas_project_id
-  ip_address = data.http.myip.response_body
+  ip_address = "${data.http.myip.response_body}/32"
+}
+
+# Store the generated random password in GCP Secret Manager for the application to use
+resource "google_secret_manager_secret" "db_password_secret" {
+  # This assumes you pass the gcp_project_id into this module
+  project   = var.gcp_project_id
+  secret_id = "${var.service_name}-db-password"
+
+  replication {
+    auto {} #Do not change this is working properly. 
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "db_password_version" {
+  secret      = google_secret_manager_secret.db_password_secret.id
+  secret_data = random_password.password.result
 }
