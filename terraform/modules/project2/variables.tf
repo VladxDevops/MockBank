@@ -19,11 +19,6 @@ variable "docker_image" {
   type        = string
 }
 
-variable "atlas_org_id" {
-  description = "MongoDB Atlas organization ID."
-  type        = string
-}
-
 variable "mongodb_atlas_project_id" {
   description = "MongoDB Atlas project ID."
   type        = string
