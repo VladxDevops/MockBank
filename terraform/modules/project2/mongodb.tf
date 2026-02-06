@@ -1,6 +1,10 @@
+resource "mongodbatlas_project" "project" {
+  name   = "${var.service_name}-project"
+  org_id = var.mongodb_atlas_org_id
+}
 
 resource "mongodbatlas_cluster" "cluster" {
-  project_id   = var.mongodb_atlas_project_id
+  project_id   = mongodbatlas_project.project.id
   name         = "${var.service_name}-db"
   provider_name = "TENANT"
   backing_provider_name = "GCP"
@@ -9,8 +13,8 @@ resource "mongodbatlas_cluster" "cluster" {
 }
 
 resource "mongodbatlas_database_user" "user" {
-  project_id        = var.mongodb_atlas_project_id
-  username          = "user"
+  project_id        = mongodbatlas_project.project.id
+  username          = "app-user"
   password          = random_password.password.result
   auth_database_name = "admin"
 
@@ -31,8 +35,9 @@ data "http" "myip" {
 }
 
 resource "mongodbatlas_project_ip_access_list" "ip_access_list" {
-  project_id = var.mongodb_atlas_project_id
-  ip_address = "${data.http.myip.response_body}/32"
+  project_id = mongodbatlas_project.project.id
+  ip_address = data.http.myip.response_body
+  comment    = "Terraform execution machine"
 }
 
 # Store the generated random password in GCP Secret Manager for the application to use

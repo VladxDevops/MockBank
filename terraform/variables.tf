@@ -30,6 +30,7 @@ variable "vpc_connector_id" {
   default     = ""
 }
 
+
 #Mongodb Atlas: 
 
 variable "atlas_org_id" {
@@ -38,7 +39,7 @@ variable "atlas_org_id" {
   sensitive   = true
 }
 
-variable "atlas_project_id" {
+variable "mongodb_atlas_project_id" {
   description = "MongoDB Atlas project ID."
   type        = string
 }

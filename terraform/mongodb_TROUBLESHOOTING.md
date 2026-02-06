@@ -94,9 +94,31 @@ Mongodb atlas UI/website > Select project name > Security >  Project identity an
 And import the mongodb atlas project to the terraform state. Command: 
 terraform import -var-file="dev.tfvars" mongodbatlas_project.atlas_project 6981c8c8bcd3ea36dd09a4c4
 
-In case the resource needs to be removed from state (e.g. if the project was deleted manually) use: 
+In case the resource needs to be removed from state (e.g. if the project was deleted manually), first find the exact resource name using `terraform state list`. Then remove it:
 terraform state rm mongodbatlas_project.atlas_project
-And readd the state using terraform import...
 
-Use: 
-terraform state list
+For example, if you see an error about an IP access list for a deleted project, find the access list resource:
+terraform state list | grep access_list
+terraform state rm mongodbatlas_project_ip_access_list.your_resource_name
+
+## Error: User already exists / Error splitting database User info from ID
+
+If Terraform fails with an error indicating that the database user already exists (e.g., `POST .../users: 409 (request "User already exists")`), it means the user was created manually or by a previous run but is missing from the state file.
+
+To fix this, you must import the user into the Terraform state.
+
+If you see `Error: error splitting database User info from ID`, it means the import ID you provided was not in the correct format.
+
+The correct format is a single string with hyphens separating the parts: `{project_id}-{username}-{auth_database_name}`.
+
+**Example Command:**
+
+1.  Find your **Project ID** from the Atlas UI (e.g., `6981c8c8bcd3ea36dd09a4c4`).
+2.  Identify the `username` (`user`) and `auth_database_name` (`admin`) from your `mongodb.tf` file.
+3.  Combine them into the import ID: `6981c8c8bcd3ea36dd09a4c4-user-admin`.
+4.  Run the import command:
+
+```bash
+# Example with a real project ID. Replace with your own.
+terraform import -var-file="dev.tfvars" module.project2.mongodbatlas_database_user.user 6981c8c8bcd3ea36dd09a4c4-user-admin
+```

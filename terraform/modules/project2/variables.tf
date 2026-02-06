@@ -19,13 +19,21 @@ variable "docker_image" {
   type        = string
 }
 
-variable "mongodb_atlas_project_id" {
-  description = "MongoDB Atlas project ID."
-  type        = string
-}
-
 variable "vpc_connector_id" {
   description = "The ID of the VPC connector."
   type        = string
   default     = ""
+}
+
+#Mongodb Atlas: 
+
+
+variable "atlas_project_id" {
+  description = "MongoDB Atlas project ID."
+  type        = string
+}
+
+variable "mongodb_atlas_org_id" {
+  description = "MongoDB Atlas organization ID."
+  type        = string
 }
