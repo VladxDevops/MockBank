@@ -90,3 +90,13 @@ Fix:
 If there is a terraform error stating that Mongo has issues with the IP: 
 Go to: 
 Mongodb atlas UI/website > Select project name > Security >  Project identity and Access > Applications > API Keys > Edit access List > "Add access list entry" > Add IP > Save > done. 
+
+And import the mongodb atlas project to the terraform state. Command: 
+terraform import -var-file="dev.tfvars" mongodbatlas_project.atlas_project 6981c8c8bcd3ea36dd09a4c4
+
+In case the resource needs to be removed from state (e.g. if the project was deleted manually) use: 
+terraform state rm mongodbatlas_project.atlas_project
+And readd the state using terraform import...
+
+Use: 
+terraform state list

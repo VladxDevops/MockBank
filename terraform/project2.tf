@@ -10,5 +10,5 @@ module "project2" {
 
   # CRITICAL FIX: This links the module to the imported/managed project resource.
   # It ignores the static value in dev.tfvars and uses the real ID from the state.
-  mongodb_atlas_project_id = mongodbatlas_project.atlas_project.id
+  mongodb_atlas_project_id = var.atlas_project_id
 }
