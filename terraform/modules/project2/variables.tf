@@ -3,11 +3,6 @@ variable "gcp_project_id" {
   type        = string
 }
 
-variable "gcp_region" {
-  description = "The GCP region to deploy resources in."
-  type        = string
-}
-
 variable "service_name" {
   description = "The name of the Cloud Run service."
   type        = string
@@ -25,7 +20,17 @@ variable "vpc_connector_id" {
   default     = ""
 }
 
+variable "gcp_region" {
+  description = "The GCP region to deploy resources in."
+  type        = string
+}
+
 #Mongodb Atlas: 
+
+variable "mongodb_atlas_cluster_region" {
+  description = "The GCP region to deploy resources in."
+  type        = string
+}
 
 
 variable "atlas_project_id" {

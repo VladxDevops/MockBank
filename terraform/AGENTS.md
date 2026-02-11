@@ -1,6 +1,6 @@
 # AGENTS.md - Automated Systems & Bot Protocols
 
-Please read the internal .md files they are a guidlines for multiple aspect like architechture, instructions, how tos, security, etc. 
+Please read the internal .md files they are a guidlines for multiple aspect like architecture, instructions, how tos, security, etc. 
 
 Please search if a file already exits before creating a new file to keep the directories organized. 
 

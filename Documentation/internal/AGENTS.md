@@ -37,3 +37,6 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/GEMINI.md`**: AI usage rules and data sanitization.
 *   **`Documentation/internal/TESTING.md`**: Testing strategies (Mocking, Journeys).
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
+
+
+TErraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs. 

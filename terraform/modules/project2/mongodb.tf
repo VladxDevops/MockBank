@@ -8,7 +8,7 @@ resource "mongodbatlas_cluster" "cluster" {
   name         = "${var.service_name}-db"
   provider_name = "TENANT"
   backing_provider_name = "GCP"
-  provider_region_name = var.gcp_region
+  provider_region_name = var.mongodb_atlas_cluster_region
   provider_instance_size_name = "M0"
 }
 

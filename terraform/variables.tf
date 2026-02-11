@@ -24,22 +24,26 @@ variable "service_name" {
   default     = "transaction-service"
 }
 
-variable "vpc_connector_id" {
-  description = "The ID of the VPC connector."
-  type        = string
-  default     = ""
-}
-
+#variable "gcp_region" { ###May not be necessary. This variable is used by the project2 module. 
+#  description = "The GCP region to deploy resources in."
+#  type        = string
+#}
 
 #Mongodb Atlas: 
 
 variable "atlas_org_id" {
   description = "MongoDB Atlas organization ID."
   type        = string
-  sensitive   = true
+  #sensitive   = true
 }
 
 variable "mongodb_atlas_project_id" {
   description = "MongoDB Atlas project ID."
+  type        = string
+}
+
+#mongodb_atlas_cluster_region:
+variable "mongodb_atlas_cluster_region" {
+  description = "The GCP region to deploy resources in mongodb Atlas."
   type        = string
 }
