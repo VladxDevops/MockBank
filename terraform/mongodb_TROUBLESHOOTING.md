@@ -2,31 +2,42 @@
 
 This guide will help you troubleshoot and resolve common errors when using the MongoDB Atlas provider for Terraform.
 
-## Error: IP_ADDRESS_NOT_ON_ACCESS_LIST
+## Error during `apply`: `IP_ADDRESS_NOT_ON_ACCESS_LIST`
 
-This is the most common error and it means that the IP address of the machine running Terraform is not allowed to connect to your MongoDB Atlas project.
+This error indicates that the public IP address of the machine running `terraform apply` is not authorized to make API calls to MongoDB Atlas. This is controlled by the **API Key's Access List** at the organization level.
+
+This is different from the *Project IP Access List*, which controls which IPs can connect to the database cluster itself. The error during `terraform apply` is almost always related to the API Key.
+
+### How to Fix
+
+1.  Log in to your MongoDB Atlas account.
+2.  In the top-left corner, click on your organization name to go to the organization view.
+3.  In the left-hand navigation pane, click on **Access Manager**.
+4.  Click on the **API Keys** tab.
+5.  Find the API key you are using for Terraform and click **Edit**.
+6.  Under the **API Access List** section, click **Add Access List Entry**.
+7.  Add the IP address shown in the Terraform error message. For development, you can click **Add Current IP Address**.
+8.  Click **Save**.
+
+It may take a few minutes for the changes to take effect. After this, run `terraform apply` again.
+
+---
+
+## Allowing Database Connections from your IP
+
+To connect to your database cluster directly (e.g., using `mongosh` from your local machine), you need to add your IP to the **Project's IP Access List**.
 
 ### 1. Find Your Public IP Address
-
-To allow your machine to connect to MongoDB Atlas, you need to find its public IP address. You can do this by running the following command in your terminal:
-
 ```bash
 curl -s ifconfig.me
 ```
 
-This will return your public IP address.
-
-### 2. Add Your IP Address to the MongoDB Atlas IP Access List
-
-Now that you have your public IP address, you need to add it to the IP Access List in your MongoDB Atlas project.
-
-1.  Log in to your MongoDB Atlas account.
+### 2. Add Your IP to the Project's IP Access List
+1.  Navigate to your Project in the Atlas UI.
 2.  In the left-hand navigation pane, click on **Network Access** under the **Security** section.
-3.  Click the **Add IP Address** button.
-4.  In the dialog that appears, click the **Add Current IP Address** button if you are accessing the UI from the same machine that is running Terraform. Otherwise, enter your public IP address in the **Access List Entry** field.
-5.  Click the **Confirm** button.
-
-It may take a few minutes for the changes to take effect.
+3.  Click **Add IP Address**.
+4.  In the dialog, click **Add Current IP Address**.
+5.  Click **Confirm**.
 
 ### 3. (Optional but Recommended) Make the IP Address Dynamic
 
@@ -84,15 +95,14 @@ The MongoDB Atlas API key you are using must have the **Project Owner** role for
 4.  Under **Project Access**, ensure that the API key has the **Project Owner** role for your project.
 
 Conclusion: 
-The atlas_org_id value listed in the dev.tfvars was wrong. 
+The `atlas_org_id` value listed in the `dev.tfvars` might be incorrect. Double-check it in the Atlas UI under your Organization's settings.
 
-Fix: 
-If there is a terraform error stating that Mongo has issues with the IP: 
-Go to: 
-Mongodb atlas UI/website > Select project name > Security >  Project identity and Access > Applications > API Keys > Edit access List > "Add access list entry" > Add IP > Save > done. 
+If a resource was created in Atlas but not in the Terraform state, you may need to import it.
 
-And import the mongodb atlas project to the terraform state. Command: 
-terraform import -var-file="dev.tfvars" mongodbatlas_project.atlas_project 6981c8c8bcd3ea36dd09a4c4
+To import an existing project into state:
+```bash
+terraform import -var-file="dev.tfvars" mongodbatlas_project.atlas_project <your-atlas-project-id>
+```
 
 In case the resource needs to be removed from state (e.g. if the project was deleted manually), first find the exact resource name using `terraform state list`. Then remove it:
 terraform state rm mongodbatlas_project.atlas_project
