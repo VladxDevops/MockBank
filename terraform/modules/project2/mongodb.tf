@@ -59,3 +59,22 @@ resource "google_secret_manager_secret_version" "db_password_version" {
   secret      = google_secret_manager_secret.db_password_secret.id
   secret_data = random_password.password.result
 }
+
+# Store the MongoDB Connection String (SRV) in Secret Manager
+resource "google_secret_manager_secret" "db_connection_secret" {
+  project   = var.gcp_project_id
+  secret_id = "${var.service_name}-db-connection-string"
+
+  replication {
+    auto {}
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "db_connection_version" {
+  secret      = google_secret_manager_secret.db_connection_secret.id
+  secret_data = mongodbatlas_cluster.cluster.connection_strings[0].standard_srv
+}
