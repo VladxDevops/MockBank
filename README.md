@@ -107,7 +107,7 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
         terraform workspace select project2 || terraform workspace new project2
         terraform apply
         ```
-    *   **Note on Atlas Deployment:** The `apply` command will create projects and clusters in your MongoDB Atlas organization. If you encounter an `IP_ADDRESS_NOT_ON_ACCESS_LIST` error, it means the IP of the machine running Terraform is not allowed to make API calls. Please see the detailed instructions in `terraform/mongodb_TROUBLESHOOTING.md` to resolve this.
+    *   **Note on Atlas Deployment:** The `apply` command will create projects and clusters in your MongoDB Atlas organization. It will also automatically store the generated MongoDB connection string in Secret Manager. If you encounter an `IP_ADDRESS_NOT_ON_ACCESS_LIST` error, it means the IP of the machine running Terraform is not allowed to make API calls. Please see the detailed instructions in `terraform/mongodb_TROUBLESHOOTING.md` to resolve this.
     *   **Network Note:** The configuration creates a VPC (`main-vpc`) and a subnet (`main-subnet`) with a `/28` CIDR block. This specific size is required to support the Serverless VPC Access Connector, which allows Cloud Run to communicate with private resources like your MongoDB cluster over the internal network.
 
 ### Infrastructure Preservation
