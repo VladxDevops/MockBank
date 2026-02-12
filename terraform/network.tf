@@ -28,3 +28,17 @@ resource "google_vpc_access_connector" "connector" {
     google_project_service.gcp_services
   ]
 }
+
+resource "google_compute_firewall" "allow-egress" {
+  name    = "main-vpc-allow-egress"
+  network = google_compute_network.vpc.name
+  project = var.compute_project_id
+
+  allow {
+    protocol = "all"
+  }
+
+  destination_ranges = ["0.0.0.0/0"]
+  direction          = "EGRESS"
+  priority           = 1000
+}
