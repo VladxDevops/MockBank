@@ -155,6 +155,16 @@ gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> \
     gcloud builds submit --tag us-central1-docker.pkg.dev/<YOUR_PROJECT_ID>/main-repository/transaction-service:v1 .
     ```
 
+### Configure MongoDB Network Access (Manual Step)
+
+You must manually retrieve the necessary IP addresses and whitelist them in MongoDB Atlas to allow Cloud Run to connect.
+
+1.  Log in to MongoDB Atlas.
+2.  Navigate to **Network Access** under **Security**.
+3.  Click **Add IP Address**.
+4.  Enter the IP address or CIDR block you retrieved for your service (or `0.0.0.0/0` if allowing public access for development).
+5.  Click **Confirm**.
+
 ### Deploy to Cloud Run
 
 Once the build is successful, deploy the service to Cloud Run. Replace `<YOUR_PROJECT_ID>` with your actual Project ID.
