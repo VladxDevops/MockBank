@@ -79,6 +79,7 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
         ```hcl
         compute_project_id = "your-gcp-project-id"
         atlas_org_id       = "your-atlas-organization-id"
+        compute_project_number = "your-gcp-project-number"
         ```
 
 3.  **Enable GCP Services:**
@@ -121,3 +122,49 @@ The following resources are protected:
 *   **Secrets in Secret Manager:** The empty secrets for the Atlas API keys will not be deleted.
 
 It is also highly recommended to protect your Terraform state GCS bucket from deletion by using bucket policies and IAM permissions.
+
+### Container Deployment
+
+After the infrastructure is provisioned via Terraform, you need to build and push the Docker image to the Artifact Registry. We use **Cloud Build** instead of `docker push` to avoid local network/proxy issues.
+
+**Prerequisites:**
+Ensure your user account has the following IAM roles:
+*   **Cloud Build Editor** (`roles/cloudbuild.builds.editor`)
+*   **Service Account User** (`roles/iam.serviceAccountUser`)
+
+You can grant these roles using the following commands (replace `<YOUR_PROJECT_ID>` and `<YOUR_EMAIL>`):
+
+```bash
+gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> \
+    --member="user:<YOUR_EMAIL>" \
+    --role="roles/cloudbuild.builds.editor"
+
+gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> \
+    --member="user:<YOUR_EMAIL>" \
+    --role="roles/iam.serviceAccountUser"
+```
+
+1.  **Navigate to the project directory:**
+    ```bash
+    cd BNKprojects/2
+    ```
+
+2.  **Submit the build to Cloud Build:**
+    Replace `<YOUR_PROJECT_ID>` with your GCP Project ID.
+    ```bash
+    gcloud builds submit --tag us-central1-docker.pkg.dev/<YOUR_PROJECT_ID>/main-repository/transaction-service:v1 .
+    ```
+
+### Deploy to Cloud Run
+
+Once the build is successful, deploy the service to Cloud Run. Replace `<YOUR_PROJECT_ID>` with your actual Project ID.
+
+```bash
+gcloud run deploy transaction-service \
+    --image us-central1-docker.pkg.dev/<YOUR_PROJECT_ID>/main-repository/transaction-service:v1 \
+    --region us-central1 \
+    --no-allow-unauthenticated \
+    --set-secrets MONGO_URI=transaction-service-db-connection-string:latest
+```
+
+*Note: Ensure you configure the `MONGO_URI` environment variable (refer to Project Details) so the service can connect to the database.*

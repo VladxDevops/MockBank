@@ -27,7 +27,7 @@ resource "mongodbatlas_database_user" "user" {
 resource "random_password" "password" {
   length           = 16
   special          = true
-  override_special = "_%@"
+  override_special = "_" # Restrict special chars to avoid breaking the URI parsing
 }
 
 data "http" "myip" {
@@ -76,5 +76,5 @@ resource "google_secret_manager_secret" "db_connection_secret" {
 
 resource "google_secret_manager_secret_version" "db_connection_version" {
   secret      = google_secret_manager_secret.db_connection_secret.id
-  secret_data = mongodbatlas_cluster.cluster.connection_strings[0].standard_srv
+  secret_data = "mongodb+srv://${mongodbatlas_database_user.user.username}:${random_password.password.result}@${replace(mongodbatlas_cluster.cluster.connection_strings[0].standard_srv, "mongodb+srv://", "")}/${tolist(mongodbatlas_database_user.user.roles)[0].database_name}?retryWrites=true&w=majority"
 }

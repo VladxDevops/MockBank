@@ -18,19 +18,11 @@ resource "google_cloud_run_v2_service" "service" {
     }
     containers {
       image = var.docker_image
-      # SECURITY IMPROVEMENT: The password is now sourced directly from Secret Manager
-      # at runtime, instead of being stored in plaintext in the service configuration.
-      # The application may need a minor update to construct the final URI from these
-      # two environment variables.
       env {
-        name  = "MONGO_URI_TEMPLATE"
-        value = "mongodb+srv://${mongodbatlas_database_user.user.username}:%s@${mongodbatlas_cluster.cluster.connection_strings[0].standard_srv}/${tolist(mongodbatlas_database_user.user.roles)[0].database_name}?retryWrites=true&w=majority"
-      }
-      env {
-        name = "MONGO_PASSWORD"
+        name = "MONGO_URI"
         value_source {
           secret_key_ref {
-            secret  = google_secret_manager_secret.db_password_secret.secret_id
+            secret  = google_secret_manager_secret.db_connection_secret.secret_id
             version = "latest"
           }
         }
@@ -51,7 +43,7 @@ resource "google_cloud_run_v2_service_iam_member" "run_invoker" {
 # Grant the service account permission to access the database password secret
 resource "google_secret_manager_secret_iam_member" "db_password_accessor" {
   project   = var.gcp_project_id
-  secret_id = google_secret_manager_secret.db_password_secret.id
+  secret_id = google_secret_manager_secret.db_connection_secret.id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.service_account.email}"
 }
