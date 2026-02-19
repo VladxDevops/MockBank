@@ -1,13 +1,34 @@
 version: '3.8'
 services:
+  app:
+    build: . # Build from the Dockerfile in the current directory
+    container_name: transaction_service_local
+    ports:
+      - "3000:3000" # Map host 3000 to container 3000 (the app's default)
+    environment:
+      # Use the service name 'mongo' as the hostname to connect
+      MONGO_URI: "mongodb://${MONGO_ROOT_USERNAME:-user}:${MONGO_ROOT_PASSWORD:-password}@mongo:27017/bank?authSource=admin"
+      # The app will listen on port 3000 because process.env.PORT is not set
+    depends_on:
+      - mongo
+    volumes:
+      # Mount source code for hot-reloading with nodemon
+      - ./src:/usr/src/app/src
+    command: npm run dev # Use nodemon for development
+
   mongo:
     image: mongo:latest
     container_name: bank_mongo_local
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-user} # Default values for convenience
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
     ports:
+      # Expose mongo to the host machine for debugging with a client if needed
       - "27017:27017"
     volumes:
-      - ../data/db:/data/db
+      # Persist mongo data using a named volume
+      - bank-data:/data/db
+
+volumes:
+  bank-data:

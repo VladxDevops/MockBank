@@ -151,10 +151,11 @@ gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> \
     ```
 
 2.  **Submit the build to Cloud Build:**
-    Replace `<YOUR_PROJECT_ID>` with your GCP Project ID.
+    From the `BNKprojects/2` directory, run the following command to submit the build using its configuration file:
     ```bash
-    gcloud builds submit --tag us-central1-docker.pkg.dev/<YOUR_PROJECT_ID>/main-repository/transaction-service:v1 .
+    gcloud builds submit --config container/cloudbuild.yaml .
     ```
+    This uses the build configuration located at `container/cloudbuild.yaml` and automatically substitutes the project ID.
 
 ### Deploy to Cloud Run
 
