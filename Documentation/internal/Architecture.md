@@ -21,7 +21,8 @@ This architecture describes a secure, cloud-native banking platform designed for
 *   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
     *   **Configuration:** Use `variables.tf` for declarations.
     *   **Environments:** State must be managed via environment-specific variable files: `dev.tfvars`, `test.tfvars`, and `prod.tfvars`.
-*   **Cost Optimization:** Select budget-friendly GCP services (e.g., Cloud Run) where possible, provided security is not compromised.
+*   **Cost Optimization:** Select budget-friendly GCP services (e.g., Cloud Run) where possible, provided security is not compromised. 
+Infrastructure and GCP services are listed under the infrastructure.md. 
 
 ## 4. Security Architecture
 **Priority: Security is the primary driver for all architectural decisions.**
