@@ -15,11 +15,6 @@ terraform {
   }
 }
 
-variable "compute_region" {
-  description = "The GCP region to deploy resources to"
-  type        = string
-  default     = "us-central1"
-}
 
 provider "google" {
   project               = var.compute_project_id

@@ -95,3 +95,23 @@ mongodb+srv://user:<password>@<cluster-url>/transaction-db?retryWrites=true&w=ma
 ```
 
 You will need to replace `<password>` and `<cluster-url>` with the values from your Atlas cluster. The password will be available in the output of the `terraform apply` command.
+
+## 8. Local Verification
+
+To verify the service is running locally and connected to MongoDB, use the following command:
+
+```bash
+curl -X POST http://localhost:3000/transfer \
+     -H "Content-Type: application/json" \
+     -d '{"amount": 100, "user_id": "test_user"}'
+```
+
+**Expected Response:**
+```json
+{
+  "message": "Transaction processed",
+  "journey_id": "<uuid>",
+  "status": "success",
+  "decision": "approved"
+}
+```

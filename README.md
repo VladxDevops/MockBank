@@ -110,7 +110,7 @@ This project uses Terraform to manage the GCP infrastructure. The configuration 
         ```
     *   **Note on Atlas Deployment:** The `apply` command will create projects and clusters in your MongoDB Atlas organization. It will also automatically store the generated MongoDB connection string in Secret Manager. If you encounter an `IP_ADDRESS_NOT_ON_ACCESS_LIST` error, it means the IP of the machine running Terraform is not allowed to make API calls. Please see the detailed instructions in `terraform/mongodb_TROUBLESHOOTING.md` to resolve this.
     *   **Note on Cloud Run:** Terraform deploys a placeholder "Hello World" image initially. This ensures the infrastructure is healthy before you deploy your actual application code. You will see this running service in the console.
-    *   **Network Note:** The configuration creates a VPC (`main-vpc`) and a subnet (`main-subnet`) with a `/28` CIDR block. This specific size is required to support the Serverless VPC Access Connector, which allows Cloud Run to communicate with private resources like your MongoDB cluster over the internal network.
+    *   **Network Note:** The configuration creates a VPC (`main-vpc`) and a subnet (`main-subnet`). The subnet's `/28` CIDR block is required for the Serverless VPC Access Connector. This connector allows Cloud Run to route traffic through your VPC. To provide a static IP for services on the public internet (like MongoDB Atlas), a **Cloud NAT** gateway must also be deployed in the VPC. This static IP can then be added to external service allow-lists.
 
 ### Infrastructure Preservation
 
@@ -166,7 +166,9 @@ gcloud run deploy transaction-service \
     --image us-central1-docker.pkg.dev/<YOUR_PROJECT_ID>/main-repository/transaction-service:v1 \
     --region us-central1 \
     --no-allow-unauthenticated \
-    --set-secrets MONGO_URI=transaction-service-db-connection-string:latest
+    --set-secrets MONGO_URI=transaction-service-db-connection-string:latest \
+    --vpc-connector avechector \
+    --vpc-egress all
 ```
 
 *Note: Ensure you configure the `MONGO_URI` environment variable (refer to Project Details) so the service can connect to the database.*

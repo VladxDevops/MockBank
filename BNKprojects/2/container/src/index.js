@@ -11,14 +11,6 @@ const port = process.env.PORT || 3000;
 // MongoDB Connection
 const mongoUri = process.env.MONGO_URI;
 
-if (mongoUri) {
-  mongoose.connect(mongoUri)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
-} else {
-  console.warn('MONGO_URI not set. Database features will not work.');
-}
-
 // Audit Log Schema (as per PROJECT_DETAILS.md)
 const auditSchema = new mongoose.Schema({
   journey_id: String,
@@ -101,6 +93,21 @@ app.post('/transfer', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+const startServer = async () => {
+  try {
+    if (!mongoUri) {
+      throw new Error('MONGO_URI environment variable not set. Cannot start server.');
+    }
+    await mongoose.connect(mongoUri);
+    console.log('Successfully connected to MongoDB.');
+
+    app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to connect to MongoDB. Server is not starting.', error);
+    process.exit(1); // Exit with a failure code
+  }
+};
+
+startServer();
