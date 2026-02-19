@@ -13,6 +13,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Run as non-root user for security
+USER node
+
 # Expose the application port
 EXPOSE 3000
 
