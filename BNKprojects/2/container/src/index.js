@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 require('dotenv').config();
 
 const app = express();
@@ -30,7 +30,7 @@ const auditSchema = new mongoose.Schema({
   ]
 });
 
-const AuditLog = mongoose.model('AuditLog', auditSchema);
+const AuditLog = mongoose.model('AuditLog', auditSchema, 'journeys');
 
 // Health Check Route
 app.get('/', (req, res) => {
@@ -45,10 +45,11 @@ app.post('/transfer', async (req, res) => {
     return res.status(400).json({ error: 'Missing user_id or amount' });
   }
 
-  const journey_id = uuidv4();
+  const journey_id = randomUUID();
   const steps = [];
   let risk_score = 0;
   let decision = 'approved';
+  let overallStatus = 'success';
 
   // Step 1: Login (Simulated)
   steps.push({
@@ -75,18 +76,29 @@ app.post('/transfer', async (req, res) => {
   // Step 3: Step-Up Auth (if required)
   if (decision === 'step_up_required') {
     steps.push({ step: 'mfa_challenge_issued', timestamp: new Date(), status: 'success' });
-    // Simulate successful MFA
-    steps.push({ step: 'mfa_verification', timestamp: new Date(), status: 'success' });
+    
+    // Simulate MFA (Success by default, Timeout if amount is 15000 for interview scenario)
+    if (amount === 15000) {
+      steps.push({ 
+        step: 'mfa_verification', 
+        timestamp: new Date(), 
+        status: 'failed', 
+        error_code: 'TIMEOUT' 
+      });
+      overallStatus = 'failed';
+    } else {
+      steps.push({ step: 'mfa_verification', timestamp: new Date(), status: 'success' });
+    }
   }
 
   // Save to MongoDB
   try {
     const auditEntry = new AuditLog({
-      journey_id, user_id, status: 'success', risk_score, steps
+      journey_id, user_id, status: overallStatus, risk_score, steps
     });
     await auditEntry.save();
     
-    res.json({ message: 'Transaction processed', journey_id, status: 'success', decision });
+    res.json({ message: 'Transaction processed', journey_id, status: overallStatus, decision });
   } catch (error) {
     console.error('Error saving audit log:', error);
     res.status(500).json({ error: 'Internal Server Error' });
