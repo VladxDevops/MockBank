@@ -39,4 +39,6 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
 
 
-TErraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs. 
+Terraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs. 
+
+Please keep the changelog.md up to date.

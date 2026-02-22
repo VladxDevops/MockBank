@@ -172,3 +172,31 @@ gcloud run deploy transaction-service \
 ```
 
 *Note: Ensure you configure the `MONGO_URI` environment variable (refer to Project Details) so the service can connect to the database.*
+
+### Service Logic & Diagnostics
+
+The deployed service implements the following orchestration logic:
+
+2.  **Step 2: Transaction Request**
+    *   User requests to transfer amount `$X`.
+    *   **Logic:**
+        *   IF `$X < $10,000`: Allow immediately.
+        *   IF `$X >= $10,000`: Trigger **Step-Up Auth**.
+
+3.  **Step 3: Step-Up Authentication (MFA)**
+    *   System challenges user (simulated).
+    *   **Action:** Log `mfa_challenge_issued`.
+    *   **Outcome:**
+        *   *Success:* Proceed to transfer.
+        *   *Fail:* Log `mfa_failed` with error code.
+
+#### Diagnostic Query
+To investigate MFA failures (e.g., timeouts), run the following MongoDB query:
+
+```javascript
+db.journeys.find({
+    "steps.step": "mfa_verification",
+    "steps.status": "failed",
+    "steps.error_code": "TIMEOUT"
+}).sort({ timestamp: -1 })
+```
