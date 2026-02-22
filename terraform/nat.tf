@@ -12,6 +12,9 @@ resource "google_compute_address" "nat_ip" {
   project = var.compute_project_id
   region  = var.compute_region
   network_tier = "STANDARD"
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # The Cloud NAT gateway for static egress IP

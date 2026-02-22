@@ -2,6 +2,9 @@ resource "google_compute_network" "vpc" {
   name                    = "main-vpc"
   auto_create_subnetworks = false
   project                 = var.compute_project_id
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_compute_subnetwork" "private" {
