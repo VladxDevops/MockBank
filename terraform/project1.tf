@@ -15,6 +15,10 @@ resource "random_password" "keycloak_admin_password" {
   special = false
 }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
 resource "google_secret_manager_secret" "keycloak_db_password" {
   secret_id = "keycloak-db-password"
   replication {

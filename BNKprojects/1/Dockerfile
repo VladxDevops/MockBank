@@ -12,4 +12,7 @@ WORKDIR /opt/keycloak
 # Build the image for production (optimizes startup)
 RUN /opt/keycloak/bin/kc.sh build
 
+# Run as non-root user for security
+USER keycloak
+
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
