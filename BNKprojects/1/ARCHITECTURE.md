@@ -24,3 +24,6 @@ graph TD
 
 ### 3. VPC Connector
 *   Bridges the Serverless environment (Cloud Run) with the VPC to allow traffic to Cloud SQL.
+
+### 4. Region and Zone
+*   The region and/or zone will be specified at the .tfvars level/files.

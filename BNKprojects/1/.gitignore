@@ -1,0 +1,19 @@
+# IDE and Editor configurations
+.idea/
+.vscode/
+*.swp
+*.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local environment variables and secrets
+.env
+
+# Build directories (if local builds are performed)
+target/
+build/

@@ -25,6 +25,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Branching Strategy**: Adopted uppercase branch names (`DEV`, `TEST`, `PROD`) to clearly distinguish environment-specific branches from feature branches.
 - **Terraform Structure**: Mandated the use of `dev.tfvars`, `test.tfvars`, and `prod.tfvars` for environment management.
 - **Documentation Structure**: Moved internal policy documents (`SECURITY.md`, `GEMINI.md`, `TESTING.md`, `CONTRIBUTING.md`) to the `Documentation/internal/` directory.
+- **Project 1 Terraform**: Refactored `google_sql_database_instance` to use `name_prefix` instead of `random_id` to resolve dependency errors.
+- **Project 1 Security**: Updated Keycloak Dockerfile to run as non-root user (`USER keycloak`).
 
 ### Decisions & Constraints
 - **Secrets Management**: Hardcoding secrets is strictly prohibited. Adopted **GCP Secret Manager** as the single source of truth.
