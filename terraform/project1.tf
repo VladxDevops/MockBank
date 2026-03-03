@@ -15,6 +15,10 @@ resource "random_password" "keycloak_admin_password" {
   special = false
 }
 
+resource "random_id" "db_name_suffix" {
+  byte_length = 4
+}
+
 resource "google_secret_manager_secret" "keycloak_db_password" {
   secret_id = "keycloak-db-password"
   replication {
@@ -45,7 +49,7 @@ resource "google_secret_manager_secret_version" "keycloak_admin_password_val" {
 # 2. Cloud SQL (PostgreSQL)
 # ------------------------------------------------------------------------------
 resource "google_sql_database_instance" "keycloak_db" {
-  name_prefix      = "keycloak-db-"
+  name             = "keycloak-db-${random_id.db_name_suffix.hex}"
   database_version = "POSTGRES_15"
   region           = var.compute_region
   
