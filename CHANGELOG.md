@@ -30,6 +30,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ### Fixed
 - **Terraform**: Added `sqladmin.googleapis.com` to the list of enabled GCP services to fix `SERVICE_DISABLED` error when creating the Cloud SQL instance for Project 1.
+- **Terraform**: Fixed IAM permissions for Project 1. Granted `roles/cloudsql.admin` to the deployer service account and verified successful creation of the Keycloak Cloud SQL instance.
 
 ### Decisions & Constraints
 - **Secrets Management**: Hardcoding secrets is strictly prohibited. Adopted **GCP Secret Manager** as the single source of truth.

@@ -93,7 +93,7 @@ resource "google_cloud_run_service" "keycloak" {
   template {
     spec {
       containers {
-        image = "quay.io/keycloak/keycloak:24.0.1"
+        image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/main-repository/keycloak:24.0.1"
 
         # Start in dev mode for the lab (no strict HTTPS requirement on the container itself)
         args = ["start-dev"]
