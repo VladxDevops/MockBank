@@ -28,6 +28,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Project 1 Terraform**: Refactored `google_sql_database_instance` to use `name_prefix` instead of `random_id` to resolve dependency errors.
 - **Project 1 Security**: Updated Keycloak Dockerfile to run as non-root user (`USER keycloak`).
 
+### Fixed
+- **Terraform**: Added `sqladmin.googleapis.com` to the list of enabled GCP services to fix `SERVICE_DISABLED` error when creating the Cloud SQL instance for Project 1.
+
 ### Decisions & Constraints
 - **Secrets Management**: Hardcoding secrets is strictly prohibited. Adopted **GCP Secret Manager** as the single source of truth.
 - **Infrastructure**: Selected **GCP Cloud Run** for cost-efficiency without compromising security.

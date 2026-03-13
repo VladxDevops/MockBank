@@ -9,6 +9,8 @@ resource "google_project_service" "gcp_services" {
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
     "vpcaccess.googleapis.com",
+    "sqladmin.googleapis.com",
+    "servicenetworking.googleapis.com", # Required for Cloud SQL private IP peering
   ])
 
   project = var.compute_project_id

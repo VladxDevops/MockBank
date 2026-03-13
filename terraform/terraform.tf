@@ -19,7 +19,7 @@ terraform {
 provider "google" {
   project               = var.compute_project_id
   region                = var.compute_region
-  user_project_override = true
+  #user_project_override = true #Disabled to remediate error failing to deploy keycloak instance. 
 }
 
 variable "bootstrap" {

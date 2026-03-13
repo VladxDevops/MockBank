@@ -1,5 +1,10 @@
 # AGENTS.md - Project 1 Protocols
 
+Please: 
+Read the internal .md files they are a guidlines for multiple aspect like architechture, instructions, how tos, security, etc. 
+Search if a file already exits before creating a new file to keep the directories organized. 
+Document all changes in the changelo.md. Keep internal and internal documentation up to date. 
+
 **CLASSIFICATION: INTERNAL USE ONLY**
 
 This document outlines specific protocols for Automated Agents interacting with Project 1 (Identity Service).
