@@ -2,6 +2,21 @@
 # PROJECT 1: Identity Provider (Keycloak) & Database
 # ==============================================================================
 
+# ------------------------------------------------------------------------------
+# 0. Artifact Registry Repository for Keycloak Image
+# ------------------------------------------------------------------------------
+resource "google_artifact_registry_repository" "project1_repo" {
+  project       = var.compute_project_id
+  location      = var.compute_region
+  repository_id = var.project1_repository
+  description   = "Docker repository for Project 1 (Keycloak)"
+  format        = "DOCKER"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
   project = var.compute_project_id
   role   = "roles/cloudsql.admin"
@@ -91,12 +106,14 @@ resource "google_cloud_run_service" "keycloak" {
   location = var.compute_region
 
   template {
+    metadata {
+      annotations = {
+        "run.googleapis.com/cloudsql-instances" = google_sql_database_instance.keycloak_db.connection_name
+      }
+    }
     spec {
       containers {
-        image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/main-repository/keycloak:24.0.1"
-
-        # Start in dev mode for the lab (no strict HTTPS requirement on the container itself)
-        args = ["start-dev"]
+        image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/${var.project1_repository}/keycloak:24.0.1"
 
         env {
           name  = "KC_DB"
@@ -104,7 +121,7 @@ resource "google_cloud_run_service" "keycloak" {
         }
         env {
           name  = "KC_DB_URL"
-          value = "jdbc:postgresql://${google_sql_database_instance.keycloak_db.public_ip_address}:5432/keycloak"
+          value = "jdbc:postgresql:///${google_sql_database.keycloak_schema.name}?host=/cloudsql/${google_sql_database_instance.keycloak_db.connection_name}"
         }
         env {
           name  = "KC_DB_USERNAME"
@@ -145,5 +162,8 @@ resource "google_cloud_run_service" "keycloak" {
     latest_revision = true
   }
 
-  depends_on = [google_secret_manager_secret_version.keycloak_db_password_val]
+  depends_on = [
+    google_secret_manager_secret_version.keycloak_db_password_val,
+    google_artifact_registry_repository.project1_repo,
+  ]
 }

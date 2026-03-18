@@ -49,3 +49,9 @@ variable "terraform_deployer_service_account" {
   description = "The service account email used to deploy Terraform resources"
   type        = string
 }
+
+#Artifact Registry repository for Project1: 
+variable "project1_repository"  {
+  description = "name of the Artifact Registry Repository"
+  type        = string
+}
