@@ -19,3 +19,13 @@ variable "project1_repository" {
   description = "name of the Artifact Registry Repository"
   type        = string
 }
+
+variable "vpc_network_id" {
+  description = "The self-link of the VPC network for private resources."
+  type        = string
+}
+
+variable "vpc_connector_id" {
+  description = "The ID of the Serverless VPC Access Connector."
+  type        = string
+}

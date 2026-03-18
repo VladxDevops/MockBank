@@ -45,3 +45,25 @@ resource "google_compute_firewall" "allow-egress" {
   direction          = "EGRESS"
   priority           = 1000
 }
+
+# This IP range is reserved for Google's services (like Cloud SQL) to use
+# when they peer with your VPC.
+resource "google_compute_global_address" "private_service_access_range" {
+  project       = var.compute_project_id
+  name          = "private-service-access-range"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.vpc.id
+}
+
+# This resource establishes the VPC peering connection that allows Cloud SQL
+# to have a private IP address inside your VPC.
+resource "google_service_networking_connection" "private_vpc_connection" {
+  network                 = google_compute_network.vpc.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_service_access_range.name]
+
+  # This depends on the Service Networking API being enabled.
+  depends_on = [google_project_service.gcp_services]
+}

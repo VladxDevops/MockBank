@@ -77,9 +77,8 @@ resource "google_sql_database_instance" "keycloak_db" {
     tier = "db-f1-micro" # Use micro for dev/cost savings
 
     ip_configuration {
-      ipv4_enabled = true # Allow public IP for easier initial connectivity (secure with authorized networks in prod)
-      # For strict private IP, we would need a Private Service Access peering range configured.
-      # Keeping public enabled for simplicity in this lab environment unless VPC peering is fully set up.
+      ipv4_enabled    = false # Disable public IP for security.
+      private_network = var.vpc_network_id
     }
   }
 
@@ -108,7 +107,9 @@ resource "google_cloud_run_service" "keycloak" {
   template {
     metadata {
       annotations = {
-        "run.googleapis.com/cloudsql-instances" = google_sql_database_instance.keycloak_db.connection_name
+        "run.googleapis.com/cloudsql-instances"   = google_sql_database_instance.keycloak_db.connection_name
+        "run.googleapis.com/vpc-access-connector" = var.vpc_connector_id
+        "run.googleapis.com/vpc-access-egress"    = "all-traffic"
       }
     }
     spec {
