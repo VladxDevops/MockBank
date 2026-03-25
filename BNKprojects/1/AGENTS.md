@@ -21,6 +21,7 @@ This document outlines specific protocols for Automated Agents interacting with 
     *   **Prohibited:** Ingesting user passwords, session tokens, or PII from logs. Exposing PI and PII. 
 
 ## 3. AI Assistants (Gemini)
+*   **Terraform Generation:** When modifying Project 1 infrastructure, ensure `keycloak_serv_acc_account_id` is used in `main.tf` and defined in `variables.tf`. Do not suggest code with hardcoded string literals for IAM identities.
 *   **Configuration:** AI may assist in generating Realm Export JSON files.
 *   **Constraint:** AI must NEVER be provided with the `keycloak-admin-password` or the `master` realm private keys.
 

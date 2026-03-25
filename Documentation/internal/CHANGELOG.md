@@ -94,3 +94,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Updated `BNKprojects/1/ARCHITECTURE.md` with explicit Ingress/Egress flow details for the Identity Service.
     - Refactored `BNKprojects/1/ARCHITECTURE.md` to group traffic flow under a dedicated "Networking" section.
     - Clarified the decision to use Cloud Run's built-in Load Balancer instead of a dedicated resource in `BNKprojects/1/ARCHITECTURE.md`.
+    - Documented `keycloak-sa` Service Account purpose and the requirement for parameterizing IAM names in `BNKprojects/1/ARCHITECTURE.md`.
+    - Updated `Documentation/internal/Architecture.md`, `Documentation/internal/AGENTS.md`, and `BNKprojects/1/AGENTS.md` to enforce the prohibition of hardcoded Service Account names.
+    - Created `BNKprojects/1/TROUBLESHOOTING.md` to institutionalize knowledge about Cloud Run/Java deployment issues.
+    - Added `BNKprojects/1/localTSkeycloakContainer.md` to assist developers with local container debugging workflows.

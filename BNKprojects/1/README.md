@@ -39,6 +39,7 @@ Refer to `PROJECT1_DETAILS.md` for instructions on configuring the `AltmtrkBank`
 *   `AGENTS.md`: Bot protocols for this project.
 *   `INFRASTRUCTURE.md`: List of cloud resources.
 *   `SECURITY.md`: Security controls specific to Identity.
+*   `TROUBLESHOOTING.md`: Solutions for common Cloud Run and IAM deployment errors.
 
 ## References
 *   Internal Architecture

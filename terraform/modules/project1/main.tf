@@ -98,6 +98,36 @@ resource "google_sql_user" "keycloak_user" {
 }
 
 # ------------------------------------------------------------------------------
+# 2.1 IAM & Service Account (Least Privilege)
+# ------------------------------------------------------------------------------
+#KeyCloak Service Account: 
+resource "google_service_account" "keycloak_sa" {
+  account_id   = var.keycloak_serv_acc_account_id
+  display_name = "Keycloak Service Account"
+  project      = var.compute_project_id
+}
+
+# Required for Cloud Run to connect to Cloud SQL via the Auth Proxy
+resource "google_project_iam_member" "keycloak_cloudsql_client" {
+  project = var.compute_project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
+}
+
+# Required to read the database and admin passwords from Secret Manager
+resource "google_project_iam_member" "keycloak_db_secret_access" {
+  project   = var.compute_project_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.keycloak_sa.email}"
+}
+
+resource "google_project_iam_member" "keycloak_ar_reader" {
+  project    = var.compute_project_id
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
+}
+
+# ------------------------------------------------------------------------------
 # 3. Cloud Run Service (Keycloak)
 # ------------------------------------------------------------------------------
 resource "google_cloud_run_service" "keycloak" {
@@ -110,9 +140,11 @@ resource "google_cloud_run_service" "keycloak" {
         "run.googleapis.com/cloudsql-instances"   = google_sql_database_instance.keycloak_db.connection_name
         "run.googleapis.com/vpc-access-connector" = var.vpc_connector_id
         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
+        "run.googleapis.com/startup-cpu-boost"    = "true"
       }
     }
     spec {
+      service_account_name = google_service_account.keycloak_sa.email
       containers {
         image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/${var.project1_repository}/keycloak:24.0.1"
 
@@ -154,6 +186,18 @@ resource "google_cloud_run_service" "keycloak" {
           name  = "KC_PROXY"
           value = "edge"
         }
+        # Disable strict hostname checking for Cloud Run dynamic URLs
+        env {
+          name  = "KC_HOSTNAME_STRICT"
+          value = "false"
+        }
+
+        resources {
+          limits = {
+            cpu    = "2000m"
+            memory = "2Gi"
+          }
+        }
       }
     }
   }
@@ -164,7 +208,8 @@ resource "google_cloud_run_service" "keycloak" {
   }
 
   depends_on = [
+    google_service_account.keycloak_sa, 
     google_secret_manager_secret_version.keycloak_db_password_val,
     google_artifact_registry_repository.project1_repo,
   ]
-}
+} 

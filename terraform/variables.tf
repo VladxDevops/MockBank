@@ -55,3 +55,9 @@ variable "project1_repository"  {
   description = "name of the Artifact Registry Repository"
   type        = string
 }
+
+#Cloud Run Service account: 
+variable "keycloak_serv_acc_account_id" {
+  description = "The account ID for the Keycloak Service Account (passed from tfvars to avoid hardcoding)."
+  type        = string
+}

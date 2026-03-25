@@ -14,6 +14,50 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.2.7] - Local Documentation
+### Added
+- **Local Guide**: Created `BNKprojects/1/localTSkeycloakContainer.md` providing step-by-step instructions for troubleshooting the Keycloak container locally using Docker Compose.
+
+## [1.2.6] - Performance Optimization
+### Changed
+- **Cloud Run Startup**: Enabled "Startup CPU Boost" (`run.googleapis.com/startup-cpu-boost`) for the Keycloak service in `project1/main.tf`. This provides additional CPU during container initialization to reduce cold start times, which is critical for Java/Quarkus applications.
+
+## [1.2.5] - Documentation
+### Added
+- **Troubleshooting**: Created `BNKprojects/1/TROUBLESHOOTING.md` to capture knowledge regarding common Cloud Run failures (OOM, IAM, Hostname Strictness, Probes) encountered during Project 1 deployment.
+
+## [1.2.4] - Project 1 Deployment Fixes
+### Fixed
+- **Keycloak Startup Loop**: Set `KC_HOSTNAME_STRICT=false` in `project1/main.tf`. Keycloak production mode requires a hostname, but Cloud Run URLs are dynamic. Disabling strictness allows the service to boot successfully.
+- **Health Check Probe**: Corrected `startup_probe` syntax from camelCase to snake_case in `project1/main.tf`. Optimized settings for Java startup (`period_seconds=10`, `failure_threshold=12`) to prevent premature termination during JVM initialization.
+
+## [1.2.3] - Local Development Configuration Update
+### Changed
+- **Docker Compose Command**: Removed `start-dev` override in `BNKprojects/1/container/docker-compose.yaml` to rely on the Dockerfile's default `start --optimized` command. This ensures local development uses the same optimized runtime as production while still allowing HTTP via environment variables.
+- **Cleanup**: Removed duplicate `volumes` block in `BNKprojects/1/container/docker-compose.yaml`.
+
+## [1.2.2] - Local Development Fix
+### Fixed
+- **Docker Compose Entrypoint**: Fixed `BNKprojects/1/container/docker-compose.yaml` to explicitly override the `entrypoint`. This resolves a conflict where the Dockerfile's `ENTRYPOINT ["...","start","--optimized"]` was being concatenated with the compose `command: ["start-dev"]`, causing the container to fail on startup.
+
+## [1.2.1] - Project 1 Developer Experience
+### Added
+- **Local Development**: Added `docker-compose.yaml` to `BNKprojects/1/container/` to allow running Keycloak and PostgreSQL locally. Configured it to override production security flags (`KC_PROXY`, `KC_HOSTNAME_STRICT`) for local compatibility.
+- **CI/CD**: Added `cloudbuild.yaml` to `BNKprojects/1/container/` to automate building and pushing the custom Keycloak image to Artifact Registry.
+
+## [1.1.2] - Project 1 IAM & Permissions Fix
+### Security
+- **Service Account**: Created a dedicated Service Account (`keycloak-sa`) for the Keycloak Cloud Run service instead of using the default Compute Engine account.
+- **Least Privilege**: Explicitly granted `roles/cloudsql.client` (for DB connection) and `roles/secretmanager.secretAccessor` (for DB/Admin passwords) to `keycloak-sa`.
+- **Artifact Access**: Granted `roles/artifactregistry.reader` to `keycloak-sa` to ensure reliable image pulling.
+- **IAM Syntax**: Updated Secret Manager IAM bindings in `project1` module to use `.secret_id` instead of `.id`. This prevents malformed resource IDs (e.g., `projects/p/secrets/projects/p/secrets/s`) ensuring permissions are correctly applied.
+### Fixed
+- **Container Crash**: Resolved `HealthCheckContainerError` by fixing missing IAM permissions that caused the Keycloak container to crash during startup (unable to access secrets/DB).
+
+## [1.1.1] - Project 1 Deployment Fixes
+### Fixed
+- **Keycloak Resources**: Increased Cloud Run resource limits to `2000m` (2 vCPU) and `2Gi` Memory. The default `512Mi` was causing the Java container to crash (OOM) before startup completed, resulting in `Ready:False` errors.
+
 ## [1.1.0] - Project 1 Hardening & Private Networking
 ### Security
 - **Cloud SQL Private IP**: Configured the Keycloak Cloud SQL instance to use a Private IP only, disabling its Public IP to reduce attack surface.

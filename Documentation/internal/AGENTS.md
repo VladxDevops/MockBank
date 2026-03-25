@@ -40,6 +40,10 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
 
 
-Terraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs. 
+Terraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs.
+
+### Terraform Variables
+*   **Constraint:** Do not hardcode Service Account names or IDs in `main.tf` files.
+*   **Requirement:** Always create a corresponding variable in `variables.tf` (e.g., `service_account_id`) and populate it via `.tfvars`. This ensures that sensitive naming conventions are not leaked in the module source and allows for environment-specific naming if needed.
 
 Please keep the changelog.md up to date.

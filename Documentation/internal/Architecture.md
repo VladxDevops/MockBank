@@ -22,6 +22,7 @@ This architecture describes a secure, cloud-native banking platform designed for
     *   **Configuration:** Use `variables.tf` for declarations.
     *   **Environments:** State must be managed via environment-specific variable files: `dev.tfvars`, `test.tfvars`, and `prod.tfvars`.
 *   **Cost Optimization:** Select budget-friendly GCP services (e.g., Cloud Run) where possible, provided security is not compromised. 
+*   **IAM Security:** Service Account names must never be hardcoded in Terraform modules. They must be passed as variables (e.g., `keycloak_serv_acc_account_id`) from `.tfvars` to allow flexibility and prevent information leakage.
 Infrastructure and GCP services are listed under the infrastructure.md. 
 *   Region and Zone: The region and/or zone will be specified at the .tfvars level/files.
 

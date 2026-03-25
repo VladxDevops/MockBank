@@ -15,4 +15,7 @@ module "project1" {
 
   # Ensure the VPC peering for private services is complete before creating module resources
   depends_on = [google_service_networking_connection.private_vpc_connection]
+
+  #Cloud Run Service account: 
+  keycloak_serv_acc_account_id = var.keycloak_serv_acc_account_id
 }

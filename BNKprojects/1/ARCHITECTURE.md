@@ -49,3 +49,23 @@ graph TD
 *   **Destinations:**
     1.  **Cloud SQL:** Accessed via Private IP (No public internet exposure).
     2.  **External APIs:** Routed through Cloud NAT to ensure a stable static outbound IP.
+
+## IAM & Identity
+
+### Service Account: `keycloak-sa`
+*   **Purpose:** Dedicated identity for the Keycloak Cloud Run service. Replaces the default Compute Engine Service Account to enforce Least Privilege.
+*   **Configuration:** The Service Account ID is **not** hardcoded in the Terraform module. It is injected via the `keycloak_serv_acc_account_id` variable from the environment-specific `.tfvars` file.
+*   **Permissions:**
+    *   `roles/cloudsql.client`: Allows connection to Cloud SQL via the Auth Proxy.
+    *   `roles/secretmanager.secretAccessor`: Allows retrieval of database and admin credentials.
+    *   `roles/artifactregistry.reader`: Allows pulling the container image.
+
+## IAM & Identity
+
+### Service Account: `keycloak-sa`
+*   **Purpose:** Dedicated identity for the Keycloak Cloud Run service. Replaces the default Compute Engine Service Account to enforce Least Privilege.
+*   **Configuration:** The Service Account ID is **not** hardcoded in the Terraform module. It is injected via the `keycloak_serv_acc_account_id` variable from the environment-specific `.tfvars` file.
+*   **Permissions:**
+    *   `roles/cloudsql.client`: Allows connection to Cloud SQL via the Auth Proxy.
+    *   `roles/secretmanager.secretAccessor`: Allows retrieval of database and admin credentials.
+    *   `roles/artifactregistry.reader`: Allows pulling the container image.

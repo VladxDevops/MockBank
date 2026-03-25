@@ -29,3 +29,8 @@ variable "vpc_connector_id" {
   description = "The ID of the Serverless VPC Access Connector."
   type        = string
 }
+
+variable "keycloak_serv_acc_account_id" {
+  description = "The account ID for the Keycloak Service Account (passed from tfvars to avoid hardcoding)."
+  type        = string
+}
