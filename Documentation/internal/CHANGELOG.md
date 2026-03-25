@@ -68,3 +68,29 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Refactor**: Moved `docker-compose.yml` to `2/container/` and created `2/container/Dockerfile` to comply with directory standards.
 - **Terraform**: Created Terraform module for Project 2 to deploy the transaction service to Cloud Run.
 - **Documentation**: Updated `README.md`, `terraform/terraform-internal-README.MD`, and `BNKprojects/2/PROJECT_DETAILS.md` with MongoDB Atlas instructions and deployment details for Project 2.
+### Added
+- **Project 2 Transaction Service**:
+    - Implemented Node.js microservice for money transfers.
+    - Deployed to Google Cloud Run (Region: `us-south1`).
+    - Integrated with MongoDB Atlas for Audit Logging.
+    - Implemented Step-Up Authentication logic for transactions >= $10,000.
+    - Verified end-to-end flow with `curl` and MongoDB Compass.
+    - Validated diagnostic queries for MFA timeouts.
+### Added
+- **Project 2 Transaction Service**:
+    - Implemented Node.js microservice for money transfers.
+    - Deployed to Google Cloud Run (Region: `us-south1`).
+    - Integrated with MongoDB Atlas for Audit Logging.
+    - Implemented Step-Up Authentication logic for transactions >= $10,000.
+    - Verified end-to-end flow with `curl` and MongoDB Compass.
+    - Validated diagnostic queries for MFA timeouts.
+### Security
+- **Project 1 Container**:
+    - Hardened Keycloak container for Cloud Run deployment.
+    - Added `KC_PROXY=edge` to handle TLS termination securely.
+### Documentation
+- **Traffic Analysis**:
+    - Updated `Documentation/internal/Architecture.md` to define Global Ingress and VPC Egress standards.
+    - Updated `BNKprojects/1/ARCHITECTURE.md` with explicit Ingress/Egress flow details for the Identity Service.
+    - Refactored `BNKprojects/1/ARCHITECTURE.md` to group traffic flow under a dedicated "Networking" section.
+    - Clarified the decision to use Cloud Run's built-in Load Balancer instead of a dedicated resource in `BNKprojects/1/ARCHITECTURE.md`.

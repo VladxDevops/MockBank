@@ -13,6 +13,8 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
 *   **Terraform State Bucket**: A private GCS bucket to store the Terraform state files (`.tfstate`) securely with object versioning enabled.
 *   **VPC Network**: A custom Virtual Private Cloud to isolate traffic.
     *   **Serverless VPC Access Connector**: To allow Cloud Run services to communicate with private data services (Cloud SQL/MongoDB).
+    *   **Private Service Access**: VPC Peering allocated range for Google Managed Services (Cloud SQL).
+    *   **Cloud NAT**: Configured with `MANUAL_ONLY` IP allocation to provide a stable static IP for outbound traffic (required for external service allow-listing).
 
 ## 2. Security & Identity (Zero Trust)
 *   **Secret Manager**: The centralized vault for all secrets.

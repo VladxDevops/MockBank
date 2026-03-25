@@ -17,6 +17,12 @@ COPY --from=builder /opt/keycloak/ /opt/keycloak/
 ENV KC_HEALTH_ENABLED=true
 ENV KC_METRICS_ENABLED=true
 
+# Security: Configure proxy mode for Cloud Run (TLS termination at edge)
+# This ensures cookies are marked 'Secure' and redirects use HTTPS.
+ENV KC_PROXY=edge
+ENV KC_HTTP_ENABLED=true
+ENV KC_HOSTNAME_STRICT=true
+
 # Configure a database vendor for runtime
 ENV KC_DB=postgres
 

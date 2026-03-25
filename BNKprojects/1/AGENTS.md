@@ -12,6 +12,7 @@ This document outlines specific protocols for Automated Agents interacting with 
 ## 1. Deployment Agents (CI/CD)
 *   **Keycloak Updates:** Agents must use the `kc.sh build` command to optimize the image before deployment.
 *   **Zero-Downtime:** Database migrations must be backward compatible.
+*   **Container Build:** The Keycloak container image is built and pushed to Artifact Registry using a parameterized Cloud Build configuration (`mirror-keycloak.yaml`) to avoid hardcoding project-specific values.
 
 ## 2. Monitoring Agents
 *   **Health Checks:** Monitor the `/health` endpoint of Keycloak.

@@ -14,6 +14,20 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.1.0] - Project 1 Hardening & Private Networking
+### Security
+- **Cloud SQL Private IP**: Configured the Keycloak Cloud SQL instance to use a Private IP only, disabling its Public IP to reduce attack surface.
+- **Cloud Run Private Connectivity**: Updated the Keycloak Cloud Run service to connect to Cloud SQL securely over the private VPC network using the Cloud SQL Auth Proxy (Unix Socket).
+- **VPC Egress**: Configured the Cloud Run service's VPC connector with `egress = "all-traffic"` to ensure all outbound traffic is routed through the VPC and Cloud NAT, enabling static IPs for external service allow-listing.
+
+### Fixed
+- **Terraform Dependency**: Added an explicit `depends_on` to the Keycloak Cloud Run service to ensure the Artifact Registry repository is created first, resolving a race condition during deployment.
+- **Container Startup**: Resolved a container crash by removing the conflicting `args = ["start-dev"]` from the Cloud Run service definition, allowing the container to use its correct `start --optimized` entrypoint.
+- **Terraform Syntax**: Corrected an `Unsupported block type` error by replacing the `vpc_access` block with the appropriate `run.googleapis.com/vpc-access-connector` annotation for the Cloud Run v1 service.
+
+### Changed
+- **CI/CD Portability**: Refactored the Keycloak image mirroring process to use a parameterized Cloud Build file (`mirror-keycloak.yaml`) with substitutions, eliminating hardcoded project IDs and repository names.
+
 ## [1.0.0] - Current
 ### Added
 - **security.md**: Established the "Prime Directive" (Security > Privacy). Defined standards for MFA, RBAC, and Incident Response.

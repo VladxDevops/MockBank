@@ -16,14 +16,36 @@ graph TD
 
 ### 1. Keycloak (Application)
 *   Runs as a stateless container on Cloud Run.
-*   configured with `KC_PROXY=edge` to handle TLS termination at the load balancer.
+*   **Startup:** Uses `start --optimized` (Production Mode).
+*   **Connectivity:** Connects to Cloud SQL via Cloud SQL Auth Proxy (Unix Socket) to ensure zero-trust connectivity.
+*   Configured with `KC_PROXY=edge` to handle TLS termination at the load balancer.
 
 ### 2. Cloud SQL (Database)
 *   Stores Realms, Clients, Users, and Sessions.
-*   Located in the private VPC subnet.
+*   **Network:** Private IP only (Public IP disabled). Accessed via Private Service Access (VPC Peering).
+
+## Networking: 
 
 ### 3. VPC Connector
 *   Bridges the Serverless environment (Cloud Run) with the VPC to allow traffic to Cloud SQL.
+*   **Egress:** Configured to `all-traffic` to ensure all outbound requests flow through the Cloud NAT gateway (allowing for static IP whitelisting).
 
 ### 4. Region and Zone
 *   The region and/or zone will be specified at the .tfvars level/files.
+
+
+### Traffic Flow
+
+#### Ingress (Incoming)
+*   **Type:** External (Public Internet).
+*   **Mechanism:** Traffic enters via the global Google Cloud Load Balancer (Cloud Run default).
+    *   *Decision:* We utilize the built-in shared load balancer for cost efficiency. A dedicated Global External Load Balancer is reserved for future hardening (to enable Cloud Armor WAF).
+*   **Termination:** TLS is terminated at the edge. The container receives unencrypted HTTP traffic on port 8080.
+*   **Security:** The container is configured with `KC_PROXY=edge` and `KC_HOSTNAME_STRICT=true` to ensure it recognizes the original `https` protocol and enforces strict host validation.
+
+#### Egress (Outgoing)
+*   **Type:** Internal (Private VPC).
+*   **Mechanism:** Forced via Serverless VPC Access Connector (`egress = "all-traffic"`).
+*   **Destinations:**
+    1.  **Cloud SQL:** Accessed via Private IP (No public internet exposure).
+    2.  **External APIs:** Routed through Cloud NAT to ensure a stable static outbound IP.

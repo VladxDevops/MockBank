@@ -76,9 +76,9 @@ db.journeys.find({
 ```
 
 ## 6. Development Plan
-1.  Initialize Node.js project in `2/`.
-2.  Create `docker-compose.yml` for MongoDB.
-3.  Implement `POST /transfer` endpoint with the logic above.
+1.  [x] Initialize Node.js project in `2/`.
+2.  [x] Create `docker-compose.yml` for MongoDB.
+3.  [x] Implement `POST /transfer` endpoint with the logic above.
 
 ## 7. Connecting to the Database
 

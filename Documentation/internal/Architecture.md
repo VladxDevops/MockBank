@@ -32,6 +32,12 @@ Infrastructure and GCP services are listed under the infrastructure.md.
 *   **Data at Rest:** All databases (MongoDB, SQL) are encrypted using customer-managed keys.
 *   **Secrets Management:** No passwords, keys, or sensitive information are hardcoded. All credentials are injected at runtime via GCP Secret Manager.
 
+### Network Traffic & Isolation for project1: 
+*   **Ingress (Incoming):** Services are exposed via public HTTPS endpoints (`*.run.app`). TLS is terminated at the Cloud Run edge (Google Front End). Traffic reaches the container via HTTP/8080.
+*   **Egress (Outgoing):** All outbound traffic is routed through the **Serverless VPC Access Connector**.
+    *   *Internal:* Database connections use Private IPs.
+    *   *Internet:* Routed via Cloud NAT for static IP stability.
+
 ## 5. Data Flow
 1.  User authenticates via IdP.
 2.  IdP issues OIDC Token.
@@ -43,6 +49,12 @@ To maintain a clean and navigable codebase, the following directory standards ap
 
 *   **`Documentation/`**: Central repository for all project documentation.
     *   `internal/`: Policy and governance documents.
+*   **`Infrastructure/`**: Terraform and cloud configuration.
+*   **Service Directories (e.g., `Services/{name}` or Project folders):**
+    *   `src/`: Application logic and source code.
+    *   `container/`: Containerization assets (`Dockerfile`, `docker-compose.yml`, entrypoint scripts).
+    *   `tests/`: Unit and integration tests.
+    *   `config/`: Non-sensitive configuration files.
 *   **`Infrastructure/`**: Terraform and cloud configuration.
 *   **Service Directories (e.g., `Services/{name}` or Project folders):**
     *   `src/`: Application logic and source code.
