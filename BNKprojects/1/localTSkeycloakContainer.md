@@ -14,11 +14,12 @@ This guide details how to build, run, and debug the Project 1 Keycloak container
 
 2.  Start the environment (builds image and starts Postgres + Keycloak):
     ```bash
-    docker-compose up --build
+    sudo docker-compose up --build
     ```
 
 ## 3. Verification
-*   **Access:** Open http://localhost:8080.
+*   **Access:** Open http://localhost:8080. You should see the "Welcome to Keycloak" landing page.
+*   **DB Check:** If the page loads, the database connection is successful.
 *   **Admin Console:** Click "Administration Console".
 *   **Credentials:**
     *   Username: `admin`
@@ -48,6 +49,33 @@ The local setup uses a dedicated Postgres container defined in the compose file.
 ### Port Conflicts
 *   **Error:** `Bind for 0.0.0.0:8080 failed: port is already allocated`.
 *   **Fix:** Stop other services using port 8080 or modify `docker-compose.yaml` ports mapping (e.g., `"8081:8080"`).
+
+### Docker Permission Denied
+*   **Error:** `permission denied while trying to connect to the Docker daemon socket`.
+*   **Fix:** Run with `sudo` or add your user to the docker group:
+    ```bash
+    sudo usermod -aG docker $USER
+    newgrp docker
+    ```
+
+### Browser Error: Connection Refused
+*   **Error:** `ERR_CONNECTION_REFUSED` or "This site can't be reached".
+*   **Cause 1 (Most Likely):** Keycloak is still starting. Java applications can take 30-60 seconds to initialize.
+    *   **Fix:** Watch the terminal logs. Wait until you see: `Listening on: http://0.0.0.0:8080`.
+*   **Cause 2:** Container crashed.
+    *   **Fix:** Check container status:
+        ```bash
+        sudo docker-compose ps
+        ```
+        If State is `Exit`, check logs for errors:
+        ```bash
+        sudo docker-compose logs keycloak
+        ```
+
+### Container Crash on Startup (Race Condition)
+*   **Error:** `Connection to postgres:5432 refused` followed by `keycloak-1 exited with code 1`.
+*   **Cause:** Keycloak tried to connect while Postgres was restarting during its initialization phase.
+*   **Fix:** Ensure `docker-compose.yaml` has a `healthcheck` configured for Postgres and Keycloak waits for `service_healthy`.
 
 ## 5. Cleanup
 Stop containers and remove volumes (resets local database state):

@@ -127,6 +127,18 @@ resource "google_project_iam_member" "keycloak_ar_reader" {
   member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
+resource "google_project_iam_member" "keycloak_run_admin" {
+  project = var.compute_project_id
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
+}
+
+resource "google_project_iam_member" "keycloak_sa_user" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
+}
+
 # ------------------------------------------------------------------------------
 # 3. Cloud Run Service (Keycloak)
 # ------------------------------------------------------------------------------

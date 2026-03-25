@@ -14,6 +14,30 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.3.3] - IAM Privileges Expansion
+### Security
+- **Service Account Roles**: Granted `roles/run.admin` and `roles/iam.serviceAccountUser` to the Keycloak service account (`keycloak-sa`) in `project1/main.tf`.
+
+## [1.3.2] - Local Environment Verified
+### Verified
+- **Local Setup:** Confirmed successful startup of Keycloak and Postgres locally after resolving the race condition. Updated verification steps in `BNKprojects/1/localTSkeycloakContainer.md`.
+
+## [1.3.1] - Local Development Stability
+### Fixed
+- **Container Race Condition**: Updated `BNKprojects/1/container/docker-compose.yaml` to include a `healthcheck` for Postgres and set Keycloak to `depends_on: service_healthy`. This prevents Keycloak from crashing while Postgres is performing its initial restart during database creation.
+
+## [1.3.0] - Documentation Enhancements
+### Added
+- **Docker Compose Flags**: Clarified the difference between foreground (`up`) and detached (`up -d`) modes in `BNKprojects/1/localTSkeycloakContainer.md`.
+
+## [1.2.9] - Troubleshooting Documentation
+### Added
+- **Connection Refused Guide**: Updated `BNKprojects/1/localTSkeycloakContainer.md` with specific steps to diagnose browser connection errors (Startup delay vs Container crash).
+
+## [1.2.8] - Troubleshooting Updates
+### Added
+- **Docker Permissions**: Updated `BNKprojects/1/localTSkeycloakContainer.md` with instructions for resolving "permission denied" errors regarding the Docker socket.
+
 ## [1.2.7] - Local Documentation
 ### Added
 - **Local Guide**: Created `BNKprojects/1/localTSkeycloakContainer.md` providing step-by-step instructions for troubleshooting the Keycloak container locally using Docker Compose.

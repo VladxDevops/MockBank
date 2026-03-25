@@ -98,3 +98,6 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Updated `Documentation/internal/Architecture.md`, `Documentation/internal/AGENTS.md`, and `BNKprojects/1/AGENTS.md` to enforce the prohibition of hardcoded Service Account names.
     - Created `BNKprojects/1/TROUBLESHOOTING.md` to institutionalize knowledge about Cloud Run/Java deployment issues.
     - Added `BNKprojects/1/localTSkeycloakContainer.md` to assist developers with local container debugging workflows.
+    - Updated `BNKprojects/1/localTSkeycloakContainer.md` with Docker socket permission fixes.
+    - Enhanced `BNKprojects/1/localTSkeycloakContainer.md` with an explanation of Docker Compose's detached (`-d`) mode.
+    - Updated `BNKprojects/1/localTSkeycloakContainer.md` to reflect successful verification steps.

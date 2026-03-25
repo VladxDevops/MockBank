@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8' #Got error stating version attribute is obsolete. 
 
 services:
   keycloak:
@@ -17,7 +17,8 @@ services:
       - KC_HOSTNAME_STRICT=false
       - KC_HTTP_ENABLED=true
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy #This fixed the error where localhost was not leading and therewas no keycloak loading screen. 
 
   postgres:
     image: postgres:15
@@ -27,6 +28,11 @@ services:
       - POSTGRES_DB=keycloak
       - POSTGRES_USER=keycloak
       - POSTGRES_PASSWORD=password
+    healthcheck: #This fixed the error where localhost was not leading and therewas no keycloak loading screen. 
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:
