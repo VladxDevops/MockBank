@@ -16,9 +16,9 @@ graph TD
 
 ### 1. Keycloak (Application)
 *   Runs as a stateless container on Cloud Run.
-*   **Startup:** Uses `start --optimized` (Production Mode).
+*   **Startup:** Uses `args = ["start", "--optimized"]` to trigger the production runtime.
 *   **Connectivity:** Connects to Cloud SQL via Cloud SQL Auth Proxy (Unix Socket) to ensure zero-trust connectivity.
-*   **Observability:** Built-in health checks are enabled via `KC_HEALTH_ENABLED=true` to support Cloud Run startup and liveness probes.
+*   **Observability:** Built-in health checks are enabled via `KC_HEALTH_ENABLED=true`. Cloud Run uses the `/health/live` endpoint for startup probes.
 *   **Secrets:** Sensitive variables (DB Password, Admin Password) are mapped directly from Secret Manager into environment variables at the container level.
 *   Configured with `KC_PROXY=edge` to handle TLS termination at the load balancer.
 
@@ -71,3 +71,5 @@ graph TD
     *   `roles/cloudsql.client`: Allows connection to Cloud SQL via the Auth Proxy.
     *   `roles/secretmanager.secretAccessor`: Allows retrieval of database and admin credentials.
     *   `roles/artifactregistry.reader`: Allows pulling the container image.
+    *   Cloud Run Admin
+    *   Service Account User

@@ -14,6 +14,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.4.7] - Architecture Documentation Sync
+### Changed
+- **Documentation**: Updated `BNKprojects/1/ARCHITECTURE.md` to specify the startup arguments and the health check endpoint used by Cloud Run probes. Removed duplicate IAM section.
+
 ## [1.4.6] - Startup Command Correction
 ### Fixed
 - **Keycloak Startup**: Added `args = ["start", "--optimized"]` to the Cloud Run service in `project1/main.tf`. This resolves the issue where the container would print the help menu and exit instead of starting the server.
