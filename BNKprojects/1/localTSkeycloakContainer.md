@@ -26,6 +26,7 @@ This guide details how to build, run, and debug the Project 1 Keycloak container
     *   Password: `admin`
     *(Defined explicitly in `docker-compose.yaml` for local dev only)*
 
+
 ## 4. Troubleshooting Steps
 
 ### View Logs
@@ -76,6 +77,20 @@ The local setup uses a dedicated Postgres container defined in the compose file.
 *   **Error:** `Connection to postgres:5432 refused` followed by `keycloak-1 exited with code 1`.
 *   **Cause:** Keycloak tried to connect while Postgres was restarting during its initialization phase.
 *   **Fix:** Ensure `docker-compose.yaml` has a `healthcheck` configured for Postgres and Keycloak waits for `service_healthy`.
+
+### Verifying Health Check Extensions
+If Cloud Run probes are failing with 404 even with `KC_HEALTH_ENABLED=true` set in Terraform:
+1.  **Verify Image Configuration:** Check if the health extension was included during the build phase:
+    ```bash
+    sudo docker-compose exec keycloak /opt/keycloak/bin/kc.sh show-config | grep health
+    ```
+    **Note:** Seeing `kc.health-enabled = true (KcEnvVarConfigSource)` (even if multiple times) confirms the setting is active. If this is missing, the health endpoints will return 404.
+2.  **Manual Endpoint Test:** Use curl from within the container or host:
+    ```bash
+    # From host
+    curl -i http://localhost:8080/health/live
+    ```
+    A successful response should be `200 OK` with `{"status": "UP"}`.
 
 ## 5. Cleanup
 Stop containers and remove volumes (resets local database state):

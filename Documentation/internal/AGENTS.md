@@ -46,4 +46,9 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 *   **Constraint:** Do not hardcode Service Account names or IDs in `main.tf` files.
 *   **Requirement:** Always create a corresponding variable in `variables.tf` (e.g., `service_account_id`) and populate it via `.tfvars`. This ensures that sensitive naming conventions are not leaked in the module source and allows for environment-specific naming if needed.
 
+### Diagnostics & Troubleshooting
+*   **Docker Precision:** Agents must not assume container names match service names. When suggesting CLI commands for container inspection, Agents must include a discovery step: `sudo docker ps --format "table {{.Names}}\t{{.Status}}"`.
+*   **Path Absolute Accuracy:** All file references and diffs must use absolute paths to ensure context continuity across multi-directory projects.
+*   **Context Verification:** Before proposing a fix for a "crashed" service, Agents must request the last 50 lines of logs to avoid guessing the failure mode (e.g., distinguishing between OOM and Connection Refused).
+
 Please keep the changelog.md up to date.

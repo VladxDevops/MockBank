@@ -14,6 +14,40 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.4.1] - Agent Troubleshooting Protocol
+### Added
+- **Protocols**: Updated `BNKprojects/1/AGENTS.md` and `Documentation/internal/AGENTS.md` with strict rules for Docker container naming. This ensures future interactions prioritize actual container discovery (`docker ps`) over service name assumptions.
+- **Monitoring**: Documented the healthy idle state of Keycloak (~4% Mem) to serve as a baseline for future performance audits.
+
+## [1.4.0] - Docker Naming Documentation
+### Fixed
+- **Troubleshooting**: Updated `localTSkeycloakContainer.md` to clarify that `docker stats` requires the actual container name (e.g., `container-keycloak-1`) rather than the service name, resolving "No such container" errors.
+
+## [1.3.9] - Advanced Diagnostics Documentation
+### Added
+- **Troubleshooting**: Added `docker stats` and internal network connectivity tests to `localTSkeycloakContainer.md` to help diagnose "silent" failures like OOM or network isolation.
+
+## [1.3.8] - Troubleshooting Workflow Refinement
+### Added
+- **Documentation**: Updated `localTSkeycloakContainer.md` to clarify that log inspection commands require a secondary terminal window when the primary process is running in foreground mode.
+
+## [1.3.7] - Health Configuration Verified
+### Fixed
+- **Verification**: Confirmed `KC_HEALTH_ENABLED=true` is correctly mapped inside the container using `kc.sh show-config`. This resolves the root cause of Cloud Run 404 errors during startup probes.
+
+## [1.3.6] - Health Extension Verification
+### Added
+- **Troubleshooting**: Added instructions to `localTSkeycloakContainer.md` for verifying Quarkus health extensions using `kc.sh show-config`. This ensures the build-time optimization included the necessary health modules.
+
+## [1.3.5] - Health Check and Documentation Fix
+### Fixed
+- **Keycloak Probes**: Added `KC_HEALTH_ENABLED=true` to `project1/main.tf`. Without this, the `/health/live` endpoint returns 404, causing Cloud Run to fail health checks and restart the service.
+- **Documentation**: Updated `ARCHITECTURE.md` to reflect the health check requirement and secret mapping mechanism.
+
+## [1.3.4] - Documentation Sync
+### Fixed
+- **Architecture Alignment**: Updated `BNKprojects/1/ARCHITECTURE.md` to reflect `KC_HOSTNAME_STRICT=false`, resolving a contradiction with the troubleshooting guide and actual Cloud Run requirements.
+
 ## [1.3.3] - IAM Privileges Expansion
 ### Security
 - **Service Account Roles**: Granted `roles/run.admin` and `roles/iam.serviceAccountUser` to the Keycloak service account (`keycloak-sa`) in `project1/main.tf`.

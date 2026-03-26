@@ -41,7 +41,7 @@ resource "random_id" "db_name_suffix" {
 }
 
 resource "google_secret_manager_secret" "keycloak_db_password" {
-  secret_id = "keycloak-db-password"
+  secret_id = var.keycloak_database_password_secret_id
   replication {
     auto {}
   }
@@ -53,7 +53,7 @@ resource "google_secret_manager_secret_version" "keycloak_db_password_val" {
 }
 
 resource "google_secret_manager_secret" "keycloak_admin_password" {
-  secret_id = "keycloak-admin-password"
+  secret_id = var.keycloak_admin_password_secret_id
   replication {
     auto {}
   }
@@ -203,11 +203,26 @@ resource "google_cloud_run_service" "keycloak" {
           name  = "KC_HOSTNAME_STRICT"
           value = "false"
         }
+        env {
+          name  = "KC_HEALTH_ENABLED"
+          value = "true"
+        }
 
         resources {
           limits = {
             cpu    = "2000m"
             memory = "2Gi"
+          }
+        }
+
+        startup_probe {
+          initial_delay_seconds = 30
+          timeout_seconds       = 5
+          period_seconds        = 10
+          failure_threshold     = 12
+          http_get {
+            path = "/health/live"
+            port = 8080
           }
         }
       }

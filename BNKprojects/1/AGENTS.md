@@ -25,4 +25,9 @@ This document outlines specific protocols for Automated Agents interacting with 
 *   **Configuration:** AI may assist in generating Realm Export JSON files.
 *   **Constraint:** AI must NEVER be provided with the `keycloak-admin-password` or the `master` realm private keys.
 
+## 4. Troubleshooting Protocols
+*   **Container Naming:** When providing `docker stats`, `docker exec`, or `docker logs` commands, Agents must instruct the user to verify the actual container name using `sudo docker ps`. 
+*   **Service vs. Container:** Agents must explicitly distinguish between the **service name** (defined in `docker-compose.yaml`) and the **runtime container name** (e.g., `container-keycloak-1`) to prevent "No such container" errors.
+*   **Resource Monitoring:** If a user reports resource usage, Agents should compare it against the defined JVM limits (2Gi/2000m) to confirm if the container is in a healthy idle state or experiencing a leak.
+
 *Refer to `../../Documentation/internal/AGENTS.md` for global policies.*

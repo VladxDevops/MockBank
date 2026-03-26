@@ -18,6 +18,8 @@ graph TD
 *   Runs as a stateless container on Cloud Run.
 *   **Startup:** Uses `start --optimized` (Production Mode).
 *   **Connectivity:** Connects to Cloud SQL via Cloud SQL Auth Proxy (Unix Socket) to ensure zero-trust connectivity.
+*   **Observability:** Built-in health checks are enabled via `KC_HEALTH_ENABLED=true` to support Cloud Run startup and liveness probes.
+*   **Secrets:** Sensitive variables (DB Password, Admin Password) are mapped directly from Secret Manager into environment variables at the container level.
 *   Configured with `KC_PROXY=edge` to handle TLS termination at the load balancer.
 
 ### 2. Cloud SQL (Database)
@@ -41,7 +43,7 @@ graph TD
 *   **Mechanism:** Traffic enters via the global Google Cloud Load Balancer (Cloud Run default).
     *   *Decision:* We utilize the built-in shared load balancer for cost efficiency. A dedicated Global External Load Balancer is reserved for future hardening (to enable Cloud Armor WAF).
 *   **Termination:** TLS is terminated at the edge. The container receives unencrypted HTTP traffic on port 8080.
-*   **Security:** The container is configured with `KC_PROXY=edge` and `KC_HOSTNAME_STRICT=true` to ensure it recognizes the original `https` protocol and enforces strict host validation.
+*   **Security:** The container is configured with `KC_PROXY=edge` and `KC_HOSTNAME_STRICT=false` to ensure it recognizes the original `https` protocol while allowing for Cloud Run's dynamic service URLs.
 
 #### Egress (Outgoing)
 *   **Type:** Internal (Private VPC).

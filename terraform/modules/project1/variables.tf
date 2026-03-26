@@ -34,3 +34,15 @@ variable "keycloak_serv_acc_account_id" {
   description = "The account ID for the Keycloak Service Account (passed from tfvars to avoid hardcoding)."
   type        = string
 }
+
+#Secret manager:
+variable "keycloak_admin_password_secret_id" {
+  description = "name of the secret for the keyCloak admin password"
+  type        = string
+}
+
+variable "keycloak_database_password_secret_id" {
+  description = "name of the secret for the keyCloak DataBase password"
+  type        = string
+}
+

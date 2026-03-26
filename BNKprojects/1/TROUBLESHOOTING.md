@@ -38,11 +38,14 @@ This is a generic error from Cloud Run. You must open the **Logs** tab to find t
 
 ### Scenario D: Startup Probe Timeout
 *   **Symptom:** `Default STARTUP TCP probe failed 1 time consecutively`.
-*   **Cause:** The JVM takes 30-60 seconds to "warm up" and bind to port 8080. If the `startup_probe` checks too early or times out too fast, Google kills the container.
-*   **Fix:** Tune the probe in Terraform to be patient.
+*   **Cause:** Either the JVM is slow to warm up, or the `/health/live` endpoint is returning a `404` because health checks are disabled.
+*   **Fix:** 
+    1. Ensure `KC_HEALTH_ENABLED=true` is set in the environment.
+    2. Verify the config inside the container: `kc.sh show-config | grep health`.
+    3. Tune the probe in Terraform to be patient:
     ```hcl
     startup_probe {
-      initial_delay_seconds = 15
+      initial_delay_seconds = 30
       period_seconds        = 10
       failure_threshold     = 12 # Allow up to 120s total
     }
