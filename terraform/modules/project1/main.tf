@@ -159,6 +159,7 @@ resource "google_cloud_run_service" "keycloak" {
       service_account_name = google_service_account.keycloak_sa.email
       containers {
         image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/${var.project1_repository}/keycloak:24.0.1"
+        args  = ["start", "--optimized"]
 
         env {
           name  = "KC_DB"
@@ -237,6 +238,9 @@ resource "google_cloud_run_service" "keycloak" {
   depends_on = [
     google_service_account.keycloak_sa, 
     google_secret_manager_secret_version.keycloak_db_password_val,
+    google_secret_manager_secret_version.keycloak_admin_password_val,
     google_artifact_registry_repository.project1_repo,
+    google_sql_database.keycloak_schema,
+    google_sql_user.keycloak_user
   ]
 } 

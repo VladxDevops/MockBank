@@ -51,6 +51,11 @@ This is a generic error from Cloud Run. You must open the **Logs** tab to find t
     }
     ```
 
+### Scenario E: Container Exits with Help Menu (Exit 0)
+*   **Symptom:** Logs show `Container called exit(0)` followed by the Keycloak usage instructions (`Examples: start, start-dev, build...`).
+*   **Cause:** The container entrypoint (`kc.sh`) is being called without any arguments.
+*   **Fix:** Ensure `args = ["start", "--optimized"]` is defined in the Cloud Run container specification in Terraform.
+
 ## 2. Local Development Errors
 
 ### Scenario: Docker Entrypoint Conflict
@@ -62,3 +67,19 @@ This is a generic error from Cloud Run. You must open the **Logs** tab to find t
 *   **Fix:**
     *   Remove `command` in `docker-compose.yaml` to use the image's default.
     *   OR, override `entrypoint` in `docker-compose.yaml` to `/bin/sh` or just the script path if you need custom args.
+
+## 3. Critical Troubleshooting Steps
+
+If the deployment still fails after applying the dependencies:
+
+*   **Check for "Exec Format Error":** If you built your custom Keycloak image on an Apple Silicon (M1/M2) Mac, you must ensure you used the `--platform linux/amd64` flag. If not, the container will crash instantly on Cloud Run with an "exec format error," which results in the exact `Ready:False` behavior you see.
+*   **Inspect Application Logs:** The audit log you provided shows the infrastructure event. To see why the Java application crashed, you need to view the stdout/stderr logs of the container. Run this command:
+    ```bash
+    # View logs and filter for critical errors
+    gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=keycloak-service" --limit 100 --format="value(textPayload)" | grep -Ei "FATAL|Exception|Connection refused|exec format error|Permission denied"
+    ```
+    *Note: If this returns nothing, run the command without the grep to see raw container output.*
+*   **VPC Connector Verification:** Ensure the VPC connector `avechector` is in the same VPC as the Cloud SQL instance and that the VPC has Private Services Access configured. Since your DB has `ipv4_enabled = false`, it is 100% dependent on the VPC connector functioning correctly to reach the private IP of the database.
+    Look specifically for `FATAL`, `Exception`, or `Connection refused` messages.
+    *Note: Using `-E` enables extended regex for multiple patterns, and `-i` ensures the search is case-insensitive.*
+*   **VPC Connector Verification:** Ensure the VPC connector `avechector` is in the same VPC as the Cloud SQL instance and that the VPC has Private Services Access configured. Since your DB has `ipv4_enabled = false`, it is 100% dependent on the VPC connector functioning correctly to reach the private IP of the database.

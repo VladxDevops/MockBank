@@ -14,6 +14,27 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.4.6] - Startup Command Correction
+### Fixed
+- **Keycloak Startup**: Added `args = ["start", "--optimized"]` to the Cloud Run service in `project1/main.tf`. This resolves the issue where the container would print the help menu and exit instead of starting the server.
+- **Documentation**: Added Scenario E to `BNKprojects/1/TROUBLESHOOTING.md` to track this failure mode.
+
+## [1.4.5] - Log Filtering Expansion
+### Changed
+- **Troubleshooting**: Expanded the `grep` command in `BNKprojects/1/TROUBLESHOOTING.md` to include `exec format error` and `Permission denied`, which are common "silent" killers that prevent Java from starting.
+
+## [1.4.4] - Log Filtering Optimization
+### Added
+- **Troubleshooting**: Added an optimized `grep` command to `BNKprojects/1/TROUBLESHOOTING.md` to quickly identify Java exceptions and connection errors in Cloud Run logs.
+
+## [1.4.3] - Deep Dive Troubleshooting
+### Added
+- **Troubleshooting**: Added "Critical Troubleshooting Steps" to `BNKprojects/1/TROUBLESHOOTING.md` covering architecture mismatches (M1/M2 Mac), application log inspection via gcloud, and VPC connector verification for private-only Cloud SQL.
+
+## [1.4.2] - Commit Summary
+### Added
+- **Commit History**: Finalized today's session by documenting the stabilization of the Keycloak Identity service and the institutionalization of the "Docker Precision" protocol.
+
 ## [1.4.1] - Agent Troubleshooting Protocol
 ### Added
 - **Protocols**: Updated `BNKprojects/1/AGENTS.md` and `Documentation/internal/AGENTS.md` with strict rules for Docker container naming. This ensures future interactions prioritize actual container discovery (`docker ps`) over service name assumptions.
