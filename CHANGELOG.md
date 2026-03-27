@@ -14,6 +14,41 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.5.4] - 2024-05-22
+### Fixed
+- **Local Verification**: Confirmed `/health/live` returns `200 OK`. The build-time fix for `KC_HEALTH_ENABLED` is successful.
+### Changed
+- **Infrastructure**: Synchronized `project1/main.tf` with optimized `startup_probe` settings (60s delay, 20 failures) to ensure cloud deployment stability.
+
+## [1.5.3] - 2024-05-22
+### Changed
+- **Docker Optimization**: Refactored the `Dockerfile` to move `KC_HEALTH_ENABLED` and the `build` command back to the `builder` stage. This preserves multi-stage benefits while ensuring health endpoints are baked into the optimized image.
+
+## [1.5.2] - 2024-05-22
+### Changed
+- **Troubleshooting**: Identified that `KC_HEALTH_ENABLED` must be set during the build phase for `--optimized` mode.
+- **Documentation**: Updated `localTSkeycloakContainer.md` and `TROUBLESHOOTING.md` to reflect build-time property requirements.
+
+## [1.5.1] - 2024-05-22
+### Fixed
+- **Local Troubleshooting**: Identified `404 Not Found` on `/health/live` endpoint. 
+- **Root Cause Analysis**: Confirmed that `KC_HEALTH_ENABLED` is likely missing or set to false, which directly correlates with the Cloud Run startup failures.
+
+## [1.5.0] - 2024-05-22
+### Fixed
+- **Local Environment**: Confirmed successful local container startup. Logs verify Quarkus is listening on port 8080.
+- **Troubleshooting**: Moving to Phase 2 (Local Health Check verification).
+
+## [1.4.9] - 2024-05-22
+### Changed
+- **Infrastructure**: Increased `startup_probe` latency thresholds in Project 1 to accommodate JVM initialization on Cloud Run.
+- **Documentation**: Updated `TROUBLESHOOTING.md` with more robust probe settings (260s total window).
+
+## [1.4.8] - 2024-05-22
+### Added
+- **Troubleshooting**: Commenced deep-dive troubleshooting session. 
+- **Strategy**: Established a two-phase verification protocol (Local Health Verification -> Cloud IAM/VPC Audit).
+
 ## [1.4.7] - Architecture Documentation Sync
 ### Changed
 - **Documentation**: Updated `BNKprojects/1/ARCHITECTURE.md` to specify the startup arguments and the health check endpoint used by Cloud Run probes. Removed duplicate IAM section.

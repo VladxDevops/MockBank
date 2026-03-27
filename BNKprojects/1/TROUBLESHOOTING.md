@@ -1,5 +1,7 @@
 # Keycloak on Cloud Run - Troubleshooting Guide
 
+We are deploying using Linux. 
+
 **CLASSIFICATION: INTERNAL**
 
 This document details common deployment failures encountered when running Keycloak (Java/Quarkus) on Google Cloud Run and how to resolve them.
@@ -40,14 +42,14 @@ This is a generic error from Cloud Run. You must open the **Logs** tab to find t
 *   **Symptom:** `Default STARTUP TCP probe failed 1 time consecutively`.
 *   **Cause:** Either the JVM is slow to warm up, or the `/health/live` endpoint is returning a `404` because health checks are disabled.
 *   **Fix:** 
-    1. Ensure `KC_HEALTH_ENABLED=true` is set in the environment.
+    1. Ensure `KC_HEALTH_ENABLED=true` is set **during the build phase** in the Dockerfile. In optimized mode, runtime env vars for health are often ignored if not baked in.
     2. Verify the config inside the container: `kc.sh show-config | grep health`.
     3. Tune the probe in Terraform to be patient:
     ```hcl
     startup_probe {
-      initial_delay_seconds = 30
+      initial_delay_seconds = 60
       period_seconds        = 10
-      failure_threshold     = 12 # Allow up to 120s total
+      failure_threshold     = 20 # Allow up to 260s total
     }
     ```
 

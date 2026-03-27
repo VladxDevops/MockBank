@@ -2,6 +2,8 @@
 
 **CLASSIFICATION: INTERNAL USE ONLY**
 
+We are deploying using Linux. 
+
 ## 1. Executive Summary
 This architecture describes a secure, cloud-native banking platform designed for high availability and zero-trust security.
 

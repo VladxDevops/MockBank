@@ -1,21 +1,21 @@
 # STAGE 1: Build optimized Keycloak server
 FROM quay.io/keycloak/keycloak:24.0.1 AS builder
 
-# Configure a database vendor for the build
-ENV KC_DB=postgres
 WORKDIR /opt/keycloak
-# This build step creates an optimized server runtime.
+
+# Build-time configuration
+ENV KC_DB=postgres
+ENV KC_HEALTH_ENABLED=true
+ENV KC_METRICS_ENABLED=true
+
+# Create an optimized server runtime in the builder stage
 RUN /opt/keycloak/bin/kc.sh build
 
 # STAGE 2: Create the final, lighter runtime image
 FROM quay.io/keycloak/keycloak:24.0.1
 
-# Copy only the optimized server from the builder stage
+# Copy the optimized server from the builder stage to the final image
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
-
-# Enable health and metrics support
-ENV KC_HEALTH_ENABLED=true
-ENV KC_METRICS_ENABLED=true
 
 # Security: Configure proxy mode for Cloud Run (TLS termination at edge)
 # This ensures cookies are marked 'Secure' and redirects use HTTPS.

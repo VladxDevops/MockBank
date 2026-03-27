@@ -217,10 +217,10 @@ resource "google_cloud_run_service" "keycloak" {
         }
 
         startup_probe {
-          initial_delay_seconds = 30
+          initial_delay_seconds = 60
           timeout_seconds       = 5
           period_seconds        = 10
-          failure_threshold     = 12
+          failure_threshold     = 20
           http_get {
             path = "/health/live"
             port = 8080

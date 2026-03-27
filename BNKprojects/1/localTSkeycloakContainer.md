@@ -29,6 +29,12 @@ This guide details how to build, run, and debug the Project 1 Keycloak container
 
 ## 4. Troubleshooting Steps
 
+**Note on Terminals:** If you ran `docker-compose up` without the `-d` flag, your current terminal (**Terminal A**) is locked. Open a second terminal (**Terminal B**) to run the commands below.
+
+### 4.1 Discover Container Name
+Before running `exec` or `stats`, find the exact name of your running container:
+`sudo docker ps --format "table {{.Names}}\t{{.Status}}"`
+
 ### View Logs
 To see real-time logs if you ran in detached mode (`-d`), or to review history:
 ```bash
@@ -61,9 +67,13 @@ The local setup uses a dedicated Postgres container defined in the compose file.
 
 ### Browser Error: Connection Refused
 *   **Error:** `ERR_CONNECTION_REFUSED` or "This site can't be reached".
-*   **Cause 1 (Most Likely):** Keycloak is still starting. Java applications can take 30-60 seconds to initialize.
+*   **Symptom:** `curl -i http://localhost:8080/health/live` returns `404 Not Found`.
+    *   **Cause:** The health check extension is disabled.
+    *   **Fix:** Ensure `KC_HEALTH_ENABLED=true` is set in the `Dockerfile` **before** the `kc.sh build` step. If using `start --optimized`, the feature must be enabled at build-time.
+    *   **Test:** Try removing `--optimized` from the startup command in `docker-compose.yaml` to see if "auto-build" mode resolves the 404.
+*   **Cause 2 (Most Likely):** Keycloak is still starting. Java applications can take 30-60 seconds to initialize.
     *   **Fix:** Watch the terminal logs. Wait until you see: `Listening on: http://0.0.0.0:8080`.
-*   **Cause 2:** Container crashed.
+*   **Cause 3:** Container crashed.
     *   **Fix:** Check container status:
         ```bash
         sudo docker-compose ps
