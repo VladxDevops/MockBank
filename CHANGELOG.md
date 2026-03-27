@@ -14,6 +14,60 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.6.5] - 2024-05-22
+### Changed
+- **Security**: Decision made to keep Cloud Run service private. `403 Forbidden` is expected for unauthenticated external access.
+- **Verification**: Updated verification protocol to check Cloud Run service status in GCP Console and use authenticated `gcloud` requests for testing.
+
+## [1.6.4] - 2024-05-22
+### Added
+- **Verification**: Successfully deployed Keycloak to Cloud Run.
+- **Documentation**: Initiated verification protocol (URL retrieval, Health Check, Admin Console login).
+
+## [1.6.3] - 2024-05-22
+### Fixed
+- **Infrastructure**: Removed redundant `args` from `google_cloud_run_service` in `project1/main.tf`.
+- **Root Cause**: Resolved a conflict where arguments were being appended to the Dockerfile's `ENTRYPOINT`, causing Keycloak to crash on startup.
+
+## [1.6.2] - 2024-05-22
+### Fixed
+- **Documentation**: Resolved redundant VPC connector verification sections in `TROUBLESHOOTING.md`.
+- **CI/CD**: Finalized deployment commands in `localTSkeycloakContainer.md` by replacing placeholders with concrete repository names.
+
+## [1.6.1] - 2024-05-22
+### Changed
+- **CI/CD**: Updated `localTSkeycloakContainer.md` with the explicit `--tag` command for Cloud Build to ensure the `:v1` image is correctly pushed and recognized by Cloud Run.
+
+## [1.6.0] - 2024-05-22
+### Fixed
+- **Local Verification**: Confirmed `kc.db = postgres` is active in the local container configuration.
+- **Strategy**: Identified that Cloud Run is likely pulling the wrong image tag, causing the H2 driver error. Switched to explicit version tagging (`:v1`).
+
+## [1.5.9] - 2024-05-22
+### Fixed
+- **Troubleshooting**: Identified Scenario F (H2 URL format error) in Cloud Run logs.
+- **Root Cause**: Confirmed database vendor mismatch where H2 driver is active despite Postgres JDBC URL.
+
+## [1.5.8] - 2024-05-22
+### Changed
+- **Troubleshooting**: Optimized log retrieval commands in `TROUBLESHOOTING.md` with pagination (`less`) and payload formatting to handle verbose output.
+- **Documentation**: Removed redundant VPC verification sections in `TROUBLESHOOTING.md`.
+
+## [1.5.7] - 2024-05-22
+### Changed
+- **Deployment**: Transitioned from Local Troubleshooting to Cloud Deployment Phase.
+- **Strategy**: Initiated Cloud Build for the corrected Keycloak image including health fixes and realm imports.
+
+## [1.5.6] - 2024-05-22
+### Added
+- **Configuration**: Created `realm-export.json` with `AltmtrkBank` realm, `retail-app` (OIDC), and `teller-portal` (SAML) skeletons.
+- **Docker**: Updated `Dockerfile` to automatically import realm configuration on startup using the `--import-realm` flag.
+
+## [1.5.5] - 2024-05-22
+### Added
+- **Troubleshooting**: Added steps for Browser Redirection (Redirect URI) fixes, Configuration Exporting, and Database Persistence verification to `localTSkeycloakContainer.md`.
+- **Documentation**: Finalized local verification protocol before cloud deployment.
+
 ## [1.5.4] - 2024-05-22
 ### Fixed
 - **Local Verification**: Confirmed `/health/live` returns `200 OK`. The build-time fix for `KC_HEALTH_ENABLED` is successful.

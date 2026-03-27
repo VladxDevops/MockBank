@@ -17,6 +17,9 @@ FROM quay.io/keycloak/keycloak:24.0.1
 # Copy the optimized server from the builder stage to the final image
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+# Copy the realm configuration for automatic import
+COPY realm-export.json /opt/keycloak/data/import/
+
 # Security: Configure proxy mode for Cloud Run (TLS termination at edge)
 # This ensures cookies are marked 'Secure' and redirects use HTTPS.
 ENV KC_PROXY=edge
@@ -30,4 +33,4 @@ ENV KC_DB=postgres
 USER keycloak
 
 WORKDIR /opt/keycloak
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--optimized"]
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--import-realm"]

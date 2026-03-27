@@ -102,8 +102,48 @@ If Cloud Run probes are failing with 404 even with `KC_HEALTH_ENABLED=true` set 
     ```
     A successful response should be `200 OK` with `{"status": "UP"}`.
 
+        ```bash
+        sudo docker-compose logs keycloak
+        ```
+
+### Browser Error: "Invalid parameter: redirect_uri"
+*   **Symptom:** You can see the login page, but submitting credentials results in an error.
+*   **Cause:** `KC_HOSTNAME_STRICT` is set to `true` (as it is in our Dockerfile), but you are accessing it via `localhost`.
+*   **Fix:** For local testing, you may need to set `KC_HOSTNAME_STRICT=false` in your `docker-compose.yaml` environment variables to match the Cloud Run development setting.
+
+
+### 4.2 Exporting Realm Configuration
+Once you have configured your Realm, Clients, and Users locally, you should export them to a JSON file so they can be baked into the image or imported into Cloud Run:
+```bash
+sudo docker-compose exec keycloak /opt/keycloak/bin/kc.sh export --file /opt/keycloak/realm-export.json
+```
+Then copy it from the container to your host:
+```bash
+sudo docker cp <container_name>:/opt/keycloak/realm-export.json .
+```
+
+### 4.3 Database Persistence Test
+Verify that your data survives a restart (Crucial for verifying the `postgres_data` volume):
+1. Create a "Test User" in the Admin Console.
+2. Run `sudo docker-compose down`.
+3. Run `sudo docker-compose up -d`.
+4. Verify the user still exists. If not, check the `volumes:` mapping in `docker-compose.yaml`.
+
 ## 5. Cleanup
 Stop containers and remove volumes (resets local database state):
 ```bash
 docker-compose down -v
 ```
+
+## 6. Transitioning to Cloud Run
+Once local verification is successful (Health returns 200 and Realm exists):
+1. **Build and Push:**
+   Explicitly tag the image as `:v1` to ensure the optimized build is used.
+   ```bash
+   PROJECT_ID=$(gcloud config get-value project)
+   gcloud builds submit --tag us-south1-docker.pkg.dev/${PROJECT_ID}/REPO_NAME_PLACEHOLDER/keycloak:v1 .
+   ```
+2. **Deploy via Terraform:**
+   ```bash
+   terraform apply -var-file="dev.tfvars" -target=module.project1
+   ```

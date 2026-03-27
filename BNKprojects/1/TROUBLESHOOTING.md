@@ -55,8 +55,19 @@ This is a generic error from Cloud Run. You must open the **Logs** tab to find t
 
 ### Scenario E: Container Exits with Help Menu (Exit 0)
 *   **Symptom:** Logs show `Container called exit(0)` followed by the Keycloak usage instructions (`Examples: start, start-dev, build...`).
-*   **Cause:** The container entrypoint (`kc.sh`) is being called without any arguments.
-*   **Fix:** Ensure `args = ["start", "--optimized"]` is defined in the Cloud Run container specification in Terraform.
+*   **Cause:** The container entrypoint (`kc.sh`) is being called without arguments, or arguments are duplicated between the Dockerfile and Terraform.
+*   **Fix:** Ensure the startup command (`start --optimized`) is defined in **either** the Dockerfile `ENTRYPOINT` or the Terraform `args`, but not both. Duplication causes the CLI parser to fail.
+
+### Scenario F: Database Vendor Mismatch (H2 vs Postgres)
+*   **Symptom:** Logs show `ERROR: URL format error; must be "jdbc:h2:..." but is "jdbc:postgresql://..."`.
+*   **Cause:** Keycloak is using the H2 driver to parse a Postgres URL. This happens if the image was not built with `KC_DB=postgres` or if the `--optimized` flag is ignoring runtime environment variables because the build-time vendor was H2.
+*   **Fix:** 
+    1. Ensure `ENV KC_DB=postgres` is set in the `builder` stage of the `Dockerfile`.
+    2. **Crucial:** Use a unique tag (e.g., `v1`) for your custom image. If you use the same tag as the base image (`24.0.1`), Cloud Run may pull the unoptimized base image from the registry instead of your custom one.
+    3. Update `main.tf` to point to the new tag.
+    4. **Command:**
+       `gcloud builds submit --tag us-south1-docker.pkg.dev/PROJECT_ID/REPO/keycloak:v1 .`
+
 
 ## 2. Local Development Errors
 

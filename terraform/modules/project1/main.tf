@@ -158,8 +158,9 @@ resource "google_cloud_run_service" "keycloak" {
     spec {
       service_account_name = google_service_account.keycloak_sa.email
       containers {
-        image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/${var.project1_repository}/keycloak:24.0.1"
-        args  = ["start", "--optimized"]
+        image = "${var.compute_region}-docker.pkg.dev/${var.compute_project_id}/${var.project1_repository}/keycloak:v1"
+        # Arguments are now handled by the Dockerfile ENTRYPOINT to avoid duplication.
+        # ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--import-realm"]
 
         env {
           name  = "KC_DB"
@@ -167,7 +168,7 @@ resource "google_cloud_run_service" "keycloak" {
         }
         env {
           name  = "KC_DB_URL"
-          value = "jdbc:postgresql:///${google_sql_database.keycloak_schema.name}?host=/cloudsql/${google_sql_database_instance.keycloak_db.connection_name}"
+          value = "jdbc:postgresql://${google_sql_database_instance.keycloak_db.private_ip_address}:5432/${google_sql_database.keycloak_schema.name}"
         }
         env {
           name  = "KC_DB_USERNAME"
