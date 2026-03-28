@@ -14,6 +14,11 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [1.6.6] - 2024-05-23
+### Added
+- **Verification**: Commenced post-deployment testing phase for Keycloak on Cloud Run using authenticated requests.
+- **Testing**: Verified health endpoints (`/health/live`) via identity token-bearing `curl` commands; confirmed `200 OK` and `{"status": "UP"}`.
+
 ## [1.6.5] - 2024-05-22
 ### Changed
 - **Security**: Decision made to keep Cloud Run service private. `403 Forbidden` is expected for unauthenticated external access.
