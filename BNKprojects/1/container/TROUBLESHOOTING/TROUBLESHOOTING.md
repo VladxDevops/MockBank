@@ -96,3 +96,67 @@ If the deployment still fails after applying the dependencies:
     Look specifically for `FATAL`, `Exception`, or `Connection refused` messages.
     *Note: Using `-E` enables extended regex for multiple patterns, and `-i` ensures the search is case-insensitive.*
 *   **VPC Connector Verification:** Ensure the VPC connector `avechector` is in the same VPC as the Cloud SQL instance and that the VPC has Private Services Access configured. Since your DB has `ipv4_enabled = false`, it is 100% dependent on the VPC connector functioning correctly to reach the private IP of the database.
+### Scenario G: 403 Forbidden (Working as Intended)
+*   **Symptom:** Browser shows `Error: Forbidden. Your client does not have permission to get URL / from this server.`
+*   **Cause:** The Cloud Run service was deployed without the `--allow-unauthenticated` flag. This is the correct secure baseline for the Bank platform.
+*   **Fix/Workaround:** 
+    1. **To access for administration (Developer Access):** Grant yourself the invoker role: Status: DONE. 
+       ```bash
+       gcloud run services add-iam-policy-binding keycloak-service \
+         --member="user:YOUR_EMAIL@example.com" \
+         --role="roles/run.invoker" \
+         --region us-south1
+       ```
+    *   **If `localhost:8080` refuses connection:**
+        *   Check if another process is using the port: `lsof -i :8080` (Linux/Mac) or `netstat -ano | findstr :8080` (Windows). (NOT NEEDED)
+        *   Look at the `gcloud proxy` terminal output; it may have automatically selected a different port (e.g., 8081).
+        *   Try using the explicit IP: `http://127.0.0.1:8080`.
+
+    *   **Special Case: GCP Cloud Shell Port 8080 Conflict:**
+        *   Cloud Shell uses 8080 for its own web preview proxy, causing `ERR_CONNECTION_REFUSED`.
+        *   **Fix:** Run the proxy on a different port:
+          ```bash
+          gcloud run services proxy keycloak-service --region us-south1 --port 8888
+          ```
+        *   Then use the **Web Preview** button in Cloud Shell and select "Change port" to 8888. (This is the FIX)
+        *   Then use the **Web Preview** button in Cloud Shell and select "Change port" to 8888.
+        *   **Hang/Loading Issue:** If the UI hangs on "Loading the Admin UI", verify health via terminal: `curl http://localhost:8888/health/live`. If health is 200, perform a hard refresh (`Ctrl+F5`) to bypass Cloud Shell proxy caching.
+        *   **Collecting Browser Logs (F12):** 
+            1. Open **Console** tab -> Right-click -> **Save as...** to export all logs.
+            2. Open **Network** tab -> Look for red entries -> Right-click -> **Copy as cURL**. 
+            *Note: "Copy as cURL" is essential for identifying if the proxy is misconfiguring the `Host` or `X-Forwarded-Proto` headers.*
+
+### Scenario I: Startup Probe Failure after Update
+*   **Symptom:** `gcloud run services update` returns `The user-provided container failed the configured startup probe checks`.
+*   **Cause:** Often a syntax error in the `--set-env-vars` string or an OIDC/DB configuration conflict triggered by the new revision.
+*   **Diagnostic:** Run the following to see the crash reason:
+    ```bash
+    gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=keycloak-service" --limit 50 --format="value(textPayload)"
+    ```
+*   **Fix 1:** Ensure you do **not** mix `--set-env-vars` and `--update-env-vars`. Use only `--update-env-vars` to modify specific settings while preserving others.
+*   **Fix 2:** If logs show `KC_HTTP_CONTENT_SECURITY_POLICY` parsing errors, ensure the entire string is wrapped in single quotes within your shell command to protect the internal semicolons.
+*   **Symptom 2:** Logs show `ERROR: Strict hostname resolution configured but no hostname setting provided`.
+*   **Cause:** The `KC_HOSTNAME_STRICT=false` variable was missing from the update command or the environment.
+*   **Fix:** Always include `KC_HOSTNAME_STRICT=false` when updating environment variables manually via CLI to prevent Keycloak from reverting to strict production defaults.
+*   **Symptom 3:** `java.sql.SQLException: Acquisition timeout while waiting for new connection`.
+*   **Cause:** Common during "Cold Starts" or resource-heavy re-deployments.
+*   **Fix:** If this persists, increase the `KC_DB_POOL_MAX_SIZE` (default is 100) or check the VPC Connector status.
+*   **Symptom 4:** `ERROR: Connection to localhost:5432 refused`.
+*   **Cause:** The database connection variables (`KC_DB_URL`, etc.) were wiped during a manual `gcloud run services update` using the `--set-env-vars` flag.
+*   **Fix:** Restore the connection variables using `--update-env-vars`. **Verified Solution:** Use the direct Private IP of the Cloud SQL instance: `jdbc:postgresql://<PRIVATE_IP>:5432/keycloak`.
+
+### Scenario H: CSP / Iframe Timeout in Cloud Shell
+*   **Symptom:** Console shows `Framing violates CSP directive: "frame-src 'self'"` or `Timeout when waiting for 3rd party check iframe`.
+*   **Cause:** Keycloak's default security headers prevent it from being loaded within the Cloud Shell Web Preview proxy.
+*   **Fix:** Add the following environment variable to the Cloud Run service to allow the Cloud Shell domain:
+    ```bash
+    KC_HTTP_CONTENT_SECURITY_POLICY="frame-src 'self' https://*.devshell.appspot.com; frame-ancestors 'self' https://*.devshell.appspot.com;"
+    ```
+*   **Security Warning:** This should only be applied to DEV environments. For PROD, the `frame-ancestors` should be strictly limited to the actual Bank Portal domains.
+
+    2. **To access via Proxy (Recommended for local dev):**
+       ```bash
+       gcloud run services proxy keycloak-service --region us-south1
+       ```
+       Then navigate to `http://localhost:8080`.
+    3. **Transition to OIDC (Public Access):** When the `retail-app` needs to redirect users for login, the service will eventually require public access, but this should be gated by Cloud Armor in a production-ready environment.

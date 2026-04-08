@@ -21,6 +21,7 @@ This architecture describes a secure, cloud-native banking platform designed for
 ## 3. Infrastructure & Operations
 *   **Cloud Provider:** Google Cloud Platform (GCP).
 *   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
+*   **Declarative Operations:** All application-level configurations (e.g., Identity Clients, Auth Policies) must be declared in code. Manual configuration is an anti-pattern that violates the reproducibility requirement.
     *   **Configuration:** Use `variables.tf` for declarations.
     *   **Environments:** State must be managed via environment-specific variable files: `dev.tfvars`, `test.tfvars`, and `prod.tfvars`.
 *   **Cost Optimization:** Select budget-friendly GCP services (e.g., Cloud Run) where possible, provided security is not compromised. 

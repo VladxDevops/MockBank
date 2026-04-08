@@ -14,6 +14,61 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+    *   `Removed` for now removed features.
+    *   `Fixed` for any bug fixes.
+    *   `Security` in case of vulnerabilities.
+
+
+
+
+## [1.7.9] - 2024-05-24
+### Added
+- **Policy Enforcement**: Mandated **Declarative Configuration** for all service updates. Manual "Click-Ops" or direct container shell modifications are now strictly prohibited to prevent configuration drift and lost engineering hours.
+
+## [1.7.8] - 2024-05-24
+### Added
+- **OIDC Configuration**: Transitioned `retail-app` client from manual UI setup to declarative configuration in `realm-export.json`.
+- **Security**: Enforced **PKCE (S256)** and defined valid Redirect URIs and Web Origins for development within the JSON specification.
+
+## [1.7.7] - 2024-05-24
+### Fixed
+- **Cloud Run Deployment**: Successfully restored Keycloak service by applying the actual Private IP to `KC_DB_URL` and configuring `KC_HTTP_CONTENT_SECURITY_POLICY` for Cloud Shell compatibility.
+- **Connectivity**: Verified end-to-end connectivity between Cloud Run and Cloud SQL via the Serverless VPC Access Connector.
+
+## [1.7.5] - 2024-05-24
+### Fixed
+- **Database Connectivity**: Resolved "Connection to localhost:5432 refused" error caused by inadvertent clearing of environment variables during manual CLI updates.
+- **Configuration Management**: Documented Scenario J in `TROUBLESHOOTING.md` regarding the risks of using `--set-env-vars` on production-grade Cloud Run services.
+
+## [1.7.4] - 2024-05-24
+### Fixed
+- **CLI Syntax**: Corrected `gcloud run` command syntax in troubleshooting docs where `--update-env-vars` and `--set-env-vars` were incorrectly combined.
+
+## [1.7.3] - 2024-05-24
+### Fixed
+- **Troubleshooting**: Documented the "Admin UI Loading" hang specific to Cloud Shell Web Preview and provided verification steps.
+- **Diagnostics**: Added instructions for extracting browser console logs and Network HAR/cURL data to `TROUBLESHOOTING.md`.
+
+## [1.7.2] - 2024-05-24
+### Fixed
+- **Access Strategy**: Resolved Port 8080 conflict in GCP Cloud Shell by utilizing the `--port` flag with `gcloud run services proxy`.
+- **Security**: Maintained "Private Service" posture by avoiding public `allUsers` IAM bindings during the OIDC configuration phase.
+
+## [1.7.1] - 2024-05-24
+### Security
+- **Verification**: Confirmed `403 Forbidden` response for direct unauthenticated browser access to Keycloak Cloud Run. This validates the "Private Service" posture and ensures IAM policies are enforcing the Zero Trust requirement.
+
+## [1.7.0] - 2024-05-24
+### Added
+- **OIDC Integration**: Defined the technical specification for the `retail-app` client in the `AltmtrkBank` realm.
+- **Security**: Mandated **PKCE (S256)** for the public client to mitigate code interception attacks.
+- **Documentation**: Updated `PROJECT1_DETAILS.md` and `CHECKLIST.md` with OIDC implementation specifics.
+
+## [1.6.7] - 2024-05-23
+### Changed
+- **Documentation**: Refined the Project 1 Development Plan and Checklist to break down OIDC and SAML integration into actionable sub-tasks.
+- **Architecture**: Fixed redundant IAM section in `BNKprojects/1/ARCHITECTURE.md`.
+
 ## [1.6.6] - 2024-05-23
 ### Added
 - **Verification**: Commenced post-deployment testing phase for Keycloak on Cloud Run using authenticated requests.
@@ -312,6 +367,11 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Added
 - **Project 2 Transaction Service**:
     - Implemented Node.js microservice for money transfers.
+    - Deployed to Google Cloud Run (Region: `us-south1`).
+    - Integrated with MongoDB Atlas for Audit Logging.
+    - Implemented Step-Up Authentication logic for transactions >= $10,000.
+    - Verified end-to-end flow with `curl` and MongoDB Compass.
+    - Validated diagnostic queries for MFA timeouts.nsfers.
     - Deployed to Google Cloud Run (Region: `us-south1`).
     - Integrated with MongoDB Atlas for Audit Logging.
     - Implemented Step-Up Authentication logic for transactions >= $10,000.

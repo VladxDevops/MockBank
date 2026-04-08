@@ -26,10 +26,10 @@ terraform apply -target=module.project1
 
 ### 2. Accessing Keycloak
 Once deployed, Terraform will output the `keycloak_url`.
-1.  Navigate to the URL.
-2.  Log in to the **Administration Console**.
-3.  **Username:** `admin`
-4.  **Password:** Retrieve from Secret Manager (`keycloak-admin-password`).
+1.  **Get URL:** `gcloud run services describe keycloak-service --region us-south1 --format 'value(status.url)'`
+2.  **Get Password:** `gcloud secrets versions access latest --secret="keycloak-admin-password"`
+3.  **Login:** Navigate to the URL, click **Administration Console**, and use `admin` with the retrieved password.
+4.  **Switch Realm:** Select **AltmtrkBank** from the dropdown menu in the top-left corner.
 
 ### 3. Configuration
 Refer to `PROJECT1_DETAILS.md` for instructions on configuring the `AltmtrkBank` realm and clients.

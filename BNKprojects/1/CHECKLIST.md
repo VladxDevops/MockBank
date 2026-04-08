@@ -14,32 +14,43 @@
 - [x] **Performance:** "Startup CPU Boost" enabled in Cloud Run.
 - [x] **Probes:** `startup_probe` configured with 60s initial delay and 20 failure threshold.
 
-## 3. Protocol & Realm Configuration - IN PROGRESS
+## 3. Protocol & Realm Configuration - ACTIVE
 - [x] **Realm Creation:** `AltmtrkBank` realm initialized (verified in `CHANGELOG [1.5.6]`).
-- [ ] **OIDC Configuration (Retail App):** 
-    - [ ] Finalize `retail-app` client settings.
-    - [ ] Enable Authorization Code Flow with PKCE.
-    - [ ] Set Access Token lifespan < 15 mins.
-- [ ] **SAML 2.0 Configuration (Teller Portal):**
-    - [ ] Finalize `teller-portal` client settings.
-    - [ ] Ensure signed and encrypted assertions.
+- [>] **OIDC Integration (Retail App):** 
+    - [x] Create `retail-app` as a Public Client via `realm-export.json`.
+    - [x] Enable **PKCE** (S256) and configure Valid Redirect URIs via JSON.
+    - [>] Implement login redirect in Node.js/Python using `openid-client`. (In Progress)
+    - [ ] Capture and decode the JWT Access Token.
+- [ ] **SAML 2.0 Integration (Teller Portal):**
+    - [ ] Create `teller-portal` client with SAML protocol.
+    - [ ] Map Entity ID and ACS URL (Assertion Consumer Service).
+    - [ ] Enable Signed Assertions and Encrypted Assertions.
+    - [ ] Capture the XML SAML Response and verify signature.
 - [ ] **MFA Enforcement:** Mandatory TOTP for all users in `AltmtrkBank`.
 
 ## 4. Security & Verification - PARTIALLY COMPLETED
-- [x] **Proxy Settings:** `KC_PROXY=edge` configured for TLS termination.
-- [x] **Hostname Strictness:** `KC_HOSTNAME_STRICT=false` set for dynamic Cloud Run URLs.
+- [x] **Proxy Settings:** `KC_PROXY=edge` and CSP headers configured for Cloud Shell access.
+- [x] **Hostname Strictness:** `KC_HOSTNAME_STRICT=false` verified and active.
 - [x] **Health Verification:** `/health/live` returns `200 OK` (verified in `CHANGELOG [1.6.6]`).
+- [x] **DB Connectivity:** Verified Cloud SQL access via Private IP and VPC Connector.
 - [ ] **Admin Hardening:** Enable MFA on the Keycloak admin account.
 - [ ] **Audit Logging:** Verify no PII is exposed in Cloud Logging.
 
 ## 5. Development Plan Status
 Based on `PROJECT1_DETAILS.md`, the following steps track the final integration:
 
-1. [x] Write Terraform for GCP Cloud Run + SQL.
-2. [x] Deploy Keycloak.
-3. [ ] **Create "Retail App" and capture the OIDC Token.**
-4. [ ] **Create "Teller App" and capture the SAML Assertion.**
+1. [x] **Phase 1:** Write Terraform for GCP Cloud Run + SQL.
+2. [x] **Phase 2:** Deploy Keycloak and verify health.
+3. [ ] **Phase 3: OIDC Integration**
+    - [ ] Configure `retail-app` client.
+    - [ ] Build simple web app to capture OIDC token.
+4. [ ] **Phase 4: SAML Integration**
+    - [ ] Configure `teller-portal` client.
+    - [ ] Build simple web app to capture SAML assertion.
 
 ---
-**Note:** This checklist is maintained by AI and Human review. Last updated based on Changelog v1.6.6.
+**Note:** This checklist is maintained by AI and Human review. Last updated based on Changelog v1.6.7.
+**Classification: INTERNAL**
+---
+**Note:** This checklist is maintained by AI and Human review. Last updated based on Changelog v1.6.7.
 **Classification: INTERNAL**

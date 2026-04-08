@@ -55,7 +55,10 @@ The local setup uses a dedicated Postgres container defined in the compose file.
 
 ### Port Conflicts
 *   **Error:** `Bind for 0.0.0.0:8080 failed: port is already allocated`.
-*   **Fix:** Stop other services using port 8080 or modify `docker-compose.yaml` ports mapping (e.g., `"8081:8080"`).
+*   **Fix (Local):** Stop other services using port 8080 or modify `docker-compose.yaml` ports mapping (e.g., `"8081:8080"`).
+*   **Fix (Cloud Shell):** Cloud Shell reserves 8080. Always use the command 
+    gcloud run services proxy keycloak-service --region us-south1 --port 8888
+ when running `gcloud run services proxy`.
 
 ### Docker Permission Denied
 *   **Error:** `permission denied while trying to connect to the Docker daemon socket`.

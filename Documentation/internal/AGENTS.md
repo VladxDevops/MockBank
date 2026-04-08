@@ -51,4 +51,9 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 *   **Path Absolute Accuracy:** All file references and diffs must use absolute paths to ensure context continuity across multi-directory projects.
 *   **Context Verification:** Before proposing a fix for a "crashed" service, Agents must request the last 50 lines of logs to avoid guessing the failure mode (e.g., distinguishing between OOM and Connection Refused).
 
+### 5. Declarative Configuration Directive
+*   **Source of Truth:** All infrastructure and application state (Clients, Realms, Policies) must reside in version-controlled files (HCL, JSON, YAML).
+*   **Prohibition of Manual State:** Agents must never suggest manual configuration via Admin UIs or `docker exec` sessions as a permanent solution.
+*   **Reproducibility:** If a change cannot be captured in a declarative manifest, it must be documented as a critical architectural debt.
+
 Please keep the changelog.md up to date.

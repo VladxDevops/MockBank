@@ -41,5 +41,17 @@ Deploy a centralized Identity Provider (Keycloak) on GCP using Terraform and int
 ## 6. Development Plan
 1.  Write Terraform for GCP Cloud Run + SQL.
 2.  Deploy Keycloak.
-3.  Create "Retail App" and capture the OIDC Token.
-4.  Create "Teller App" and capture the SAML Assertion.
+3.  **Phase 3: Retail App (OIDC Integration):**
+    *   **Client Configuration:**
+        *   Client ID: `retail-app`
+        *   Access Type: `Public`
+        *   Flow: Authorization Code Flow
+        *   PKCE: Enforced (`S256`)
+        *   Redirect URI: `http://localhost:3000/callback`
+    *   **Implementation:** 
+        *   Use `openid-client` (Node) or `Authlib` (Python).
+        *   Ensure `code_challenge` is sent in the `/auth` request.
+        *   Validate the `nonce` and `state` parameters to prevent CSRF/Replay.
+4.  **Create "Teller App" (SAML Integration):**
+    *   Setup `teller-portal` client in Keycloak with SAML 2.0.
+    *   Capture and verify the signed XML assertion.
