@@ -2,6 +2,14 @@
 
 **CLASSIFICATION: INTERNAL**
 
+## [AAAK_CONTEXT]
+*   **PROJECT_ID:** 2 (Transaction Journey)
+*   **STATE:** Active / Deployment Complete
+*   **CORE_LOGIC:** Amount-based Step-Up Auth (Threshold: $10,000)
+*   **STRICT_DEPS:** Keycloak OIDC (Proj 1), MongoDB Atlas (Audit)
+*   **SECURITY_POSTURE:** Fail-Closed, No PII in Logs, Mandatory MFA.
+*   **DOC_ANCHOR:** `Documentation/internal/KNOWLEDGE_MAP.md`
+
 ## 1. Objective
 Build a "Money Transfer" microservice that simulates a Banking Identity Journey. The goal is to master **Orchestration Logic** and **MongoDB Diagnostics** to satisfy the "FlexID/Mosaic" requirements of the Job Description.
 

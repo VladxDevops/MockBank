@@ -18,6 +18,7 @@ graph TD
 *   Runs as a stateless container on Cloud Run.
 *   **Startup:** Uses `args = ["start", "--optimized"]` to trigger the production runtime.
 *   **Connectivity:** Connects to Cloud SQL via Cloud SQL Auth Proxy (Unix Socket) to ensure zero-trust connectivity.
+*   **Optimization:** JDBC pool size is capped (`KC_DB_POOL_MAX_SIZE=20`) to stay within the limits of the `db-f1-micro` database tier.
 *   **Observability:** Built-in health checks are enabled via `KC_HEALTH_ENABLED=true`. Cloud Run uses the `/health/live` endpoint for startup probes.
 *   **Secrets:** Sensitive variables (DB Password, Admin Password) are mapped directly from Secret Manager into environment variables at the container level.
 *   Configured with `KC_PROXY=edge` to handle TLS termination at the load balancer.

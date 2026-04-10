@@ -29,10 +29,15 @@ Once deployed, Terraform will output the `keycloak_url`.
 1.  **Get URL:** `gcloud run services describe keycloak-service --region us-south1 --format 'value(status.url)'`
 2.  **Get Password:** `gcloud secrets versions access latest --secret="keycloak-admin-password"`
 3.  **Login:** Navigate to the URL, click **Administration Console**, and use `admin` with the retrieved password.
-4.  **Switch Realm:** Select **AltmtrkBank** from the dropdown menu in the top-left corner.
+4.  **Switch Realm:** Select **Mockbankrealm** from the dropdown menu in the top-left corner.
 
 ### 3. Configuration
-Refer to `PROJECT1_DETAILS.md` for instructions on configuring the `AltmtrkBank` realm and clients.
+Refer to `PROJECT1_DETAILS.md` for instructions on configuring the `Mockbankrealm` realm and clients.
+
+## Verification & Testing
+An automated verification script `test-keycloak.sh` is available in this directory. 
+**Status:** Initial execution is currently pending. 
+Use this script to validate realm configuration, client policies (PKCE/S256), and container health.
 
 ## Directory Structure
 *   `container/`: Dockerfile for the custom Keycloak image.

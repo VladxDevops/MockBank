@@ -15,7 +15,7 @@
 - [x] **Probes:** `startup_probe` configured with 60s initial delay and 20 failure threshold.
 
 ## 3. Protocol & Realm Configuration - ACTIVE
-- [x] **Realm Creation:** `AltmtrkBank` realm initialized (verified in `CHANGELOG [1.5.6]`).
+- [x] **Realm Creation:** `Mockbankrealm` realm initialized (verified in `CHANGELOG [1.5.6]`).
 - [>] **OIDC Integration (Retail App):** 
     - [x] Create `retail-app` as a Public Client via `realm-export.json`.
     - [x] Enable **PKCE** (S256) and configure Valid Redirect URIs via JSON.
@@ -26,13 +26,14 @@
     - [ ] Map Entity ID and ACS URL (Assertion Consumer Service).
     - [ ] Enable Signed Assertions and Encrypted Assertions.
     - [ ] Capture the XML SAML Response and verify signature.
-- [ ] **MFA Enforcement:** Mandatory TOTP for all users in `AltmtrkBank`.
+- [ ] **MFA Enforcement:** Mandatory TOTP for all users in Mockbankrealm.
 
 ## 4. Security & Verification - PARTIALLY COMPLETED
 - [x] **Proxy Settings:** `KC_PROXY=edge` and CSP headers configured for Cloud Shell access.
 - [x] **Hostname Strictness:** `KC_HOSTNAME_STRICT=false` verified and active.
 - [x] **Health Verification:** `/health/live` returns `200 OK` (verified in `CHANGELOG [1.6.6]`).
 - [x] **DB Connectivity:** Verified Cloud SQL access via Private IP and VPC Connector.
+- [x] **Automated Verification:** Execute `test-keycloak.sh` for deployment validation (Verified via Report [2024-05-24]).
 - [ ] **Admin Hardening:** Enable MFA on the Keycloak admin account.
 - [ ] **Audit Logging:** Verify no PII is exposed in Cloud Logging.
 

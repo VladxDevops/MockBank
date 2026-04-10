@@ -20,6 +20,57 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 
 
+    *   `Security` in case of vulnerabilities.
+
+## [1.8.10] - 2024-05-24
+### Fixed
+- **Tooling**: Updated `TROUBLESHOOTING_SCRIPTS.md` to document variable enforcement errors in `test-keycloak.sh`.
+- **AI Operations**: Refined `GEMINI-TEST-PROTOCOL.md` to handle missing environment configuration signatures.
+
+## [1.8.9] - 2024-05-24
+### Changed
+- **Security**: Removed all hardcoded default values from `test-keycloak.sh`.
+- **Tooling**: Mandated the presence of `test-env.sh` for script execution; implemented strict variable validation and removed the "admin" password fallback.
+
+## [1.8.8] - 2024-05-24
+### Changed
+- **Tooling**: Refactored `test-keycloak.sh` to remove hardcoded secret names and resource IDs.
+- **Configuration**: Introduced `test-env.sh` to manage environment-specific variables for automated testing.
+
+## [1.8.7] - 2024-05-24
+### Added
+- **Tooling**: Added `run_comprehensive_validation` to `test-keycloak.sh` to allow simultaneous execution of both Internal (Method 1) and External (Method 2) test suites.
+- **Documentation**: Updated `README-TESTING.md` and `GEMINI-TEST-PROTOCOL.md` to reflect the new `all` testing argument.
+
+## [1.8.6] - 2024-05-24
+### Fixed
+- **Security**: Corrected Secret Manager reference from `keycloak-admin-password` to `keycloak-administrator-password` in the test script.
+- **Performance**: Optimized JDBC connection pool (`KC_DB_POOL_MAX_SIZE=20`) to prevent "Acquisition timeout" on `db-f1-micro` SQL instances.
+### Added
+- **Tooling**: Enhanced `test-keycloak.sh` with pre-flight infrastructure checks and exponential backoff for admin token retrieval.
+
+## [1.8.5] - 2024-05-24
+### Changed
+- **AI Operations**: Updated `BNKprojects/1/GEMINI-TEST-PROTOCOL.md` with strict cost-control instructions to prevent resource upscaling.
+- **Cost Management**: Prohibited AI-driven suggestions for increasing CPU/Memory or enabling always-on features without human approval.
+
+## [1.8.4] - 2024-05-24
+### Changed
+- **AI Operations**: Updated `BNKprojects/1/GEMINI-TEST-PROTOCOL.md` to restrict troubleshooting scope to `test-keycloak.sh` output.
+- **Security**: Explicitly prohibited Gemini from modifying Terraform files to maintain strict human-in-the-loop control over infrastructure.
+
+## [1.8.3] - 2024-05-24
+### Added
+- **AI Operations**: Created `BNKprojects/1/GEMINI-TEST-PROTOCOL.md` to define autonomous troubleshooting logic for the Identity Service.
+- **Security**: Embedded architectural constraints (VPC, Private IP, PKCE) into the AI testing workflow to prevent insecure "Click-Ops" suggestions.
+
+## [1.8.2] - 2024-05-24
+### Added
+- **Documentation**: Created `README-TESTING.md` for Project 1 verification instructions.
+- **Documentation**: Created `Documentation/internal/TESTING-KEYCLOAK-INTERNAL.md` to define security protocols for automated testing.
+
+## [1.8.2] - 2024-05-24
+### Changed
 
 ## [1.7.9] - 2024-05-24
 ### Added

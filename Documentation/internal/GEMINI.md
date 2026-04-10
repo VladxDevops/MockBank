@@ -10,6 +10,11 @@ Gemini Code Assist is utilized to accelerate development, refactor code, and gen
 
 *   **Prohibited Data:** Never paste real customer data, production secrets, private keys, or unmasked PII into the chat context.
 *   **Sanitization:** All code snippets shared with the AI must use dummy data (e.g., "John Doe", "Bank of Example").
+*   **Persistent Memory (MemPalace/LTM):** If using agents with long-term memory capabilities:
+    *   **Memory Palace Standard:** We use a documentation-based LTM approach via `KNOWLEDGE_MAP.md`. 
+    *   **Notation:** Use AAAK (As Always, All Knowledge) headers and TOON (Token Oriented Object Notation) for relationship definitions to maximize token efficiency.
+    *   No PII or production secrets may be "memorized."
+    *   Context files must be updated immediately in `CHANGELOG.md` when architectural bounds shift.
 
 ## 3. Code Generation Standards
 *   **Review Required:** All AI-generated code is treated as "untrusted" until reviewed by a human engineer.

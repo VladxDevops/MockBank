@@ -29,7 +29,7 @@ Deploy a centralized Identity Provider (Keycloak) on GCP using Terraform and int
     *   Deploy Cloud SQL Instance.
     *   Configure VPC Connector (Serverless to SQL).
 2.  **Keycloak Configuration:**
-    *   Realm: `AltmtrkBank`.
+    *   Realm: `Mockbankrealm`.
     *   Clients: `retail-app` (OIDC), `teller-portal` (SAML).
 
 ## 5. Interview Prep: Protocol Deep Dive

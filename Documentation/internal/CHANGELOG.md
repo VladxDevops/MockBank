@@ -88,6 +88,21 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Project 1 Container**:
     - Hardened Keycloak container for Cloud Run deployment.
     - Added `KC_PROXY=edge` to handle TLS termination securely.
+### Added
+- **Documentation**: Created `GLOSSARY_TOON_AAAK.md` to provide human-readable definitions for AI-optimized notations used in the Long-Term Memory (LTM) strategy.
+
+## [1.8.1] - 2024-05-24
+### Added
+- **Tooling**: Created `test-keycloak.sh` in `BNKprojects/1/` to automate deployment verification for both GCloud Proxy and Direct IAM-Authenticated flows.
+
+## [1.8.2] - 2024-05-24
+### Changed
+- **Tooling**: Enhanced `test-keycloak.sh` with automated `gcloud logging` retrieval on health check or validation failure to streamline troubleshooting.
+### Added
+- **Operations**: Formalized the "Script-First" testing SOP. Mandated that all current and future projects (including Project 3) include automated test scripts and secondary troubleshooting documentation for those scripts.
+- **Documentation**: Created `BNKprojects/1/TROUBLESHOOTING_SCRIPTS.md`.
+### Pending
+- **Verification**: First execution of `test-keycloak.sh` to validate the Identity Service deployment.
 ### Documentation
 - **Traffic Analysis**:
     - Updated `Documentation/internal/Architecture.md` to define Global Ingress and VPC Egress standards.

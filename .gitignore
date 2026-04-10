@@ -15,6 +15,11 @@ yarn-error.log*
 ! .env.example
 start_local.sh
 
+# Keycloak test environment variables
+Bank/BNKprojects/1/test-env.sh
+
+
+
 # --- Terraform ---
 # Exclude state and sensitive variable files
 .terraform/
@@ -46,8 +51,16 @@ logs/
 *.log
 data/db/
 
+
 #.md files: 
 internalREADME.md
+
+
+# AI Agent Long-Term Memory (LTM) Files
+Documentation/internal/KNOWLEDGE_MAP.md
+Documentation/internal/GLOSSARY_TOON_AAAK.md
+Bank/BNKprojects/1/GEMINI-TEST-PROTOCOL.md
+
 
 # yaml files: 
 cloudbuild.yaml
