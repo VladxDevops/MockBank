@@ -22,6 +22,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
     *   `Security` in case of vulnerabilities.
 
+## [1.8.11] - 2024-05-24
+### Added
+- **Tooling**: Created `test-env.sh.example` as a template for developers.
+### Changed
+- **Documentation**: Synchronized `README-TESTING.md` with the new environment file requirements.
+- **Documentation**: Cleaned up duplicate headers and empty categories in `CHANGELOG.md`.
+
 ## [1.8.10] - 2024-05-24
 ### Fixed
 - **Tooling**: Updated `TROUBLESHOOTING_SCRIPTS.md` to document variable enforcement errors in `test-keycloak.sh`.
@@ -68,9 +75,6 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Added
 - **Documentation**: Created `README-TESTING.md` for Project 1 verification instructions.
 - **Documentation**: Created `Documentation/internal/TESTING-KEYCLOAK-INTERNAL.md` to define security protocols for automated testing.
-
-## [1.8.2] - 2024-05-24
-### Changed
 
 ## [1.7.9] - 2024-05-24
 ### Added

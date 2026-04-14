@@ -15,11 +15,16 @@ Before running the script, ensure your local environment is configured:
     ```bash
     cd "BNKprojects/1"
     ```
-2.  **Make the script executable:**
+2.  **Configure Environment:**
+    Copy the example environment file and fill in your specific resource IDs:
+    ```bash
+    cp test-env.sh.example test-env.sh
+    ```
+3.  **Make the script executable:**
     ```bash
     chmod +x test-keycloak.sh
     ```
-3.  **Run the script:**
+4.  **Run the script:**
     ```bash
     ./test-keycloak.sh
     ```
