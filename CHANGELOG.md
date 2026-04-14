@@ -22,6 +22,14 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
     *   `Security` in case of vulnerabilities.
 
+## [2.0.0] - 2024-05-24
+### Changed
+- **Focus Shift**: Transitioned from Service implementation to Global CI/CD and Release Safety (Project 3).
+### Added
+- **Decisions**: Formally deferred `test-transactions.sh` automation in favor of establishing the primary deployment pipeline.
+- **Documentation**: Created `Documentation/internal/MONITORING.md` to define the cross-project observability and alerting strategy.
+- **Strategy**: Initiated the "Release Safety" framework to enforce SAST and automated deployment gates for all Cloud Run services.
+
 ## [1.8.11] - 2024-05-24
 ### Added
 - **Tooling**: Created `test-env.sh.example` as a template for developers.

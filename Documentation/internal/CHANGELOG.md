@@ -91,6 +91,19 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Added
 - **Documentation**: Created `GLOSSARY_TOON_AAAK.md` to provide human-readable definitions for AI-optimized notations used in the Long-Term Memory (LTM) strategy.
 
+
+## [1.9.0] - 2024-05-24
+### Fixed
+- **Verification**: Confirmed Project 2 (Transaction Service) manual verification is successful. Orchestration logic, Step-Up Auth (>= $10,000), and MongoDB Audit logging are functional.
+### Added
+- **Project 3 Kickoff**: Transitioned focus to CI/CD & Release Safety simulation.
+### Decisions
+- **Testing**: Deferred the automation of `test-transactions.sh` to prioritize the global CI/CD pipeline and release safety gates.
+
+## [1.8.11] - 2024-05-24
+### Added
+
+
 ## [1.8.1] - 2024-05-24
 ### Added
 - **Tooling**: Created `test-keycloak.sh` in `BNKprojects/1/` to automate deployment verification for both GCloud Proxy and Direct IAM-Authenticated flows.
