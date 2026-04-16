@@ -222,6 +222,15 @@ resource "google_cloud_run_service" "keycloak" {
           name  = "KC_DB_POOL_MAX_SIZE"
           value = "20" #Currently set to 20 due to Cloud SQL Machine Type limitations.
         }
+        env {
+          name = "SESSION_SECRET"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.retail_app_session_secret.secret_id
+              key  = "latest"
+            }
+          }
+        }
 
         resources {
           limits = {
@@ -253,6 +262,7 @@ resource "google_cloud_run_service" "keycloak" {
     google_service_account.keycloak_sa, 
     google_secret_manager_secret_version.keycloak_db_password_val,
     google_secret_manager_secret_version.keycloak_admin_password_val,
+    google_secret_manager_secret_version.retail_app_session_secret_version,
     google_artifact_registry_repository.project1_repo,
     google_sql_database.keycloak_schema,
     google_sql_user.keycloak_user
