@@ -10,6 +10,8 @@ module "project1" {
   project1_repository = var.project1_repository
   keycloak_admin_password_secret_id = var.keycloak_admin_password_secret_id
   keycloak_database_password_secret_id = var.keycloak_database_password_secret_id
+  project1_service_name = var.project1_service_name
+
 
   # Pass network details to the module
   vpc_network_id   = google_compute_network.vpc.id

@@ -3,7 +3,7 @@
 Please: 
 Read the internal .md files they are a guidlines for multiple aspect like architechture, instructions, how tos, security, etc. 
 Search if a file already exits before creating a new file to keep the directories organized. 
-Document all changes in the changelo.md. Keep internal and internal documentation up to date. 
+Document all changes in the CHANGELOG.md. Keep internal documentation up to date. 
 
 
 **CLASSIFICATION: INTERNAL USE ONLY**

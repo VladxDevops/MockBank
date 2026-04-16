@@ -46,3 +46,7 @@ variable "keycloak_database_password_secret_id" {
   type        = string
 }
 
+variable "project1_service_name" {
+  description = "The name of the service for Project 1, used to derive resource IDs (e.g., retail-app)."
+  type        = string
+}

@@ -139,6 +139,15 @@ resource "google_project_iam_member" "keycloak_sa_user" {
   member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
+# IAM binding to allow the Keycloak/Retail-App service account to access the secret.
+# Following AGENTS.md protocol using var.keycloak_serv_acc_account_id.
+resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
+  secret_id = "projects/${var.compute_project_id}/secrets/${var.project1_service_name}-session-secret"
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+  depends_on = [ google_secret_manager_secret.retail_app_session_secret ]
+}
+
 # ------------------------------------------------------------------------------
 # 3. Cloud Run Service (Keycloak)
 # ------------------------------------------------------------------------------

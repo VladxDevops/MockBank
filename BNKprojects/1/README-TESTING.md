@@ -67,5 +67,17 @@ If a check fails:
     *   **403 Forbidden:** Verify you have been granted the `roles/run.invoker` role for the `keycloak-service`.
 
 ---
-**Classification: PUBLIC (Developer Reference)**
+### Method 4: Application OIDC Verification
+*   **What it does:** Validates the end-to-end authentication cycle between the `retail-app` and Keycloak.
+*   **Steps:**
+    1.  Ensure environment variables (`KEYCLOAK_ISSUER_URL`, `SESSION_SECRET`) are set.
+    2.  Start the application: `python src/app.py`.
+    3.  Navigate to `http://localhost:3000/login`.
+    4.  Verify OIDC handshake and token capture via application terminal logs.
+*   **Validates:** 
+    *   PKCE (S256) handshake.
+    *   JWT Access Token capture.
+    *   Claim extraction (username/roles).
+
 ---
+**Classification: PUBLIC (Developer Reference)**

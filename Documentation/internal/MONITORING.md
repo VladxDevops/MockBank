@@ -9,6 +9,15 @@ Monitoring follows the **Security First** directive. We prioritize detecting sec
 *   **Privacy:** Log sinks must utilize Cloud Logging exclusions or masking to ensure no PII or session tokens are ingested.
 *   **Fail-Closed:** Alerts are configured to trigger if security gates (MFA) are bypassed or failing.
 
+## 1.1 Masking Specification
+To ensure consistency across services, the following masking standards apply:
+
+| Data Type | Masking Format | Example |
+| :--- | :--- | :--- |
+| **Email** | Partial obfuscation | `j***n@example.com` |
+| **Account Number** | Last 4 digits visible | `********1234` |
+| **Tokens/Secrets** | Full replacement | `[REDACTED]` |
+
 ## 2. Project 1: Identity Service (Keycloak)
 **Focus:** Authentication Availability & Resource Saturation.
 

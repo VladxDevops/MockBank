@@ -5,7 +5,7 @@
 - [x] **VPC Integration:** Serverless VPC Access Connector deployed with `egress = "all-traffic"`.
 - [x] **Networking:** Cloud NAT gateway active for external OIDC provider reachability.
 - [x] **IAM Least Privilege:** `keycloak-sa` created with `cloudsql.client`, `secretmanager.secretAccessor`, and `artifactregistry.reader`.
-- [x] **Secret Management:** DB and Admin passwords mapped from Secret Manager to Cloud Run environment variables.
+- [x] **Secret Management:** DB and Admin passwords mapped; `SESSION_SECRET` declared via standardized module.
 
 ## 2. Containerization & Optimization - COMPLETED
 - [x] **Dockerfile Hardening:** Image runs as non-root (`USER keycloak`).
@@ -16,11 +16,11 @@
 
 ## 3. Protocol & Realm Configuration - ACTIVE
 - [x] **Realm Creation:** `Mockbankrealm` realm initialized (verified in `CHANGELOG [1.5.6]`).
-- [>] **OIDC Integration (Retail App):** 
     - [x] Create `retail-app` as a Public Client via `realm-export.json`.
     - [x] Enable **PKCE** (S256) and configure Valid Redirect URIs via JSON.
-    - [>] Implement login redirect in Node.js/Python using `openid-client`. (In Progress)
-    - [ ] Capture and decode the JWT Access Token.
+    - [x] Define implementation logic for Node.js (`openid-client`) and Python (`Authlib`).
+    - [>] Integrate redirect logic into application service layer. (In Progress)
+    - [ ] Capture and decode the JWT Access Token for session management.
 - [ ] **SAML 2.0 Integration (Teller Portal):**
     - [ ] Create `teller-portal` client with SAML protocol.
     - [ ] Map Entity ID and ACS URL (Assertion Consumer Service).
