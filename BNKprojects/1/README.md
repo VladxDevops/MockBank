@@ -11,8 +11,13 @@ This project demonstrates:
 ## Architecture
 *   **Compute:** Google Cloud Run (Serverless Container).
 *   **Database:** Google Cloud SQL (PostgreSQL 15).
+*   **Connectivity:** **Zero-Trust** via Cloud SQL Python Connector (IAM-based auth).
 *   **Secrets:** GCP Secret Manager (DB Credentials, Admin Passwords).
 *   **Connectivity:** Serverless VPC Access Connector (Private connection to DB).
+
+## Tech Stack
+*   **Language:** Python 3.10+
+*   **Libraries:** Authlib (OIDC), python3-saml (SAML), Flask.
 
 ## Getting Started
 
@@ -33,6 +38,35 @@ Once deployed, Terraform will output the `keycloak_url`.
 
 ### 3. Configuration
 Refer to `PROJECT1_DETAILS.md` for instructions on configuring the `Mockbankrealm` realm and clients.
+
+### 4. Dependency Management
+This project uses `pip-tools` for deterministic builds.
+1.  **Declare:** Edit `requirements.in` to add/remove top-level libraries.
+2.  **Compile:** Generate the pinned `requirements.txt` (the lockfile):
+    ```bash
+    pip-compile requirements.in --output-file=requirements.txt
+    ```
+3.  **Install:** Sync your local environment to the lockfile:
+    ```bash
+    pip-sync requirements.txt
+    ```
+
+## Verification & Testing
+An automated verification script `test-keycloak.sh` is available in this directory. 
+**Status:** Initial execution is currently pending. 
+Use this script to validate realm configuration, client policies (PKCE/S256), and container health.
+
+## Directory Structure
+*   `container/`: Dockerfile for the custom Keycloak image.
+*   `AGENTS.md`: Bot protocols for this project.
+*   `INFRASTRUCTURE.md`: List of cloud resources.
+*   `SECURITY.md`: Security controls specific to Identity.
+*   `TROUBLESHOOTING.md`: Solutions for common Cloud Run and IAM deployment errors.
+
+## References
+*   Internal Architecture
+*   Project Detailsements.txt
+    ```
 
 ## Verification & Testing
 An automated verification script `test-keycloak.sh` is available in this directory. 

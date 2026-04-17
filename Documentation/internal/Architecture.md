@@ -16,7 +16,7 @@ This architecture describes a secure, cloud-native banking platform designed for
 
 ### Application Layer
 *   **API Gateway:** Entry point for all client traffic. Enforces rate limiting, TLS termination, and initial JWT validation.
-*   **Microservices:** Containerized services (Node.js/Python) running on GCP.
+*   **Microservices:** Containerized services (Python) running on GCP.
 
 ## 3. Infrastructure & Operations
 *   **Cloud Provider:** Google Cloud Platform (GCP).

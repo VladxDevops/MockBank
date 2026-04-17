@@ -22,6 +22,62 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
     *   `Security` in case of vulnerabilities.
 
+## [2.1.12] - 2024-05-24
+### Changed
+- **Documentation**: Updated `README.md` files to explicitly show the `pip-sync` and `pip-compile` workflow for dependency management.
+
+## [2.1.11] - 2024-05-24
+### Changed
+- **Documentation**: Clarified the distinction between `requirements.in` (Source of Truth) and `requirements.txt` (Deterministic Lockfile) in `CONTRIBUTING.md`.
+
+## [2.1.9] - 2024-05-24
+### Changed
+- **Documentation**: Formalized `requirements.in` usage in `BNKprojects/1/ARCHITECTURE.md` and provided usage instructions in `Documentation/internal/CONTRIBUTING.md`.
+
+## [2.1.8] - 2024-05-24
+### Added
+- **Dependency Management**: Introduced `requirements.in` to support `pip-tools` for deterministic dependency resolution.
+### Fixed
+- **Code Quality**: Cleaned up redundant logic and artifacts in `BNKprojects/1/app.py`.
+
+## [2.1.7] - 2024-05-24
+### Added
+- **Documentation**: Created `BNKprojects/1/PYTHON_CODE_EXPLANATION.md` with detailed line-by-line analysis of `app.py` and `requirements.txt`.
+### Changed
+- **Documentation**: Updated `BNKprojects/1/.gitignore` to include the new explanation file.
+
+## [2.1.6] - 2024-05-24
+### Added
+- **Python Implementation**: Created `BNKprojects/1/app.py` and `requirements.txt` as the official OIDC client implementation.
+- **OIDC Integration**: Implemented Authorization Code Flow with PKCE and JWT role extraction in Python.
+### Changed
+- **Documentation**: Updated `BNKprojects/1/CHECKLIST.md` to reflect full completion of OIDC integration tasks.
+
+## [2.1.5] - 2024-05-24
+### Changed
+- **Security**: Hardened Zero-Trust connectivity definitions in `BNKprojects/1/ARCHITECTURE.md`, mandating IAM-based database authentication via the Cloud SQL Python Connector.
+
+## [2.1.4] - 2024-05-24
+### Changed
+- **Architecture**: Formalized Python as the exclusive language for the application service layer. 
+- **Tech Stack**: Deprecated Node.js/JavaScript implementation paths in `CONTRIBUTING.md` and `ARCHITECTURE.md`.
+
+## [2.1.2] - 2024-05-24
+### Changed
+- **Documentation**: Reconciled `BNKprojects/1/CHECKLIST.md` to confirm OIDC redirect logic completion.
+### Added
+- **Strategic Goal**: Identified `test-transactions.sh` for Project 2 as the next mandatory compliance task per `TESTING.md`.
+
+## [2.1.1] - 2024-05-24
+### Added
+- **Agent Protocols**: Mandated "preview in diff mode" for all AI-generated code suggestions in `AGENTS.md` (Global and Project 1).
+
+## [2.1.0] - 2024-05-24
+### Added
+- **OIDC Integration**: Implemented Authorization Code Flow with PKCE logic for the `retail-app` service layer.
+### Changed
+- **Documentation**: Updated `BNKprojects/1/CHECKLIST.md` to reflect completion of redirect logic integration.
+
 ## [2.0.0] - 2024-05-24
 ### Changed
 - **Focus Shift**: Transitioned from Service implementation to Global CI/CD and Release Safety (Project 3).

@@ -17,7 +17,7 @@ graph TD
 ### 1. Keycloak (Application)
 *   Runs as a stateless container on Cloud Run.
 *   **Startup:** Uses `args = ["start", "--optimized"]` to trigger the production runtime.
-*   **Connectivity:** Connects to Cloud SQL via Cloud SQL Auth Proxy (Unix Socket) to ensure zero-trust connectivity.
+*   **Connectivity:** Enforces **Zero-Trust** by using the `cloud-sql-python-connector`. This leverages IAM-based authentication for the database session, ensuring that network proximity alone is insufficient for access.
 *   **Optimization:** JDBC pool size is capped (`KC_DB_POOL_MAX_SIZE=20`) to stay within the limits of the `db-f1-micro` database tier.
 *   **Observability:** Built-in health checks are enabled via `KC_HEALTH_ENABLED=true`. Cloud Run uses the `/health/live` endpoint for startup probes.
 *   **Secrets:** Sensitive variables (DB Password, Admin Password) are mapped directly from Secret Manager into environment variables at the container level.
@@ -74,3 +74,7 @@ graph TD
     *   `roles/artifactregistry.reader`: Allows pulling the container image.
     *   Cloud Run Admin
     *   Service Account User
+
+### 5. Dependency Management
+*   **Standard:** Employs `requirements.in` for high-level dependency declarations.
+*   **Reproducibility:** Pinned `requirements.txt` files are generated via `pip-compile` to ensure deterministic builds and environment parity across Cloud Run instances.

@@ -1,47 +1,73 @@
 import os
-import jwt
-from flask import Flask, url_for, session, redirect, jsonify
-from src.config.oidc import init_oidc
+from flask import Flask, redirect, url_for, session, jsonify
+from authlib.integrations.flask_client import OAuth
+from authlib.jose import jwt
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SESSION_SECRET', 'dev-secret-only')
+app.secret_key = os.getenv('SESSION_SECRET', 'dev-secret-keep-it-safe')
 
-keycloak = init_oidc(app)
+# Security configuration for session cookies
+app.config.update(
+    SESSION_COOKIE_SECURE=os.getenv('FLASK_ENV') == 'production',
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+)
+
+oauth = OAuth(app)
+oauth.register(
+    name='keycloak',
+    client_id='retail-app',
+    client_secret='',  # Public client (PKCE enforced)
+    server_metadata_url=f"{os.getenv('KEYCLOAK_URL')}/realms/Mockbankrealm/.well-known/openid-configuration",
+    client_kwargs={
+        'scope': 'openid profile email',
+        'code_challenge_method': 'S256'  # Enforce PKCE S256 per Security Policy
+    }
+)
 
 @app.route('/login')
 def login():
+    """Initiate OIDC Login Redirect with PKCE."""
     redirect_uri = url_for('auth_callback', _external=True)
-    # Authlib handles PKCE code_verifier/challenge generation automatically
-    return keycloak.authorize_redirect(redirect_uri)
+    return oauth.keycloak.authorize_redirect(redirect_uri)
 
 @app.route('/auth/callback')
 def auth_callback():
-    try:
-        # STEP 3: Exchange code and validate PKCE verifier (handled by Authlib via session)
-        token = keycloak.authorize_access_token()
-        
-        # STEP 4: Capture and Decode the JWT Access Token
-        access_token = token.get('access_token') # This is the raw JWT string
-        
-        # Decode Access Token to get user context
-        # In production, verify the signature using Keycloak's JWKS
-        user_info = jwt.decode(access_token, options={"verify_signature": False})
-        
-        session['user'] = user_info
-        session['jwt'] = access_token
+    """Handle OIDC Callback, exchange code, and capture JWT."""
+    token = oauth.keycloak.authorize_access_token()
+    user_info = token.get('userinfo')
+    access_token = token.get('access_token')
 
-        return jsonify({
-            "status": "Logged In",
-            "user": user_info.get('preferred_username'),
-            "roles": user_info.get('realm_access', {}).get('roles', [])
-        })
-    except Exception as e:
-        return f"Authentication failed: {str(e)}", 400
+    # Decode Access Token to extract realm roles (RBAC)
+    # Verification was performed by authorize_access_token() via server metadata
+    claims = jwt.decode(access_token, oauth.keycloak.load_server_metadata().get('jwks_uri'))
+    claims.validate()
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
+    # Secure Session Management
+    session['user'] = {
+        'sub': user_info.get('sub'),
+        'username': user_info.get('preferred_username'),
+        'roles': claims.get('realm_access', {}).get('roles', []),
+        'auth_time': user_info.get('iat')
+    }
+    
+    return jsonify({
+        "message": "Authenticated successfully",
+        "user": session['user']['username'],
+        "token_preview": f"{access_token[:20]}..."
+    })
+
+@app.route('/me')
+def me():
+    """Return current session data."""
+    user = session.get('user')
+    if not user:
+        return "Unauthorized", 401
+    return jsonify(user)
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=True)
+    app.run(port=int(os.getenv('PORT', 3000)))

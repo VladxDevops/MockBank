@@ -19,18 +19,19 @@ This repository hosts the source code for the Altmtrk2026 Banking Platform. It i
 ### Prerequisites
 1.  **Google Cloud SDK:** Authenticated with `gcloud auth login`.
 2.  **Terraform:** v1.5+.
-3.  **Node.js:** v18+ (LTS).
+3.  **Python:** v3.10+ (Mandatory for application layer).
+4.  **pip-tools:** Required for dependency management (`pip install pip-tools`).
 
 ### Local Development
 ```bash
 # 1. Clone the repo
 git clone <repo_url>
 
-# 2. Install dependencies
-npm install
+# 2. Sync Python Environment (installs from requirements.txt)
+pip-sync BNKprojects/1/requirements.txt
 
-# 3. Run local mock environment
-npm run dev:mock
+# 3. Run Service (Example)
+python app.py
 ```
 
 ## Project 2: Transaction Service Deployment

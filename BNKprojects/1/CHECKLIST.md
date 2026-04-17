@@ -18,8 +18,9 @@
 - [x] **Realm Creation:** `Mockbankrealm` realm initialized (verified in `CHANGELOG [1.5.6]`).
     - [x] Create `retail-app` as a Public Client via `realm-export.json`.
     - [x] Enable **PKCE** (S256) and configure Valid Redirect URIs via JSON.
-    - [x] Define implementation logic for Node.js (`openid-client`) and Python (`Authlib`).
-    - [>] Integrate redirect logic into application service layer. (In Progress)
+    - [x] Define implementation logic for Python (`Authlib`).
+    - [x] Implement deterministic dependency management (`requirements.in`).
+    - [x] Integrate redirect logic into application service layer (`app.py`).
     - [ ] Capture and decode the JWT Access Token for session management.
 - [ ] **SAML 2.0 Integration (Teller Portal):**
     - [ ] Create `teller-portal` client with SAML protocol.

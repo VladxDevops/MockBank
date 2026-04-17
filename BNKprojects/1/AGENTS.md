@@ -23,6 +23,7 @@ This document outlines specific protocols for Automated Agents interacting with 
 ## 3. AI Assistants (Gemini)
 *   **Terraform Generation:** When modifying Project 1 infrastructure, ensure `keycloak_serv_acc_account_id` is used in `main.tf` and defined in `variables.tf`. Do not suggest code with hardcoded string literals for IAM identities.
 *   **Declarative Config:** All changes to the `Mockbankrealm` realm (clients, roles, scopes) must be performed via updates to `realm-export.json`. Manual UI changes are only permitted for temporary discovery, never for deployment.
+*   **Diff Mode Requirement:** Each response providing code changes must include a "preview in diff mode" (unified diff format) with absolute paths to ensure the user knows exactly where and how to insert the code.
 *   **Constraint:** AI must NEVER be provided with the `keycloak-admin-password` or the `master` realm private keys.
 
 ## 4. Troubleshooting Protocols

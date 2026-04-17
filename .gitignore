@@ -52,9 +52,10 @@ logs/
 data/db/
 
 
-#.md files: 
+#.md and documentation files: 
 internalREADME.md
 Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
+PYTHON_CODE_EXPLANATION.md
 
 
 # AI Agent Long-Term Memory (LTM) Files

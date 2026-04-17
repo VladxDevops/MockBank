@@ -17,6 +17,9 @@ Thumbs.db
 # Keycloak test environment variables
 test-env.sh
 
+# Documentation
+PYTHON_CODE_EXPLANATION.md
+
 # Build directories (if local builds are performed)
 target/
 build/

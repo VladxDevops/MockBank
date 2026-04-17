@@ -49,6 +49,7 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 ### Diagnostics & Troubleshooting
 *   **Docker Precision:** Agents must not assume container names match service names. When suggesting CLI commands for container inspection, Agents must include a discovery step: `sudo docker ps --format "table {{.Names}}\t{{.Status}}"`.
 *   **Path Absolute Accuracy:** All file references and diffs must use absolute paths to ensure context continuity across multi-directory projects.
+*   **Diff Mode Requirement:** Each response providing code changes must include a "preview in diff mode" (unified diff format) with absolute paths to ensure the user knows exactly where and how to insert the code.
 *   **Context Verification:** Before proposing a fix for a "crashed" service, Agents must request the last 50 lines of logs to avoid guessing the failure mode (e.g., distinguishing between OOM and Connection Refused).
 
 ### 5. Declarative Configuration Directive
