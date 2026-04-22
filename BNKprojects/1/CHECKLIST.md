@@ -21,7 +21,7 @@
     - [x] Define implementation logic for Python (`Authlib`).
     - [x] Implement deterministic dependency management (`requirements.in`).
     - [x] Integrate redirect logic into application service layer (`app.py`).
-    - [ ] Capture and decode the JWT Access Token for session management.
+    - [x] Capture and decode the JWT Access Token for session management.
 - [ ] **SAML 2.0 Integration (Teller Portal):**
     - [ ] Create `teller-portal` client with SAML protocol.
     - [ ] Map Entity ID and ACS URL (Assertion Consumer Service).

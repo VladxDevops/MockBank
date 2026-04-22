@@ -22,6 +22,20 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
     *   `Security` in case of vulnerabilities.
 
+## [2.1.15] - 2024-05-24
+### Fixed
+- **Code Quality**: Resolved syntax and indentation errors in `app.py` caused by duplicate code fragments.
+
+## [2.1.14] - 2024-05-24
+### Added
+- **OIDC Integration**: Implemented JWKS-based decoding and validation for Access Tokens in `app.py`.
+- **Session Management**: Configured role extraction from `realm_access` claims for RBAC support.
+
+## [2.1.13] - 2024-05-24
+### Added
+- **Audit**: Completed comprehensive documentation review of Project 1 and 2.
+- **Protocols**: Synchronized internal agent state with Zero-Trust and Declarative Configuration directives.
+
 ## [2.1.12] - 2024-05-24
 ### Changed
 - **Documentation**: Updated `README.md` files to explicitly show the `pip-sync` and `pip-compile` workflow for dependency management.

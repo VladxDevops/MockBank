@@ -1,5 +1,6 @@
 import os
-from flask import Flask, redirect, url_for, session, jsonify
+import requests
+from flask import Flask, redirect, url_for, session, jsonify, abort
 from authlib.integrations.flask_client import OAuth
 from authlib.jose import jwt
 from dotenv import load_dotenv
@@ -42,17 +43,25 @@ def auth_callback():
     user_info = token.get('userinfo')
     access_token = token.get('access_token')
 
-    # Decode Access Token to extract realm roles (RBAC)
-    # Verification was performed by authorize_access_token() via server metadata
-    claims = jwt.decode(access_token, oauth.keycloak.load_server_metadata().get('jwks_uri'))
-    claims.validate()
+    try:
+        # Fetch JWKS from Keycloak to verify Access Token signature
+        jwks_uri = oauth.keycloak.load_server_metadata().get('jwks_uri')
+        jwks = requests.get(jwks_uri).json()
+
+        # Decode and validate the Access Token
+        # This ensures the token is valid, not expired, and intended for this app
+        claims = jwt.decode(access_token, jwks)
+        claims.validate()
+    except Exception as e:
+        app.logger.error(f"Token validation failed: {str(e)}")
+        return abort(401, description="Invalid Token")
 
     # Secure Session Management
     session['user'] = {
         'sub': user_info.get('sub'),
         'username': user_info.get('preferred_username'),
         'roles': claims.get('realm_access', {}).get('roles', []),
-        'auth_time': user_info.get('iat')
+        'exp': claims.get('exp')
     }
     
     return jsonify({
