@@ -18,6 +18,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
     *   `Security` in case of vulnerabilities.
+## [2.1.23] - 2024-05-24
+### Changed
+- **Documentation**: Updated the root `README.md` with explicit local development steps for Project 1, aligning with the `src/` directory migration and `pip-sync` dependency workflow.
 
 ## [2.1.17] - 2024-05-24
 ### Changed
@@ -33,6 +36,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Changed
 - **Architecture**: Clarified that dependency manifests (requirements.txt) must reside in the service root, not the `src/` directory, to support build caching and standard tooling.
 - **Documentation**: Removed redundant directory structure definitions in `Architecture.md`.
+## [2.1.26] - 2024-05-24
+### Fixed
+- **Environment**: Standardized the use of Python Virtual Environments (`venv`) in `README.md` to resolve `ModuleNotFoundError` and ensure dependency isolation.
 
 ## [2.1.15] - 2024-05-24
 ### Fixed
@@ -71,6 +77,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Dependency Management**: Introduced `requirements.in` to support `pip-tools` for deterministic dependency resolution.
 ### Fixed
 - **Code Quality**: Cleaned up redundant logic and artifacts in `BNKprojects/1/app.py`.
+## [2.1.28] - 2024-05-24
+### Security
+- **Hardening**: Updated `app.py` to prevent execution if `SESSION_SECRET` or `KEYCLOAK_URL` are missing.
+- **Tooling**: Added a `.env` existence check to `setup-and-run.sh` to prevent misconfigured launches.
 
 ## [2.1.7] - 2024-05-24
 ### Added
@@ -88,11 +98,22 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## [2.1.5] - 2024-05-24
 ### Changed
 - **Security**: Hardened Zero-Trust connectivity definitions in `BNKprojects/1/ARCHITECTURE.md`, mandating IAM-based database authentication via the Cloud SQL Python Connector.
+## [2.1.25] - 2024-05-24
+### Fixed
+- **Tooling**: Resolved `ModuleNotFoundError` by enforcing `pip-sync` workflow for local execution.
+- **Structure**: Removed duplicate `app.py` from the project root to maintain alignment with the `src/` directory standard defined in `Architecture.md`.
 
 ## [2.1.4] - 2024-05-24
 ### Changed
 - **Architecture**: Formalized Python as the exclusive language for the application service layer. 
 - **Tech Stack**: Deprecated Node.js/JavaScript implementation paths in `CONTRIBUTING.md` and `ARCHITECTURE.md`.
+## [2.1.24] - 2024-05-24
+### Changed
+- **Configuration**: Updated `.env` to reflect the Cloud Run URL for Keycloak.
+- **Security**: Noted the requirement for GCP IAM authorization (Identity Tokens) when accessing the private Identity Service.
+## [2.1.27] - 2024-05-24
+### Added
+- **Tooling**: Created `setup-and-run.sh` in Project 1 to automate virtual environment initialization, dependency synchronization, and application execution.
 
 ## [2.1.2] - 2024-05-24
 ### Changed
@@ -204,6 +225,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Fixed
 - **Access Strategy**: Resolved Port 8080 conflict in GCP Cloud Shell by utilizing the `--port` flag with `gcloud run services proxy`.
 - **Security**: Maintained "Private Service" posture by avoiding public `allUsers` IAM bindings during the OIDC configuration phase.
+## [2.1.32] - 2024-05-24
+### Fixed
+- **Code Quality**: Added robust error handling to the `/login` route in `app.py` to catch OIDC discovery failures caused by misconfigured proxy settings or private service connectivity issues.
 
 ## [1.7.1] - 2024-05-24
 ### Security

@@ -9,6 +9,11 @@ Document all changes in the changelo.md. Keep internal and internal documentatio
 
 This document outlines specific protocols for Automated Agents interacting with Project 1 (Identity Service).
 
+## 0. Critical Security Constraint
+**ZERO UNAUTHENTICATED INGRESS:** All services in Project 1 must remain private. 
+*   Do NOT suggest `allUsers` IAM bindings.
+*   Do NOT suggest disabling IAM authentication on Cloud Run.
+
 ## 1. Deployment Agents (CI/CD)
 *   **Keycloak Updates:** Agents must use the `kc.sh build` command to optimize the image before deployment.
 *   **Zero-Downtime:** Database migrations must be backward compatible.

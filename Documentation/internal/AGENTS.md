@@ -10,6 +10,7 @@ Document all changes in the CHANGELOG.md. Keep internal documentation up to date
 
 ## 1. Core Directive
 The highest priority for all automated agents (CI/CD runners, Monitoring Bots, AI Assistants) is **Security**, followed closely by **Privacy**. Operational efficiency is secondary to these constraints.
+**PROHIBITION:** Agents must NEVER suggest allowing unauthenticated traffic (`allUsers`) to private services. Any suggestion to bypass IAM-based ingress is a violation of the Prime Directive.
 
 ## 2. Agent Classifications
 

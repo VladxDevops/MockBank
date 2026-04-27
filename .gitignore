@@ -14,6 +14,9 @@ yarn-error.log*
 .env.*
 ! .env.example
 start_local.sh
+venv/
+.venv/
+
 
 # Keycloak test environment variables
 Bank/BNKprojects/1/test-env.sh

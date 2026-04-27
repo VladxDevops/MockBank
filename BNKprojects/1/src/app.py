@@ -6,10 +6,22 @@ from authlib.jose import jwt
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+# Use absolute path to ensure .env is loaded regardless of execution context
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_path = os.path.join(basedir, '../.env')
+load_dotenv(env_path, override=True)
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SESSION_SECRET', 'dev-secret-keep-it-safe')
+
+# Enforce mandatory environment variables per Security Policy
+app.secret_key = os.getenv('SESSION_SECRET')
+if not app.secret_key or app.secret_key == 'dev-secret-keep-it-safe':
+    raise RuntimeError("SESSION_SECRET is not set or is using an insecure default. Check your .env file.")
+
+if not os.getenv('KEYCLOAK_URL'):
+    raise RuntimeError("KEYCLOAK_URL is missing. Identity Provider cannot be initialized.")
+
+print(f" * Identity Provider configured: {os.getenv('KEYCLOAK_URL')}")
 
 # Security configuration for session cookies
 app.config.update(
@@ -34,12 +46,21 @@ oauth.register(
 def login():
     """Initiate OIDC Login Redirect with PKCE."""
     redirect_uri = url_for('auth_callback', _external=True)
-    return oauth.keycloak.authorize_redirect(redirect_uri)
+    try:
+        return oauth.keycloak.authorize_redirect(redirect_uri)
+    except Exception as e:
+        app.logger.error(f"OIDC Discovery failed. Check if KEYCLOAK_URL points to the gcloud proxy (http://localhost:8888): {str(e)}")
+        return abort(500, description="Identity Provider unreachable. Verify proxy and IAM permissions.")
 
 @app.route('/auth/callback')
 def auth_callback():
     """Handle OIDC Callback, exchange code, and capture JWT."""
-    token = oauth.keycloak.authorize_access_token()
+    try:
+        token = oauth.keycloak.authorize_access_token()
+    except Exception as e:
+        app.logger.error(f"OIDC Token Exchange failed. Verify KEYCLOAK_URL and GCP IAM permissions: {str(e)}")
+        return abort(401, description="Authentication Failed")
+
     user_info = token.get('userinfo')
     access_token = token.get('access_token')
 

@@ -90,7 +90,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Added `KC_PROXY=edge` to handle TLS termination securely.
 ### Added
 - **Documentation**: Created `GLOSSARY_TOON_AAAK.md` to provide human-readable definitions for AI-optimized notations used in the Long-Term Memory (LTM) strategy.
+## [2.1.38] - 2024-05-24
+### Security
+- **Environment**: Enforced exclusion of Python virtual environments from version control to ensure cross-platform compatibility and clean repository state.
 
+## [2.1.34] - 2024-05-24
+### Fixed
+- **Environment**: Forced `load_dotenv(override=True)` in `app.py` to prevent stale shell environment variables from overriding the local `.env` configuration, ensuring the OIDC proxy is correctly utilized.
 
 ## [1.9.0] - 2024-05-24
 ### Fixed

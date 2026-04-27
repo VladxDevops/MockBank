@@ -27,11 +27,18 @@ This repository hosts the source code for the Altmtrk2026 Banking Platform. It i
 # 1. Clone the repo
 git clone <repo_url>
 
-# 2. Sync Python Environment (installs from requirements.txt)
-pip-sync BNKprojects/1/requirements.txt
+# 2. Setup Project 1 (Identity Client)
+cd BNKprojects/1
 
-# 3. Run Service (Example)
-python app.py
+# 3. Sync dependencies from the lockfile
+pip-sync requirements.txt
+
+# 4. Configure local environment variables
+# Copy the template and update with your local Keycloak/Secret settings
+cp .env.example .env
+
+# 5. Start the application
+python src/app.py
 ```
 
 ## Project 2: Transaction Service Deployment
