@@ -17,10 +17,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Removed` for now removed features.
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
-
-
-
     *   `Security` in case of vulnerabilities.
+
 ## [2.1.17] - 2024-05-24
 ### Changed
 - **Documentation**: Formally documented the RBAC role mapping (`customer`, `teller`, `manager`, `audit`) in `Architecture.md` to align high-level docs with `realm-export.json` skeletons.
@@ -28,6 +26,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## [2.1.16] - 2024-05-24
 ### Added
 - **Documentation**: Created a detailed, line-by-line explanation of the OIDC implementation in `PYTHON_CODE_EXPLANATION.md`.
+## [2.1.21] - 2024-05-24
+### Fixed
+- **Structure**: Resolved a conflict where a file named `src` prevented the creation of the standard `src/` directory in Project 1; moved `app.py` to the correct location.
+## [2.1.22] - 2024-05-24
+### Changed
+- **Architecture**: Clarified that dependency manifests (requirements.txt) must reside in the service root, not the `src/` directory, to support build caching and standard tooling.
+- **Documentation**: Removed redundant directory structure definitions in `Architecture.md`.
 
 ## [2.1.15] - 2024-05-24
 ### Fixed

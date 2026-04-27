@@ -63,10 +63,6 @@ To maintain a clean and navigable codebase, the following directory standards ap
     *   `src/`: Application logic and source code.
     *   `container/`: Containerization assets (`Dockerfile`, `docker-compose.yml`, entrypoint scripts).
     *   `tests/`: Unit and integration tests.
-    *   `config/`: Non-sensitive configuration files.
+        *   `config/`: Non-sensitive configuration files.
+    *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
 *   **`Infrastructure/`**: Terraform and cloud configuration.
-*   **Service Directories (e.g., `Services/{name}` or Project folders):**
-    *   `src/`: Application logic and source code.
-    *   `container/`: Containerization assets (`Dockerfile`, `docker-compose.yml`, entrypoint scripts).
-    *   `tests/`: Unit and integration tests.
-    *   `config/`: Non-sensitive configuration files.
