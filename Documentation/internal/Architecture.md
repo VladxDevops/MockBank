@@ -13,6 +13,11 @@ This architecture describes a secure, cloud-native banking platform designed for
 *   **Primary IdP:** Centralized Identity Provider handling OIDC and SAML flows.
 *   **Orchestration:** Logic layer to handle Step-Up Authentication (MFA) based on risk signals.
 *   **Session Management:** Distributed session state stored in MongoDB (Audit/Logs) and Redis (Hot State).
+*   **RBAC Role Mapping:**
+    *   `customer`: Standard access to the `retail-app` for balance inquiries and standard transfers.
+    *   `teller`: Access to the `teller-portal` (SAML) for branch operations.
+    *   `manager`: Elevated privileges for transaction overrides and Step-Up authentication approvals.
+    *   `audit`: Read-only access to MongoDB logs and system metrics for compliance agents.
 
 ### Application Layer
 *   **API Gateway:** Entry point for all client traffic. Enforces rate limiting, TLS termination, and initial JWT validation.

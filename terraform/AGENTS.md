@@ -3,7 +3,7 @@
 Please: 
 Read the internal .md files they are a guidlines for multiple aspect like architechture, instructions, how tos, security, etc. 
 Search if a file already exits before creating a new file to keep the directories organized. 
-Document all changes in the changelo.md. Keep internal and internal documentation up to date. 
+Document all changes in the CHANGELOG.md. Keep internal and external documentation up to date. 
 
 **CLASSIFICATION: INTERNAL USE ONLY**
 
@@ -37,5 +37,3 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/GEMINI.md`**: AI usage rules and data sanitization.
 *   **`Documentation/internal/TESTING.md`**: Testing strategies (Mocking, Journeys).
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
-
-

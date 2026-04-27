@@ -21,6 +21,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 
     *   `Security` in case of vulnerabilities.
+## [2.1.17] - 2024-05-24
+### Changed
+- **Documentation**: Formally documented the RBAC role mapping (`customer`, `teller`, `manager`, `audit`) in `Architecture.md` to align high-level docs with `realm-export.json` skeletons.
+
+## [2.1.16] - 2024-05-24
+### Added
+- **Documentation**: Created a detailed, line-by-line explanation of the OIDC implementation in `PYTHON_CODE_EXPLANATION.md`.
 
 ## [2.1.15] - 2024-05-24
 ### Fixed
@@ -35,6 +42,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Added
 - **Audit**: Completed comprehensive documentation review of Project 1 and 2.
 - **Protocols**: Synchronized internal agent state with Zero-Trust and Declarative Configuration directives.
+## [2.1.18] - 2024-05-24
+### Added
+- **Tooling**: Created `.env.example` for Project 1 to standardize local environment configuration for the Python OIDC client.
 
 ## [2.1.12] - 2024-05-24
 ### Changed
@@ -47,6 +57,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## [2.1.9] - 2024-05-24
 ### Changed
 - **Documentation**: Formalized `requirements.in` usage in `BNKprojects/1/ARCHITECTURE.md` and provided usage instructions in `Documentation/internal/CONTRIBUTING.md`.
+## [2.1.19] - 2024-05-24
+### Added
+- **Tooling**: Generated a dedicated `.env` file for the Project 1 Python application to separate runtime configuration from testing shell scripts.
 
 ## [2.1.8] - 2024-05-24
 ### Added
@@ -509,4 +522,5 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Integrated with MongoDB Atlas for Audit Logging.
     - Implemented Step-Up Authentication logic for transactions >= $10,000.
     - Verified end-to-end flow with `curl` and MongoDB Compass.
+    - Validated diagnostic queries for MFA timeouts.DB Compass.
     - Validated diagnostic queries for MFA timeouts.
