@@ -1,103 +1,68 @@
 import os
 import requests
-from flask import Flask, redirect, url_for, session, jsonify, abort
-from authlib.integrations.flask_client import OAuth
-from authlib.jose import jwt
-from dotenv import load_dotenv
+import sys
+import subprocess
+from google.auth.transport.requests import Request
+from google.oauth2 import id_token
+import google.auth
 
-# Load environment variables
-# Use absolute path to ensure .env is loaded regardless of execution context
-basedir = os.path.abspath(os.path.dirname(__file__))
-env_path = os.path.join(basedir, '../.env')
-load_dotenv(env_path, override=True)
-
-app = Flask(__name__)
-
-# Enforce mandatory environment variables per Security Policy
-app.secret_key = os.getenv('SESSION_SECRET')
-if not app.secret_key or app.secret_key == 'dev-secret-keep-it-safe':
-    raise RuntimeError("SESSION_SECRET is not set or is using an insecure default. Check your .env file.")
-
-if not os.getenv('KEYCLOAK_URL'):
-    raise RuntimeError("KEYCLOAK_URL is missing. Identity Provider cannot be initialized.")
-
-print(f" * Identity Provider configured: {os.getenv('KEYCLOAK_URL')}")
-
-# Security configuration for session cookies
-app.config.update(
-    SESSION_COOKIE_SECURE=os.getenv('FLASK_ENV') == 'production',
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE='Lax',
-)
-
-oauth = OAuth(app)
-oauth.register(
-    name='keycloak',
-    client_id='retail-app',
-    client_secret='',  # Public client (PKCE enforced)
-    server_metadata_url=f"{os.getenv('KEYCLOAK_URL')}/realms/Mockbankrealm/.well-known/openid-configuration",
-    client_kwargs={
-        'scope': 'openid profile email',
-        'code_challenge_method': 'S256'  # Enforce PKCE S256 per Security Policy
-    }
-)
-
-@app.route('/login')
-def login():
-    """Initiate OIDC Login Redirect with PKCE."""
-    redirect_uri = url_for('auth_callback', _external=True)
+def get_google_id_token(audience: str) -> str:
+    """
+    Generates an OIDC ID token for the specified audience.
+    This is required to authenticate with Cloud Run services that have
+    IAM-based ingress control enabled (no-allow-unauthenticated).
+    """
     try:
-        return oauth.keycloak.authorize_redirect(redirect_uri)
+        # Try the standard library first (works on Cloud Run/Service Accounts)
+        auth_req = Request()
+        return id_token.fetch_id_token(auth_req, audience)
     except Exception as e:
-        app.logger.error(f"OIDC Discovery failed. Check if KEYCLOAK_URL points to the gcloud proxy (http://localhost:8888): {str(e)}")
-        return abort(500, description="Identity Provider unreachable. Verify proxy and IAM permissions.")
+        # Fallback: Mirror the bash script logic for local development
+        # This uses the gcloud CLI to get an identity token for the user account
+        try:
+            print(f"[DEBUG] Library fetch failed ({e}). Attempting gcloud fallback...")
+            result = subprocess.run(
+                ["gcloud", "auth", "print-identity-token", f"--audiences={audience}"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            return result.stdout.strip()
+        except subprocess.CalledProcessError as err:
+            print(f"[ERROR] Failed to obtain ID token via library or gcloud: {err.stderr}")
+            print("[TIP] Ensure you are logged in: gcloud auth login")
+            sys.exit(1)
 
-@app.route('/auth/callback')
-def auth_callback():
-    """Handle OIDC Callback, exchange code, and capture JWT."""
-    try:
-        token = oauth.keycloak.authorize_access_token()
-    except Exception as e:
-        app.logger.error(f"OIDC Token Exchange failed. Verify KEYCLOAK_URL and GCP IAM permissions: {str(e)}")
-        return abort(401, description="Authentication Failed")
-
-    user_info = token.get('userinfo')
-    access_token = token.get('access_token')
-
-    try:
-        # Fetch JWKS from Keycloak to verify Access Token signature
-        jwks_uri = oauth.keycloak.load_server_metadata().get('jwks_uri')
-        jwks = requests.get(jwks_uri).json()
-
-        # Decode and validate the Access Token
-        # This ensures the token is valid, not expired, and intended for this app
-        claims = jwt.decode(access_token, jwks)
-        claims.validate()
-    except Exception as e:
-        app.logger.error(f"Token validation failed: {str(e)}")
-        return abort(401, description="Invalid Token")
-
-    # Secure Session Management
-    session['user'] = {
-        'sub': user_info.get('sub'),
-        'username': user_info.get('preferred_username'),
-        'roles': claims.get('realm_access', {}).get('roles', []),
-        'exp': claims.get('exp')
-    }
+def main():
+    # Target URL should be the Cloud Run Service URL
+    target_url = os.getenv("KEYCLOAK_URL")
     
-    return jsonify({
-        "message": "Authenticated successfully",
-        "user": session['user']['username'],
-        "token_preview": f"{access_token[:20]}..."
-    })
+    if not target_url:
+        print("[ERROR] KEYCLOAK_URL environment variable is not set.")
+        sys.exit(1)
 
-@app.route('/me')
-def me():
-    """Return current session data."""
-    user = session.get('user')
-    if not user:
-        return "Unauthorized", 401
-    return jsonify(user)
+    print(f"[INFO] Attempting authenticated request to: {target_url}")
 
-if __name__ == '__main__':
-    app.run(port=int(os.getenv('PORT', 3000)))
+    # Replicating the 'test-keycloak.sh' logic
+    # We use the base URL as the audience for IAM verification
+    token = get_google_id_token(target_url)
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Perform a simple health check against the Keycloak endpoint
+        # Note: Unauthenticated attempts will fail with 403 at the GCP layer
+        response = requests.get(f"{target_url}/health", headers=headers, timeout=10)
+        response.raise_for_status()
+        
+        print(f"[SUCCESS] Status Code: {response.status_code}")
+        print(f"[DATA] {response.text}")
+
+    except requests.exceptions.HTTPError as err:
+        print(f"[ERROR] HTTP Error: {err}")
+
+if __name__ == "__main__":
+    main()

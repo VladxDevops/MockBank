@@ -82,3 +82,14 @@ bash -x ./test-keycloak.sh validate
 
 ---
 *Standard Operating Procedure: Document every script failure mode here to prevent engineering toil.*
+
+## 8. Python Auth Client (src/app.py)
+*   **Symptom:** `[ERROR] Failed to obtain ID token via library or gcloud: ERROR: (gcloud.auth.print-identity-token) Invalid account type for --audiences.`
+    *   **Status:** [IN PROGRESS]
+    *   **Cause:** The `--audiences` flag requires an active Service Account identity. Standard user credentials cannot sign OIDC tokens for specific Cloud Run audiences locally.
+    *   **Workaround:** 
+        1. Start the proxy in a separate terminal: 
+           `gcloud run services proxy keycloak-service --region us-south1 --port 8888`
+        2. Update your `.env` to use the local proxy:
+           `KEYCLOAK_URL=http://localhost:8888`
+        3. The proxy will automatically inject the OIDC token from your `gcloud` session.

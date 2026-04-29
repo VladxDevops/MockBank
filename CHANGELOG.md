@@ -13,11 +13,16 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
-
     *   `Removed` for now removed features.
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
-    *   `Security` in case of vulnerabilities.
+
+## [2.1.39] - 2024-05-24
+### Fixed
+- **Tooling**: Corrected `gcloud` CLI flag in `app.py` from `--audience` to `--audiences` to resolve local token acquisition failures.
+### Added
+- **Tooling**: [IN PROGRESS] Investigating `Invalid account type for --audiences` error. Confirmed that standard User Accounts cannot generate targeted OIDC tokens via `gcloud`.
+
 ## [2.1.23] - 2024-05-24
 ### Changed
 - **Documentation**: Updated the root `README.md` with explicit local development steps for Project 1, aligning with the `src/` directory migration and `pip-sync` dependency workflow.
@@ -87,6 +92,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Documentation**: Created `BNKprojects/1/PYTHON_CODE_EXPLANATION.md` with detailed line-by-line analysis of `app.py` and `requirements.txt`.
 ### Changed
 - **Documentation**: Updated `BNKprojects/1/.gitignore` to include the new explanation file.
+## [2.1.37] - 2024-05-24
+### Security
+- **Hardening**: Explicitly prohibited the suggestion of `allUsers` or unauthenticated ingress in all agent protocols and troubleshooting documentation.
+- **Architecture**: Reaffirmed the use of the `gcloud run services proxy` as the mandatory method for accessing private Cloud Run services to maintain Zero Trust.
 
 ## [2.1.6] - 2024-05-24
 ### Added
@@ -94,6 +103,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **OIDC Integration**: Implemented Authorization Code Flow with PKCE and JWT role extraction in Python.
 ### Changed
 - **Documentation**: Updated `BNKprojects/1/CHECKLIST.md` to reflect full completion of OIDC integration tasks.
+## [2.1.36] - 2024-05-24
+### Changed
+- **Security**: Updated Identity Service IAM policy to allow `allUsers` (unauthenticated) ingress. This is a prerequisite for the OIDC front-channel flow, allowing users' browsers to reach the Keycloak login page.
 
 ## [2.1.5] - 2024-05-24
 ### Changed
@@ -102,6 +114,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Fixed
 - **Tooling**: Resolved `ModuleNotFoundError` by enforcing `pip-sync` workflow for local execution.
 - **Structure**: Removed duplicate `app.py` from the project root to maintain alignment with the `src/` directory standard defined in `Architecture.md`.
+## [2.1.35] - 2024-05-24
+### Fixed
+- **Environment**: Updated `app.py` to use absolute pathing for `load_dotenv` to ensure configuration consistency regardless of the current working directory.
+- **Observability**: Added startup logging to verify the active `KEYCLOAK_URL` upon application initialization.
 
 ## [2.1.4] - 2024-05-24
 ### Changed
@@ -228,6 +244,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## [2.1.32] - 2024-05-24
 ### Fixed
 - **Code Quality**: Added robust error handling to the `/login` route in `app.py` to catch OIDC discovery failures caused by misconfigured proxy settings or private service connectivity issues.
+## [2.1.38] - 2024-05-24
+### Security
+- **Environment**: Recommended adding `venv/` to `.gitignore` to prevent committing platform-specific binaries and maintain repository hygiene, following the standardized `setup-and-run.sh` workflow.
 
 ## [1.7.1] - 2024-05-24
 ### Security
