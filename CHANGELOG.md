@@ -17,11 +17,18 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.1.40] - 2024-05-24
+### Fixed
+- **Tooling**: Successfully resolved the `Invalid account type for --audiences` error. Implemented localhost detection in `src/app.py` to bypass OIDC token acquisition when using the `gcloud run services proxy`.
+- **Environment**: Resolved `ModuleNotFoundError` by standardizing the `requirements.in` manifest and ensuring all necessary Google Auth and configuration libraries are included in the `pip-sync` workflow.
+### Changed
+- **Documentation**: Updated the root `README.md` to explicitly document the proxy workaround for local development.
+
 ## [2.1.39] - 2024-05-24
 ### Fixed
 - **Tooling**: Corrected `gcloud` CLI flag in `app.py` from `--audience` to `--audiences` to resolve local token acquisition failures.
-### Added
-- **Tooling**: [IN PROGRESS] Investigating `Invalid account type for --audiences` error. Confirmed that standard User Accounts cannot generate targeted OIDC tokens via `gcloud`.
+### Changed
+- **Tooling**: Confirmed that standard User Accounts cannot generate targeted OIDC tokens via `gcloud` for specific audiences locally.
 
 ## [2.1.23] - 2024-05-24
 ### Changed

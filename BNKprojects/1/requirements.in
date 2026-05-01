@@ -1,5 +1,6 @@
-Flask
-Authlib
+google-auth
 requests
 python-dotenv
-cryptography
+Authlib
+Flask
+python3-saml

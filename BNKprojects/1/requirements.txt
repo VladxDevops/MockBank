@@ -18,23 +18,37 @@ click==8.3.3
     # via flask
 cryptography==41.0.7
     # via
-    #   -r requirements.in
     #   authlib
+    #   google-auth
 flask==3.0.0
+    # via -r requirements.in
+google-auth==2.50.0
     # via -r requirements.in
 idna==3.13
     # via requests
+isodate==0.7.2
+    # via python3-saml
 itsdangerous==2.2.0
     # via flask
 jinja2==3.1.6
     # via flask
+lxml==6.1.0
+    # via
+    #   python3-saml
+    #   xmlsec
 markupsafe==3.0.3
     # via
     #   jinja2
     #   werkzeug
+pyasn1==0.6.3
+    # via pyasn1-modules
+pyasn1-modules==0.4.2
+    # via google-auth
 pycparser==3.0
     # via cffi
 python-dotenv==1.0.0
+    # via -r requirements.in
+python3-saml==1.16.0
     # via -r requirements.in
 requests==2.31.0
     # via -r requirements.in
@@ -42,3 +56,5 @@ urllib3==2.6.3
     # via requests
 werkzeug==3.1.8
     # via flask
+xmlsec==1.3.17
+    # via python3-saml

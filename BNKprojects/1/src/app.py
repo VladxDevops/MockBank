@@ -1,10 +1,16 @@
 import os
+from pathlib import Path
 import requests
 import sys
 import subprocess
+from dotenv import load_dotenv
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 import google.auth
+
+# Load environment variables from .env file using an absolute path
+env_path = Path(__file__).resolve().parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
 
 def get_google_id_token(audience: str) -> str:
     """
@@ -28,8 +34,10 @@ def get_google_id_token(audience: str) -> str:
                 check=True
             )
             return result.stdout.strip()
-        except subprocess.CalledProcessError as err:
-            print(f"[ERROR] Failed to obtain ID token via library or gcloud: {err.stderr}")
+        except subprocess.CalledProcessError:
+            print("[ERROR] Failed to obtain ID token via library or gcloud.")
+            print("[INFO] Note: Standard User Accounts cannot generate tokens for specific audiences.")
+            print("[TIP] Workaround: Run 'gcloud run services proxy' and point KEYCLOAK_URL to localhost.")
             print("[TIP] Ensure you are logged in: gcloud auth login")
             sys.exit(1)
 
@@ -43,14 +51,21 @@ def main():
 
     print(f"[INFO] Attempting authenticated request to: {target_url}")
 
-    # Replicating the 'test-keycloak.sh' logic
-    # We use the base URL as the audience for IAM verification
-    token = get_google_id_token(target_url)
-
     headers = {
-        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
+
+    # Skip token acquisition if using the local proxy or if a token is manually provided
+    if target_url.startswith("http://localhost") or target_url.startswith("http://127.0.0.1"):
+        print("[INFO] Localhost detected. Skipping Google ID token acquisition (Proxy mode).")
+    else:
+        token = os.getenv("GOOGLE_ID_TOKEN")
+        if not token:
+            # Replicating the 'test-keycloak.sh' logic
+            # We use the base URL as the audience for IAM verification
+            token = get_google_id_token(target_url)
+        
+        headers["Authorization"] = f"Bearer {token}"
 
     try:
         # Perform a simple health check against the Keycloak endpoint
