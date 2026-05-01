@@ -23,13 +23,10 @@
     - [x] Verify connectivity and ID token acquisition logic in `src/app.py`.
     - [x] Successfully bypassed local OIDC restrictions using `gcloud run services proxy`.
 - [ ] **SAML 2.0 Integration (Teller Portal):** [ACTIVE]
-    - [ ] Create `teller-portal` client with SAML protocol in `realm-export.json`.
-    - [ ] Map Entity ID and ACS URL (`/saml/acs`) for local development.
-    - [ ] Configure Keycloak to sign and encrypt SAML Assertions via RSA_SHA256.
     - [x] Create `teller-portal` client with SAML protocol in `realm-export.json`.
     - [x] Map Entity ID and ACS URL (`/saml/acs`) for local development.
     - [x] Configure Keycloak to sign and encrypt SAML Assertions via RSA_SHA256.
-    - [ ] Implement `src/teller_portal.py` using `python3-saml` to verify signatures.
+    - [x] Implement `src/teller_portal.py` using `python3-saml` to verify signatures.
 - [ ] **MFA Enforcement:** Mandatory TOTP for all users in Mockbankrealm.
 
 ## 4. Security & Verification - PARTIALLY COMPLETED

@@ -49,6 +49,11 @@ def main():
         print("[ERROR] KEYCLOAK_URL environment variable is not set.")
         sys.exit(1)
 
+    # Hardening: Prevent execution if session secret is missing
+    if not os.getenv("SESSION_SECRET"):
+        print("[ERROR] SESSION_SECRET environment variable is not set. Security policy violation.")
+        sys.exit(1)
+
     print(f"[INFO] Attempting authenticated request to: {target_url}")
 
     headers = {

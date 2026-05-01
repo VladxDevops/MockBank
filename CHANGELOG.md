@@ -17,6 +17,17 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.1.44] - 2024-05-24
+### Added
+- **SAML Integration**: Implemented `src/teller_portal.py` using `python3-saml` to handle the SAML 2.0 Service Provider (SP) flow.
+- **SAML Integration**: Created `src/generate_saml_certs.sh` to automate the generation of SP certificates required for signed/encrypted assertions.
+- **Documentation**: Updated `CHECKLIST.md` to reflect the completion of the SAML implementation phase.
+
+## [2.1.43] - 2024-05-24
+### Added
+- **SAML Integration**: Created `/home/pochitawork/InterviewCloud Projects/Altmtrk2026/Bank/BNKprojects/1/container/realm-export.json` with the `teller-portal` SAML client configuration, including signed and encrypted assertions and attribute mappers.
+- **Documentation**: Updated `CHECKLIST.md` to reflect the completion of the Keycloak SAML client configuration.
+
 ## [2.1.42] - 2024-05-24
 ### Added
 - **SAML Integration**: Defined the dual-track plan for `teller-portal` configuration in `realm-export.json` and the `python3-saml` implementation strategy.
