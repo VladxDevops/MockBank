@@ -17,6 +17,16 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.1.42] - 2024-05-24
+### Added
+- **SAML Integration**: Defined the dual-track plan for `teller-portal` configuration in `realm-export.json` and the `python3-saml` implementation strategy.
+- **Documentation**: Updated `CHECKLIST.md` to reflect the current active focus on SAML 2.0 mapping and assertion security.
+
+## [2.1.41] - 2024-05-24
+### Added
+- **SAML Integration**: Initiated the "Legacy Teller Portal" integration phase.
+- **Documentation**: Updated `CHECKLIST.md` to mark OIDC connectivity as verified and transition focus to SAML 2.0.
+
 ## [2.1.40] - 2024-05-24
 ### Fixed
 - **Tooling**: Successfully resolved the `Invalid account type for --audiences` error. Implemented localhost detection in `src/app.py` to bypass OIDC token acquisition when using the `gcloud run services proxy`.
