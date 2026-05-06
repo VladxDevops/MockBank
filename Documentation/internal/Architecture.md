@@ -44,6 +44,7 @@ Infrastructure and GCP services are listed under the infrastructure.md.
 *   **Zero Trust Network:** Service-to-service communication is encrypted via mTLS.
 *   **Data at Rest:** All databases (MongoDB, SQL) are encrypted using customer-managed keys.
 *   **Secrets Management:** No passwords, keys, or sensitive information are hardcoded. All credentials are injected at runtime via GCP Secret Manager.
+*   **Just-In-Time (JIT) Access:** Production write access is restricted via **IAM Privileged Access Manager (PAM)**. No user shall have standing "Owner" or "Editor" roles in the `PROD` environment.
 
 ### Network Traffic & Isolation for project1: 
 *   **Ingress (Incoming):** Services are exposed via public HTTPS endpoints (`*.run.app`). TLS is terminated at the Cloud Run edge (Google Front End). Traffic reaches the container via HTTP/8080.

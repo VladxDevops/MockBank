@@ -83,3 +83,11 @@ variable "project1_service_name" {
 }
 
 ###End of project1 Secrets. 
+
+###Project3: 
+
+#Github: 
+variable "github_repository" {
+  description = "The GitHub repository in 'owner/repo' format"
+  type        = string
+}

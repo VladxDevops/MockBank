@@ -1,3 +1,23 @@
+# --- Required GCP Services for Project 3 ---
+
+resource "google_project_service" "cloud_deploy" {
+  project            = var.compute_project_id
+  service            = "deploy.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "iam_credentials" {
+  project            = var.compute_project_id
+  service            = "iamcredentials.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "cloud_resource_manager" {
+  project            = var.compute_project_id
+  service            = "cloudresourcemanager.googleapis.com"
+  disable_on_destroy = false
+}
+
 # --- Workload Identity Federation for GitHub Actions ---
 
 resource "google_iam_workload_identity_pool" "github_pool" {
@@ -18,6 +38,10 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
+
+  depends_on = [
+    google_project_service.iam_credentials
+  ]
 }
 
 # Service Account that GitHub Actions will impersonate
@@ -57,7 +81,7 @@ resource "google_project_iam_member" "artifact_registry_writer" {
 resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
   location    = var.compute_region
   name        = "transaction-service-pipeline"
-  description = "GCP`s Cloud Deploy Pipeline for the Transaction Service Managed delivery pipeline for the Transaction Service"
+  description = "Managed delivery pipeline for the Transaction Service"
 
   serial_pipeline {
     stages {
@@ -67,12 +91,16 @@ resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
       target_id = "test-target"
     }
   }
+
+  depends_on = [
+    google_project_service.cloud_deploy
+  ]
 }
 
 # DEV Target (Cloud Run)
 resource "google_clouddeploy_target" "dev_target" {
   location = var.compute_region
-  name     = "dev-target, Cloud Run"
+  name     = "dev-target"
 
   run {
     location = "projects/${var.compute_project_id}/locations/${var.compute_region}"
@@ -84,12 +112,16 @@ resource "google_clouddeploy_target" "dev_target" {
   }
 
   require_approval = false
+
+  depends_on = [
+    google_project_service.cloud_deploy
+  ]
 }
 
 # TEST Target (Cloud Run)
 resource "google_clouddeploy_target" "test_target" {
   location = var.compute_region
-  name     = "test-target, Cloud Run"
+  name     = "test-targe"
 
   run {
     location = "projects/${var.compute_project_id}/locations/${var.compute_region}"
@@ -102,4 +134,8 @@ resource "google_clouddeploy_target" "test_target" {
 
   # Requirement for promotion gate
   require_approval = true
+
+  depends_on = [
+    google_project_service.cloud_deploy
+  ]
 }
