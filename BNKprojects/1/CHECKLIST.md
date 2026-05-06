@@ -43,12 +43,12 @@ Based on `PROJECT1_DETAILS.md`, the following steps track the final integration:
 
 1. [x] **Phase 1:** Write Terraform for GCP Cloud Run + SQL.
 2. [x] **Phase 2:** Deploy Keycloak and verify health.
-3. [ ] **Phase 3: OIDC Integration**
-    - [ ] Configure `retail-app` client.
-    - [ ] Build simple web app to capture OIDC token.
-4. [ ] **Phase 4: SAML Integration**
-    - [ ] Configure `teller-portal` client.
-    - [ ] Build simple web app to capture SAML assertion.
+3. [x] **Phase 3: OIDC Integration**
+    - [x] Configure `retail-app` client with PKCE S256.
+    - [x] Build authenticated request logic in `app.py`.
+4. [x] **Phase 4: SAML Integration**
+    - [x] Configure `teller-portal` client in `realm-export.json`.
+    - [x] Implement `src/teller_portal.py` SP handler.
 
 ---
 **Note:** This checklist is maintained by AI and Human review. Last updated based on Changelog v1.6.7.

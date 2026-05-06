@@ -10,6 +10,8 @@ graph TD
     LB -->|Port 8080| KC[Keycloak Container]
     KC -->|Private IP| SQL[(Cloud SQL - PostgreSQL)]
     KC -->|Read| SM[Secret Manager]
+    KC -.->|SAML 2.0| TP[Teller Portal - Python SP]
+    KC -.->|OIDC / PKCE| RA[Retail App - Python]
 ```
 
 ## Components
@@ -72,8 +74,8 @@ graph TD
     *   `roles/cloudsql.client`: Allows connection to Cloud SQL via the Auth Proxy.
     *   `roles/secretmanager.secretAccessor`: Allows retrieval of database and admin credentials.
     *   `roles/artifactregistry.reader`: Allows pulling the container image.
-    *   Cloud Run Admin
-    *   Service Account User
+    *   `roles/run.admin`: Permission to manage Cloud Run revisions.
+    *   `roles/iam.serviceAccountUser`: Required for identity impersonation during deployment.
 
 ### 5. Dependency Management
 *   **Standard:** Employs `requirements.in` for high-level dependency declarations.

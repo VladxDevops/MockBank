@@ -29,6 +29,11 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
     *   Keycloak Custom Image (Project 1)
 *   **Cloud Run**: The standard serverless compute platform for all stateless microservices.
 
+## 3.1 DevOps Tools Infrastructure
+*   **Google Cloud Deploy**: Managed CD service for Cloud Run; handles promotion targets and rollback automation.
+*   **Cloud Build**: Primary CI engine for image creation and security scanning (SAST).
+*   **Google Kubernetes Engine (GKE) Autopilot**: Cost-optimized Kubernetes cluster to host ArgoCD for future Kubernetes-native GitOps.
+
 ## 4. Observability
 *   **Cloud Logging**: Centralized log aggregation.
     *   *Requirement:* Must capture structured JSON logs from Node.js apps for the "Audit Agents".

@@ -17,6 +17,49 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.2.5] - 2024-05-24
+### Added
+- **CI/CD Implementation**: Started provisioning Workload Identity Federation (WIF) and Google Cloud Deploy pipelines via Terraform.
+### Changed
+- **Status**: Moved Project 3 from Planning to Implementation phase.
+
+## [2.2.4] - 2024-05-24
+### Added
+- **CI/CD Strategy**: Adopted a hybrid CI/CD approach utilizing both Google Cloud Deploy and ArgoCD.
+### Changed
+- **Decisions**: Google Cloud Deploy will be used for continuous delivery of Cloud Run services. ArgoCD will be deployed on a GKE Autopilot cluster to manage future Kubernetes workloads and provide continuous drift detection, optimizing costs by leveraging Autopilot's pay-per-pod model.
+- **Documentation**: Updated `BNKprojects/3/PROJECT3_DETAILS.md` to reflect the new hybrid strategy and cost considerations for ArgoCD on GKE Autopilot.
+- **Documentation**: Updated `BNKprojects/3/README.md` and `Documentation/internal/INFRASTRUCTURE.md` for consistency.
+
+## [2.2.3] - 2024-05-24
+### Added
+- **Research**: Evaluated Google Cloud Deploy vs. ArgoCD for drift detection.
+### Changed
+- **Architecture**: Documented that Google Cloud Deploy is push-based and does not natively support continuous drift detection or auto-remediation.
+- **Decisions**: Maintained ArgoCD as the preferred GitOps engine for drift detection, pending GKE cost approval.
+
+## [2.2.2] - 2024-05-24
+### Changed
+- **Architecture**: Clarified that ArgoCD is Kubernetes-native and cannot run on Cloud Run.
+- **Decisions**: Evaluated cost difference between Cloud Run ($0 baseline) and GKE (~$70 baseline) for hosting GitOps engines.
+- **Documentation**: Updated `BNKprojects/3/PROJECT3_DETAILS.md` to include GKE as a prerequisite for ArgoCD.
+
+## [2.2.1] - 2024-05-24
+### Added
+- **Research**: Completed feasibility study on ArgoCD for GitOps implementation.
+- **Decisions**: Confirmed ArgoCD as $0 cost (Open Source). Identified requirement for Kubernetes (GKE) to host the GitOps engine.
+- **Project 3**: Updated `PROJECT3_DETAILS.md` to include Drift Detection and GitOps as core components.
+
+## [2.2.0] - 2024-05-24
+### Added
+- **Security**: Updated root(at /Bank/) `.gitignore` to enforce the exclusion of internal documentation (`Documentation/internal/`) and project-specific design details from version control.
+- **Project 3**: Commenced Global CI/CD and Release Safety phase.
+
+## [2.1.45] - 2024-05-24
+### Changed
+- **Documentation**: Synchronized `ARCHITECTURE.md` and `CHECKLIST.md` to reflect the completed SAML integration and OIDC local proxy strategy.
+- **Documentation**: Formally documented "Fail-Fast" security enforcement for session secrets.
+
 ## [2.1.44] - 2024-05-24
 ### Added
 - **SAML Integration**: Implemented `src/teller_portal.py` using `python3-saml` to handle the SAML 2.0 Service Provider (SP) flow.

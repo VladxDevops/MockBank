@@ -44,7 +44,7 @@ Deploy a centralized Identity Provider (Keycloak) on GCP using Terraform and int
 3.  **Phase 3: Retail App (OIDC Integration):**
     *   **Client Configuration:**
         *   Client ID: `retail-app`
-        *   Access Type: `Public`
+        *   Access Type: `PRIVATE, GCP authenticated`
         *   Flow: Authorization Code Flow
         *   PKCE: Enforced (`S256`)
         *   Redirect URI: `http://localhost:3000/callback`

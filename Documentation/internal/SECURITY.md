@@ -11,7 +11,7 @@ In any conflict between feature velocity, user convenience, or system performanc
 *   **Authentication:** Multi-Factor Authentication (MFA) is mandatory for all administrative and high-value transaction flows.
 *   **Authorization:** Strict Role-Based Access Control (RBAC). Default access is "Deny All".
 *   **Vulnerability Management:** Critical vulnerabilities must be patched within 24 hours of detection.
-*   **Secrets Management:** No passwords, keys, or sensitive information will be hardcoded. All secrets must be managed via GCP Secret Manager.
+*   **Secrets Management:** No passwords, keys, or sensitive information will be hardcoded. All secrets must be managed via GCP Secret Manager. Please alway double check that the GCP project numbers, names, and ids are not harcoded. Do not hard code service account email addresses nor keys. 
 
 ## 3. Privacy Standards
 *   **Data Minimization:** We only collect data strictly necessary for the banking transaction.

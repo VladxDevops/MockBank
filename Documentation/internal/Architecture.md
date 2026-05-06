@@ -27,6 +27,10 @@ This architecture describes a secure, cloud-native banking platform designed for
 *   **Cloud Provider:** Google Cloud Platform (GCP).
 *   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
 *   **Declarative Operations:** All application-level configurations (e.g., Identity Clients, Auth Policies) must be declared in code. Manual configuration is an anti-pattern that violates the reproducibility requirement.
+*   **Orchestration & Delivery (Hybrid Model):**
+    *   **Cloud Run Services:** Managed via **Google Cloud Deploy** for automated promotion through `DEV`, `TEST`, and `PROD` targets.
+    *   **GitOps (Future):** **ArgoCD** hosted on GKE Autopilot provides continuous drift detection and reconciliation for Kubernetes-native workloads.
+*   **Release Safety:** Staggered deployments are enforced by automated gates (SAST, functional verification) as defined in `RELEASE_SAFETY.md`.
     *   **Configuration:** Use `variables.tf` for declarations.
     *   **Environments:** State must be managed via environment-specific variable files: `dev.tfvars`, `test.tfvars`, and `prod.tfvars`.
 *   **Cost Optimization:** Select budget-friendly GCP services (e.g., Cloud Run) where possible, provided security is not compromised. 
@@ -62,6 +66,10 @@ To maintain a clean and navigable codebase, the following directory standards ap
 *   **Service Directories (e.g., `Services/{name}` or Project folders):**
     *   `src/`: Application logic and source code.
     *   `container/`: Containerization assets (`Dockerfile`, `docker-compose.yml`, entrypoint scripts).
+    *   `tests/`: Unit and integration tests.
+        *   `config/`: Non-sensitive configuration files.
+    *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
+*   **`Infrastructure/`**: Terraform and cloud configuration.
     *   `tests/`: Unit and integration tests.
         *   `config/`: Non-sensitive configuration files.
     *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.

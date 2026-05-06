@@ -17,6 +17,7 @@ The highest priority for all automated agents (CI/CD runners, Monitoring Bots, A
 ### A. Deployment Agents (CI/CD)
 *   **Role:** Execute safe, staggered deployments to production environments.
 *   **Security:** Must operate with ephemeral credentials. No long-lived secrets stored in agent configurations.
+*   **Compliance:** Must enforce all gates defined in `RELEASE_SAFETY.md`.
 
 ### B. Audit & Monitoring Agents
 *   **Role:** Inspect MongoDB logs and system metrics for anomalies.

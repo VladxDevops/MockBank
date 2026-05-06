@@ -1,6 +1,6 @@
 # Project 3: Mosaic Migration (CI/CD & Release Safety) Checklist
 
-## 1. Environment & Provider Setup - PENDING
+## 1. Environment & Provider Setup - ACTIVE
 - [ ] **Keycloak Provider Init:** Configure the `mrparkers/keycloak` Terraform provider.
 - [ ] **Authentication:** Securely map IdP admin credentials from Secret Manager to the Terraform runner.
 - [ ] **Workspace Strategy:** Initialize Terraform workspaces for `DEV` and `PROD` environments.
@@ -33,5 +33,5 @@ Based on `BNKprojects/3/PROJECT_DETAILS.md`, the following steps track the final
 3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
 
 ---
-**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the PLANNING phase.
+**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
 **Classification: INTERNAL**
