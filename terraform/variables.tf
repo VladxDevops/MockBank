@@ -91,3 +91,19 @@ variable "github_repository" {
   description = "The GitHub repository in 'owner/repo' format"
   type        = string
 }
+
+variable "workforce_identity_federation_pool_id" {
+  description = "The ID for the Workload Identity Pool"
+  type        = string
+}
+
+variable "workforce_identity_federation_provider_id" {
+  description = "The ID for the Workload Identity Pool Provider"
+  type        = string
+}
+
+variable "github_actions_sa_id" {
+  description = "The account ID for the GitHub Actions Service Account"
+  type        = string
+}
+

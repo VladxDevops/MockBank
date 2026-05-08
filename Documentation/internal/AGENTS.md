@@ -59,4 +59,9 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 *   **Prohibition of Manual State:** Agents must never suggest manual configuration via Admin UIs or `docker exec` sessions as a permanent solution.
 *   **Reproducibility:** If a change cannot be captured in a declarative manifest, it must be documented as a critical architectural debt.
 
+### 6. Modular Infrastructure Directive
+*   **Reusability:** All CI/CD and release safety infrastructure (Workload Identity, Cloud Deploy pipelines) must be encapsulated in reusable modules.
+*   **Standardization:** Service-specific logic (e.g., repository name, service name) must be passed as variables to these modules.
+*   **Constraint:** Root configuration files (like `project3.tf`) should ideally act as orchestrators that call these modules rather than containing flat resource definitions.
+
 Please keep the changelog.md up to date.

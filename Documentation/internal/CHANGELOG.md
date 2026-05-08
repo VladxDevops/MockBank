@@ -14,12 +14,36 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.5.1] - 2024-05-24
+### Fixed
+- **Terraform**: Declared missing variables for Workload Identity and GitHub Actions SAs in `variables.tf`.
+- **IAM**: Granted `roles/iam.serviceAccountUser` to the GitHub Actions SA in `project3.tf` to resolve deployment authorization errors.
+### Added
+- **Governance**: Synchronized variable naming between `project3.tf` and `variables.tf` for consistency.
+
+## [0.5.0] - 2024-05-24
+### Added
+- **Architecture**: Transitioned to a modular CI/CD architecture by implementing the `cicd_pipeline` module.
+- **Decision**: Mandated modularity for all CI/CD infrastructure to allow for standardized release safety across multiple microservices (e.g., Transaction, Loans).
+- **Security**: Standardized IAM role assignment within the module to prevent permission drift between services.
+
+## [0.5.0] - 2024-05-24
+### Added
+- **Architecture**: Transitioned to a modular CI/CD architecture by implementing the `cicd_pipeline` module.
+- **Decision**: Mandated modularity for all CI/CD infrastructure to allow for standardized release safety across multiple microservices (e.g., Transaction, Loans).
+- **Security**: Standardized IAM role assignment within the module to prevent permission drift between services.
+
+## [0.4.1] - 2024-05-24
+### Fixed
+- **Terraform**: Fixed `google_clouddeploy_target` attribute references in `project3.tf` (switched `.target_id` to `.name`).
+- **Terraform**: Corrected Cloud Deploy API service name to `clouddeploy.googleapis.com`.
+
 ## [0.4.0] - 2024-05-24
 ### Added
 - **Terraform**: Consolidated Cloud Deploy infrastructure into `project3.tf` to ensure it is provisioned alongside CI/CD resources.
 - **Infrastructure**: Enabled `clouddeploy.googleapis.com` API.
 - **Security**: Configured `DEV` target for rapid iteration while maintaining manual approval gates for `TEST` and `PROD`.
-- **IAM**: Added `roles/clouddeploy.jobRunner` and `roles/logging.logWriter` to the GitHub Actions service account to enable execution of Cloud Deploy jobs.
+- **IAM**: Added `roles/clouddeploy.jobRunner`, `roles/logging.logWriter`, and `roles/iam.serviceAccountUser` to the GitHub Actions service account.
 - **Governance**: Created `SERVICE_ACCOUNT_GOVERNANCE.md` to document and regulate IAM roles and service account purposes.
 - **Decision**: Adopted full `terraform apply` over targeted applies for Project 3 to ensure dependency graph integrity between GCP APIs and Cloud Deploy resources.
 

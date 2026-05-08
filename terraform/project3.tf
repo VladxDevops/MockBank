@@ -2,7 +2,7 @@
 
 resource "google_project_service" "cloud_deploy" {
   project            = var.compute_project_id
-  service            = "deploy.googleapis.com"
+  service            = "clouddeploy.googleapis.com"
   disable_on_destroy = false
 }
 
@@ -21,14 +21,14 @@ resource "google_project_service" "cloud_resource_manager" {
 # --- Workload Identity Federation for GitHub Actions ---
 
 resource "google_iam_workload_identity_pool" "github_pool" {
-  workload_identity_pool_id = "github-actions-pool"
+  workload_identity_pool_id = var.wif_pool_id
   display_name              = "GitHub Actions Pool"
   description               = "Identity pool for GitHub Actions automation"
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = "github-provider"
+  workload_identity_pool_provider_id = var.wif_provider_id
   display_name                       = "GitHub Provider"
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
@@ -46,18 +46,34 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
 
 # Service Account that GitHub Actions will impersonate
 resource "google_service_account" "github_actions_sa" {
-  account_id   = "sa-github-actions"
+  account_id   = var.github_actions_sa_id
   display_name = "GitHub Actions CI/CD Service Account"
 }
 
 # Allow GitHub to impersonate the SA (Restrict to our specific repository)
-resource "google_service_account_iam_member" "wif_binding" {
+resource "google_service_account_iam_member" "workload_identity_federation_binding" {
   service_account_id = google_service_account.github_actions_sa.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"
 }
 
 # Permissions for the CI/CD SA to manage deployments
+
+#IAM roles for the Terraform service account needed for project3: 
+resource "google_project_iam_member" "terraform_sa_workload_identity_admin" {
+  project = var.compute_project_id
+  role   = "roles/iam.workloadIdentityPoolAdmin"
+  member = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
+  project = var.compute_project_id
+  role   = "roles/clouddeploy.admin"
+  member = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+#End of roles for the Terraform service account needed for project3. 
+
 resource "google_project_iam_member" "cloud_deploy_admin" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.admin"
@@ -76,6 +92,18 @@ resource "google_project_iam_member" "artifact_registry_writer" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "iam_workload_identity_admin" {
+  project = var.compute_project_id
+  role    = "roles/iam.workloadIdentityPoolAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "cloud_deploy_releaser" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.releaser"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 resource "google_project_iam_member" "cloud_deploy_job_runner" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.jobRunner"
@@ -88,6 +116,12 @@ resource "google_project_iam_member" "logging_writer" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "iam_service_account_user" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 # --- Google Cloud Deploy Pipeline (Project 2: Transaction Service) ---
 
 resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
@@ -97,13 +131,13 @@ resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
 
   serial_pipeline {
     stages {
-      target_id = google_clouddeploy_target.dev_target.target_id
+      target_id = google_clouddeploy_target.dev_target.name
     }
     stages {
-      target_id = google_clouddeploy_target.test_target.target_id
+      target_id = google_clouddeploy_target.test_target.name
     }
     stages {
-      target_id = google_clouddeploy_target.prod_target.target_id
+      target_id = google_clouddeploy_target.prod_target.name
     }
   }
 
