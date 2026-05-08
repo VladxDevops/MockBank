@@ -14,6 +14,15 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.4.0] - 2024-05-24
+### Added
+- **Terraform**: Consolidated Cloud Deploy infrastructure into `project3.tf` to ensure it is provisioned alongside CI/CD resources.
+- **Infrastructure**: Enabled `clouddeploy.googleapis.com` API.
+- **Security**: Configured `DEV` target for rapid iteration while maintaining manual approval gates for `TEST` and `PROD`.
+- **IAM**: Added `roles/clouddeploy.jobRunner` and `roles/logging.logWriter` to the GitHub Actions service account to enable execution of Cloud Deploy jobs.
+- **Governance**: Created `SERVICE_ACCOUNT_GOVERNANCE.md` to document and regulate IAM roles and service account purposes.
+- **Decision**: Adopted full `terraform apply` over targeted applies for Project 3 to ensure dependency graph integrity between GCP APIs and Cloud Deploy resources.
+
 ## [0.1.0] - Initial Setup
 ### Added
 - **security.md**: Established the "Prime Directive" (Security > Privacy). Defined standards for MFA, RBAC, and Incident Response.
