@@ -21,14 +21,14 @@ resource "google_project_service" "cloud_resource_manager" {
 # --- Workload Identity Federation for GitHub Actions ---
 
 resource "google_iam_workload_identity_pool" "github_pool" {
-  workload_identity_pool_id = var.wif_pool_id
+  workload_identity_pool_id = var.workforce_identity_federation_pool_id
   display_name              = "GitHub Actions Pool"
   description               = "Identity pool for GitHub Actions automation"
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = var.wif_provider_id
+  workload_identity_pool_provider_id = var.workforce_identity_federation_provider_id
   display_name                       = "GitHub Provider"
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
@@ -208,3 +208,4 @@ resource "google_clouddeploy_target" "prod_target" {
     google_project_service.cloud_deploy
   ]
 }
+

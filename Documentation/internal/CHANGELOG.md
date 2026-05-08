@@ -14,6 +14,11 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.5.2] - 2024-05-24
+### Changed
+- **Refactor**: Renamed all Workload Identity variables from `wif_` prefix to `workforce_identity_federation_` for better architectural alignment and clarity.
+- **Terraform**: Updated `variables.tf`, `project3.tf`, and `modules/cicd_pipeline/main.tf` to reflect the new variable names.
+
 ## [0.5.1] - 2024-05-24
 ### Fixed
 - **Terraform**: Declared missing variables for Workload Identity and GitHub Actions SAs in `variables.tf`.

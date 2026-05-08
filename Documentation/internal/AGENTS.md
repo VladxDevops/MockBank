@@ -65,3 +65,17 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 *   **Constraint:** Root configuration files (like `project3.tf`) should ideally act as orchestrators that call these modules rather than containing flat resource definitions.
 
 Please keep the changelog.md up to date.
+
+### 7. IAM Resource Standards
+*   **Explicit Declaration:** Do NOT use `for_each` or `count` to loop through a list of roles for a single identity (e.g., `google_project_iam_member`).
+*   **Readability:** Every IAM role assignment must be its own unique Terraform resource. This improves visibility during `terraform plan` and allows for granular management (dependencies, lifecycle rules, and comments).
+*   **Example Format:**
+    ```hcl
+    # Required for the service to write logs
+    resource "google_project_iam_member" "service_logging_writer" {
+      project = var.compute_project_id
+      role    = "roles/logging.logWriter"
+      member  = "serviceAccount:${google_service_account.example_sa.email}"
+    }
+    ```
+*   **Consistency:** Use the service account's email attribute for the `member` field to ensure the dependency graph is correctly built by Terraform.
