@@ -76,6 +76,18 @@ resource "google_project_iam_member" "artifact_registry_writer" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "cloud_deploy_job_runner" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.jobRunner"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "logging_writer" {
+  project = var.compute_project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 # --- Google Cloud Deploy Pipeline (Project 2: Transaction Service) ---
 
 resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
@@ -85,10 +97,13 @@ resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
 
   serial_pipeline {
     stages {
-      target_id = "dev-target"
+      target_id = google_clouddeploy_target.dev_target.target_id
     }
     stages {
-      target_id = "test-target"
+      target_id = google_clouddeploy_target.test_target.target_id
+    }
+    stages {
+      target_id = google_clouddeploy_target.prod_target.target_id
     }
   }
 
@@ -121,7 +136,7 @@ resource "google_clouddeploy_target" "dev_target" {
 # TEST Target (Cloud Run)
 resource "google_clouddeploy_target" "test_target" {
   location = var.compute_region
-  name     = "test-targe"
+  name     = "test-target"
 
   run {
     location = "projects/${var.compute_project_id}/locations/${var.compute_region}"
@@ -134,6 +149,26 @@ resource "google_clouddeploy_target" "test_target" {
 
   # Requirement for promotion gate
   require_approval = true
+
+  depends_on = [
+    google_project_service.cloud_deploy
+  ]
+}
+
+# PROD Target (Cloud Run)
+resource "google_clouddeploy_target" "prod_target" {
+  location          = var.compute_region
+  name              = "prod-target"
+  require_approval  = true
+
+  run {
+    location = "projects/${var.compute_project_id}/locations/${var.compute_region}"
+  }
+
+  execution_configs {
+    usages            = ["RENDER", "DEPLOY"]
+    service_account   = google_service_account.github_actions_sa.email
+  }
 
   depends_on = [
     google_project_service.cloud_deploy
