@@ -22,6 +22,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **GitOps**: Initialized Keycloak Terraform provider and migrated the `AltmtrkBank` realm to HCL.
 - **GitOps**: Implemented SAML 2.0 integration for `teller-portal` with automated self-signed certificate generation and Secret Manager storage.
 - **GitOps**: Implemented the `retail-app` OIDC client and the new `risk` scope in Terraform to satisfy Fraud Team requirements.
+- **Documentation**: Created `BNKprojects/3/SAML_INTERVIEW_QA.md` detailing interview questions and answers for the SAML implementation.
 ### Changed
 - **Configuration**: Updated Project 3 variables to support Keycloak admin credentials and URL.
 

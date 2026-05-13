@@ -9,9 +9,10 @@
 ## 2. Configuration as Code (GitOps) - ACTIVE
 - [x] **Keycloak Provider Init:** Already initialized in step 1.
 - [x] **Realm Migration:** Core realm and Retail App OIDC client defined in HCL.
-- [ ] **Client Definition:** SAML `teller-portal` resource remaining.
+- [x] **Client Definition:** SAML `teller-portal` resource defined with automated TLS generation.
 - [ ] **Environment Parity:** Create `dev.tfvars` and `prod.tfvars` to manage environment-specific URLs and secrets.
 - [x] **Scenario - Risk Scope:** New `risk` scope defined as an HCL resource.
+
 
 ## 3. CI/CD Pipeline (GitHub Actions) - ACTIVE
 - [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
