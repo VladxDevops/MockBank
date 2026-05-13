@@ -32,3 +32,21 @@ variable "terraform_deployer_service_account" {
   description = "The email address of the service account used to run Terraform, used for administrative IAM bindings."
   type        = string
 }
+
+#Keycloak: 
+variable "keycloak_url" {
+  description = "The URL of the Keycloak instance (e.g., https://keycloak.example.com)."
+  type        = string
+}
+
+variable "keycloak_admin_username" {
+  description = "The username for the Keycloak admin account."
+  type        = string
+  default     = "admin"
+}
+
+variable "keycloak_admin_password" {
+  description = "The password for the Keycloak admin account, typically sourced from Secret Manager."
+  type        = string
+  sensitive   = true
+}

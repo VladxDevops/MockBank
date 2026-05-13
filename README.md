@@ -185,6 +185,49 @@ PROJECT_ID=$(gcloud config get-value project) && gcloud run deploy transaction-s
 
 *Note: Ensure you configure the `MONGO_URI` environment variable (refer to Project Details) so the service can connect to the database.*
 
+## Project 3: CI/CD & Release Safety Workflow
+
+This project implements a secure, automated pipeline for the Transaction Service using GitHub Actions and Google Cloud Deploy.
+
+### 1. Setup & Configuration (Prerequisites)
+Before the pipeline can run, you must configure the following in your GitHub Repository Settings:
+
+**GitHub Secrets (`Settings > Secrets > Actions`):**
+*   `WIF_PROVIDER`: The full resource name of the Workload Identity Provider (e.g., `projects/NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github-provider`).
+*   `WIF_SERVICE_ACCOUNT`: The email of the Service Account created for CI/CD (e.g., `github-actions-sa@PROJECT_ID.iam.gserviceaccount.com`).
+
+**GitHub Variables (`Settings > Variables > Actions`):**
+*   `GCP_PROJECT_ID`: Your Google Cloud Project ID.
+*   `GCP_DEPLOY_REGION`: The region for deployment (e.g., `us-south1`).
+
+### 2. The Deployment Manifests
+*   **`skaffold.yaml`**: This file bridges the gap between your source code and the cloud. It tells Cloud Deploy how to build your image (using the Dockerfile in `BNKprojects/2/container/`) and which Kubernetes-style manifests to render.
+*   **`service.yaml`**: A Knative Service definition for Cloud Run. It configures:
+    *   **VPC Egress**: Routes traffic through `avechector` for private MongoDB access.
+    *   **Secrets**: Maps the MongoDB connection string from Secret Manager to the `MONGO_URI` environment variable.
+
+### 3. Pipeline Execution Flow
+1.  **Code Push**: Push code to the `DEV` or `main` branch.
+2.  **SAST Gate**: The `sast-scan` job runs **Semgrep**. It scans for hardcoded secrets, Node.js security vulnerabilities, and general audit failures. If vulnerabilities are found, the pipeline fails.
+3.  **Authentication**: The workflow uses **Workload Identity Federation (WIF)** to exchange a GitHub OIDC token for a short-lived GCP access token—no static keys required.
+4.  **Release Creation**: The `gcloud deploy releases create` command bundles the source code from `BNKprojects/2`, sends it to Cloud Deploy, and triggers the `transaction-service-pipeline`.
+
+### 4. Promotion & Approval
+*   **DEV**: Deployment to the `dev-target` happens automatically after a successful push to the `DEV` branch.
+*   **TEST/PROD**: These targets are configured with `require_approval: true`.
+    *   To promote: Navigate to the **Google Cloud Deploy** console.
+    *   Select the `transaction-service-pipeline`.
+    *   Click **Promote** on the current release to move it from `DEV` to `TEST`.
+    *   A user with the appropriate IAM permissions must manually approve the rollout in the UI.
+
+### 5. Local Testing with Skaffold
+To verify the manifests locally before pushing:
+```bash
+cd BNKprojects/2
+skaffold render --image transaction-service-image:local
+```
+This will output the rendered YAML that Cloud Deploy will use, allowing you to verify environment variables and annotations.
+
 ### Service Logic & Diagnostics
 
 The deployed service implements the following orchestration logic:

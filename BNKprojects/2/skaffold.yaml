@@ -1,0 +1,15 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: transaction-service
+build:
+  artifacts:
+    - image: transaction-service-image
+      context: .
+      docker:
+        dockerfile: container/Dockerfile
+manifests:
+  rawYaml:
+    - service.yaml
+deploy:
+  cloudrun: {}

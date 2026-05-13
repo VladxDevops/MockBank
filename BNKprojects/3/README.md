@@ -48,3 +48,8 @@ Project 3 provides the automation engine for the Altmtrk2026 Bank Platform. It f
 *   Project Details
 *   Release Safety Policy
 *   Changelog
+
+## Status: Infrastructure Ready
+*   [x] Terraform Provisioning (WIF + Cloud Deploy)
+*   [ ] GitHub Actions Workflow Integration (pending+not started)
+*   [ ] Skaffold Configuration (pending+not started)

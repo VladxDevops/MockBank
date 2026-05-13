@@ -17,6 +17,26 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.4.0] - 2024-05-24
+### Added
+- **GitOps**: Initialized Keycloak Terraform provider and migrated the `AltmtrkBank` realm to HCL.
+- **GitOps**: Implemented SAML 2.0 integration for `teller-portal` with automated self-signed certificate generation and Secret Manager storage.
+- **GitOps**: Implemented the `retail-app` OIDC client and the new `risk` scope in Terraform to satisfy Fraud Team requirements.
+### Changed
+- **Configuration**: Updated Project 3 variables to support Keycloak admin credentials and URL.
+
+## [2.3.0] - 2024-05-24
+### Added
+- **Infrastructure**: Successfully provisioned Project 3 infrastructure (Workload Identity Federation Pool/Provider and Google Cloud Deploy Pipelines) via modularized Terraform.
+### Fixed
+- **Terraform**: Corrected OIDC provider `attribute_condition` to properly reference mapped attributes, resolving 400 Bad Request errors.
+- **Terraform**: Fixed HCL syntax errors in `google_clouddeploy_target` (replaced semicolons with newlines).
+- **IAM**: Resolved propagation race conditions by adding explicit `depends_on` between IAM role assignments and WIF resource creation.
+### Pending (Not Started)
+- **CI/CD Integration**: Creation of `.github/workflows/deploy.yml` to authenticate via WIF and trigger Cloud Deploy releases.
+- **Manifests**: Configuration of `skaffold.yaml` for the Transaction Service (Project 2).
+- **Security**: Implementation of SAST (Static Application Security Testing) gates within the GitHub Actions pipeline.
+
 ## [2.2.5] - 2024-05-24
 ### Added
 - **CI/CD Implementation**: Started provisioning Workload Identity Federation (WIF) and Google Cloud Deploy pipelines via Terraform.

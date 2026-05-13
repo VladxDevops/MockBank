@@ -57,12 +57,15 @@ data/db/
 
 #.md and documentation files: 
 internalREADME.md
+spec.md
 Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
 PYTHON_CODE_EXPLANATION.md
 RELEASE_SAFETY.md
 Documentation/internal/SERVICE_ACCOUNT_GOVERNANCE.md
+
 #Project3: 
 PROJECT3_DETAILS.md
+
 
 
 

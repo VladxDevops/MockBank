@@ -1,0 +1,26 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: transaction-service
+spec:
+  template:
+    metadata:
+      annotations:
+        # Routes traffic through the VPC for private MongoDB Atlas access
+        run.googleapis.com/vpc-access-connector: avechector
+        run.googleapis.com/vpc-access-egress: all
+    spec:
+      containers:
+      - image: transaction-service-image
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: transaction-service-db-connection-string
+              key: latest
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: 1000m

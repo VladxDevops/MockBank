@@ -14,6 +14,15 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.6.0] - 2024-05-24
+### Added
+- **Infrastructure**: Completed the modularization of Project 3. Verified successful creation of identity federation and delivery pipelines.
+### Security
+- **IAM**: Enforced explicit resource declaration for all Project 3 IAM roles to improve auditability.
+### Pending (Not Started)
+- **Workflow**: End-to-end automation linking GitHub Actions to the Cloud Deploy targets.
+- **Governance**: Final review of the CI/CD service account permissions against the "Least Privilege" directive.
+
 ## [0.5.2] - 2024-05-24
 ### Changed
 - **Refactor**: Renamed all Workload Identity variables from `wif_` prefix to `workforce_identity_federation_` for better architectural alignment and clarity.
