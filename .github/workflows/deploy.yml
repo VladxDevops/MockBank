@@ -151,3 +151,44 @@ jobs:
             --region="${{ env.GCP_REGION }}" \
             --delivery-pipeline="${{ env.PIPELINE_NAME }}" \
             --source="BNKprojects/2"
+
+  release-identity:
+    name: Build and Deploy Project 1 (Identity)
+    needs: [terraform-plan, sast-scan]
+    environment: DEV
+    if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build Keycloak Image
+        run: |
+          cd BNKprojects/1/container
+          # Using github.sha as a tag ensures immutable releases and triggers Cloud Run revisions correctly
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}" .
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Apply (Project 1)
+        run: |
+          cd terraform
+          terraform init
+          # Targeted apply ensures we only update Keycloak and its dependencies
+          terraform apply -auto-approve -lock=false \
+            -target=module.project1 \
+            -var-file="dev.tfvars" \
+            -var="keycloak_admin_password=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" \
+            -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
+            -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
+            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}"
