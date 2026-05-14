@@ -89,6 +89,7 @@ jobs:
 
   unit-tests:
     name: Unit Tests (Project 2)
+    needs: auto-fix
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -99,7 +100,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: BNKprojects/2/package-lock.json
+          cache-dependency-path: BNKprojects/2/package*.json
 
       - name: Install dependencies
         run: cd BNKprojects/2 && npm ci
@@ -109,6 +110,7 @@ jobs:
 
   dependency-scan:
     name: Dependency Audit
+    needs: auto-fix
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
