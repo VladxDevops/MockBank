@@ -1,5 +1,5 @@
 # 1. Reserve a Global Static IP for the Bank API
-# Note: While Cloud Run provides a default URL, a Global Static IP is required 
+### Note: While Cloud Run provides a default URL, a Global Static IP is required 
 # for the Global External Load Balancer. This enables the use of Cloud Armor 
 # (WAF) and a unified entry point for all microservices, adhering to the 
 # "Security First" objective of this educational platform.

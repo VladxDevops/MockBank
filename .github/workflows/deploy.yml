@@ -63,10 +63,12 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform plan -lock=false -var-file="dev.tfvars" \
+          terraform plan -lock=false \
             -var="keycloak_admin_password=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" \
             -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
+            -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
+            -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
             -out=tfplan
 
   sast-scan:
@@ -187,8 +189,9 @@ jobs:
           # Targeted apply ensures we only update Keycloak and its dependencies
           terraform apply -auto-approve -lock=false \
             -target=module.project1 \
-            -var-file="dev.tfvars" \
             -var="keycloak_admin_password=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" \
             -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
+            -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
+            -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
             -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}"
