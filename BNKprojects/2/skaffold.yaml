@@ -13,4 +13,3 @@ manifests:
     - service.yaml
 deploy:
   cloudRun: {}
-  cloudRun: {}
