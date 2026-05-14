@@ -112,3 +112,8 @@ variable "teller_portal_certificate_id" {
   type        = string
 }
 
+variable "domain_name" {
+  description = "The domain name for the Bank API (e.g., api.altmtrk.bank)"
+  type        = string
+  default     = null
+}
