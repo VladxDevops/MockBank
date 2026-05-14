@@ -192,13 +192,48 @@ This project implements a secure, automated pipeline for the Transaction Service
 ### 1. Setup & Configuration (Prerequisites)
 Before the pipeline can run, you must configure the following in your GitHub Repository Settings:
 
-**GitHub Secrets (`Settings > Secrets > Actions`):**
+**GitHub Secrets (`Settings > Secrets > Actions` or via `gh` CLI):**
+
+To find the correct values for your secrets via Google Cloud Shell:
+```bash
+# For WIF_PROVIDER:
+gcloud iam workload-identity-pools list --location=global
+OR: 
+gcloud iam workload-identity-pools providers list --location="global" --workload-identity-pool="YOUR_POOL_NAME" --format="value(name)"
+
+# For WIF_SERVICE_ACCOUNT:
+gcloud iam service-accounts list --filter="name:github-actions" --format="value(email)"
+```
+
+To set secrets via terminal (Safety First):
+```bash
+# 1. Verify current repository context
+gh repo view --json nameWithOwner
+
+#It should print: username/repo_name
+
+
+# 2. Set environment-specific secrets (e.g., for DEV)
+gh secret set WIF_PROVIDER --env DEV --body "your-DEV-provider-string"
+gh secret set WIF_SERVICE_ACCOUNT --env DEV --body "your-sa-email"
+gh secret set KEYCLOAK_ADMIN_PASSWORD --env DEV --body "your-password"
+gh secret set GCP_PROJECT_ID --env DEV --body "your-actual-dev-project-id"
+
+```
+
 *   `WIF_PROVIDER`: The full resource name of the Workload Identity Provider (e.g., `projects/NUMBER/locations/global/workloadIdentityPools/github-pool/providers/github-provider`).
 *   `WIF_SERVICE_ACCOUNT`: The email of the Service Account created for CI/CD (e.g., `github-actions-sa@PROJECT_ID.iam.gserviceaccount.com`).
+*   `KEYCLOAK_ADMIN_PASSWORD`: Admin password for Terraform provider auth.
 
-**GitHub Variables (`Settings > Variables > Actions`):**
+**GitHub Variables (`Settings > Variables > Actions` or via `gh` CLI):**
+
+```bash
+gh variable set GCP_PROJECT_ID --body "your-project-id"
+gh variable set GCP_COMPUTE_REGION --body "replace with region (e.g., us-central1)"
+```
+
 *   `GCP_PROJECT_ID`: Your Google Cloud Project ID.
-*   `GCP_DEPLOY_REGION`: The region for deployment (e.g., `us-south1`).
+*   `GCP_COMPUTE_REGION`: The region for deployment (e.g., `us-central1`).
 
 ### 2. The Deployment Manifests
 *   **`skaffold.yaml`**: This file bridges the gap between your source code and the cloud. It tells Cloud Deploy how to build your image (using the Dockerfile in `BNKprojects/2/container/`) and which Kubernetes-style manifests to render.

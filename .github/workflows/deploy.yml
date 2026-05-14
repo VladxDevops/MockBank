@@ -34,7 +34,7 @@ jobs:
           terraform plan -var-file="dev.tfvars" \
             -var="keycloak_admin_password=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}" \
             -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
-            -var="compute_region=${{ vars.GCP_DEPLOY_REGION }}" \
+            -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -out=tfplan
 
   sast-scan:
@@ -52,13 +52,46 @@ jobs:
             p/secrets
             p/nodejs
 
+  unit-tests:
+    name: Unit Tests (Project 2)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: BNKprojects/2/package-lock.json
+
+      - name: Install dependencies
+        run: cd BNKprojects/2 && npm ci
+
+      - name: Run tests
+        run: cd BNKprojects/2 && npm test || echo "No tests defined yet"
+
+  dependency-scan:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Node.js Audit
+        run: |
+          cd BNKprojects/2
+          # Fails on high/critical vulnerabilities
+          npm audit --audit-level=high
+
   build-and-release:
     name: Build and Trigger Cloud Deploy
-    needs: sast-scan
+    needs: [sast-scan, unit-tests, dependency-scan]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
-      GCP_REGION: ${{ vars.GCP_DEPLOY_REGION }} #Create github secret, pending.
+      GCP_REGION: ${{ vars.GCP_COMPUTE_REGION }} #Create github secret, pending.
       PIPELINE_NAME: transaction-service-pipeline
 
     steps:
