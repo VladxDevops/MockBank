@@ -88,10 +88,11 @@ jobs:
   build-and-release:
     name: Build and Trigger Cloud Deploy
     needs: [sast-scan, unit-tests, dependency-scan]
+    environment: DEV
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
-      GCP_REGION: ${{ vars.GCP_COMPUTE_REGION }} #Create github secret, pending.
+      GCP_REGION: ${{ vars.GCP_COMPUTE_REGION }}
       PIPELINE_NAME: transaction-service-pipeline
 
     steps:
