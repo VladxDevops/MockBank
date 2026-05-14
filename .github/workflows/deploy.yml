@@ -38,9 +38,9 @@ jobs:
           npm audit fix || echo "Manual intervention required for some vulnerabilities"
 
       - name: Commit fixes
-          uses: stefanzweifel/git-auto-commit-action@v5
-          with:
-            commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
 
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
