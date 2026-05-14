@@ -19,9 +19,9 @@ resource "google_compute_subnetwork" "private" {
 
 resource "google_vpc_access_connector" "connector" {
   # IMPORTANT: Replace "vpc-conn" with the actual name of your connector in GCP.
-  name          = "avechector"
-  project       = var.compute_project_id
-  region        = var.compute_region
+  name    = "avechector"
+  project = var.compute_project_id
+  region  = var.compute_region
   subnet {
     name = google_compute_subnetwork.private.name
   }

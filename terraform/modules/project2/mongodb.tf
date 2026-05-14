@@ -4,18 +4,18 @@ resource "mongodbatlas_project" "project" {
 }
 
 resource "mongodbatlas_cluster" "cluster" {
-  project_id   = mongodbatlas_project.project.id
-  name         = "${var.service_name}-db"
-  provider_name = "TENANT"
-  backing_provider_name = "GCP"
-  provider_region_name = var.mongodb_atlas_cluster_region
+  project_id                  = mongodbatlas_project.project.id
+  name                        = "${var.service_name}-db"
+  provider_name               = "TENANT"
+  backing_provider_name       = "GCP"
+  provider_region_name        = var.mongodb_atlas_cluster_region
   provider_instance_size_name = "M0"
 }
 
 resource "mongodbatlas_database_user" "user" {
-  project_id        = mongodbatlas_project.project.id
-  username          = "app-user"
-  password          = random_password.password.result
+  project_id         = mongodbatlas_project.project.id
+  username           = "app-user"
+  password           = random_password.password.result
   auth_database_name = "admin"
 
   roles {

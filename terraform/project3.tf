@@ -62,14 +62,14 @@ resource "google_service_account_iam_member" "workload_identity_federation_bindi
 #IAM roles for the Terraform service account needed for project3: 
 resource "google_project_iam_member" "terraform_sa_workload_identity_admin" {
   project = var.compute_project_id
-  role   = "roles/iam.workloadIdentityPoolAdmin"
-  member = "serviceAccount:${var.terraform_deployer_service_account}"
+  role    = "roles/iam.workloadIdentityPoolAdmin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
 resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
   project = var.compute_project_id
-  role   = "roles/clouddeploy.admin"
-  member = "serviceAccount:${var.terraform_deployer_service_account}"
+  role    = "roles/clouddeploy.admin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
 #End of roles for the Terraform service account needed for project3. 
@@ -156,8 +156,8 @@ resource "google_clouddeploy_target" "dev_target" {
   }
 
   execution_configs {
-    usages            = ["RENDER", "DEPLOY"]
-    service_account   = google_service_account.github_actions_sa.email
+    usages          = ["RENDER", "DEPLOY"]
+    service_account = google_service_account.github_actions_sa.email
   }
 
   require_approval = false
@@ -177,8 +177,8 @@ resource "google_clouddeploy_target" "test_target" {
   }
 
   execution_configs {
-    usages            = ["RENDER", "DEPLOY"]
-    service_account   = google_service_account.github_actions_sa.email
+    usages          = ["RENDER", "DEPLOY"]
+    service_account = google_service_account.github_actions_sa.email
   }
 
   # Requirement for promotion gate
@@ -191,17 +191,17 @@ resource "google_clouddeploy_target" "test_target" {
 
 # PROD Target (Cloud Run)
 resource "google_clouddeploy_target" "prod_target" {
-  location          = var.compute_region
-  name              = "prod-target"
-  require_approval  = true
+  location         = var.compute_region
+  name             = "prod-target"
+  require_approval = true
 
   run {
     location = "projects/${var.compute_project_id}/locations/${var.compute_region}"
   }
 
   execution_configs {
-    usages            = ["RENDER", "DEPLOY"]
-    service_account   = google_service_account.github_actions_sa.email
+    usages          = ["RENDER", "DEPLOY"]
+    service_account = google_service_account.github_actions_sa.email
   }
 
   depends_on = [

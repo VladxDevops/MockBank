@@ -13,5 +13,5 @@ resource "google_artifact_registry_repository" "repository" {
 
 variable "artifact_registry_repository_id" {
   description = "name of the Artifact Registry Repository"
-  type = string
+  type        = string
 }

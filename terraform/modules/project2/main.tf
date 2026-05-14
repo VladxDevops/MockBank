@@ -33,11 +33,11 @@ resource "google_cloud_run_v2_service" "service" {
 
 # This resource is more secure as it grants invoker permission only to this specific service, not the entire project.
 resource "google_cloud_run_v2_service_iam_member" "run_invoker" {
-  project = var.gcp_project_id
+  project  = var.gcp_project_id
   location = google_cloud_run_v2_service.service.location
-  name    = google_cloud_run_v2_service.service.name
-  role    = "roles/run.invoker"
-  member  = "allUsers" # Use "allUsers" to make the service publicly accessible.
+  name     = google_cloud_run_v2_service.service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers" # Use "allUsers" to make the service publicly accessible.
 }
 
 # Grant the service account permission to access the database password secret

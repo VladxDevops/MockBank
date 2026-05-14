@@ -4,13 +4,13 @@ module "project1" {
   source = "./modules/project1"
 
   # Pass the required variables into the module
-  compute_region                     = var.compute_region
-  terraform_deployer_service_account = var.terraform_deployer_service_account
-  compute_project_id                 = var.compute_project_id
-  project1_repository = var.project1_repository
-  keycloak_admin_password_secret_id = var.keycloak_admin_password_secret_id
+  compute_region                       = var.compute_region
+  terraform_deployer_service_account   = var.terraform_deployer_service_account
+  compute_project_id                   = var.compute_project_id
+  project1_repository                  = var.project1_repository
+  keycloak_admin_password_secret_id    = var.keycloak_admin_password_secret_id
   keycloak_database_password_secret_id = var.keycloak_database_password_secret_id
-  project1_service_name = var.project1_service_name
+  project1_service_name                = var.project1_service_name
 
 
   # Pass network details to the module

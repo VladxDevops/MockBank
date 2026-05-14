@@ -51,7 +51,7 @@ variable "terraform_deployer_service_account" {
 }
 
 #Artifact Registry repository for Project1: 
-variable "project1_repository"  {
+variable "project1_repository" {
   description = "name of the Artifact Registry Repository"
   type        = string
 }

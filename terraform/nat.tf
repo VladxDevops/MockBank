@@ -8,9 +8,9 @@ resource "google_compute_router" "router" {
 
 // Reserve a static external IP address for the NAT gateway
 resource "google_compute_address" "nat_ip" {
-  name    = "nat-static-ip"
-  project = var.compute_project_id
-  region  = var.compute_region
+  name         = "nat-static-ip"
+  project      = var.compute_project_id
+  region       = var.compute_region
   network_tier = "STANDARD"
   lifecycle {
     prevent_destroy = true

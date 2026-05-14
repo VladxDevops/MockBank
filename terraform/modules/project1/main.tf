@@ -19,8 +19,8 @@ resource "google_artifact_registry_repository" "project1_repo" {
 
 resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
   project = var.compute_project_id
-  role   = "roles/cloudsql.admin"
-  member = "serviceAccount:${var.terraform_deployer_service_account}"
+  role    = "roles/cloudsql.admin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
 # ------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ resource "google_sql_database_instance" "keycloak_db" {
   }
 
   deletion_protection = false # Allow destroy for lab environment
-  depends_on = [ google_project_iam_member.terraform_sa_cloudsql_admin ]
+  depends_on          = [google_project_iam_member.terraform_sa_cloudsql_admin]
 }
 
 resource "google_sql_database" "keycloak_schema" {
@@ -116,15 +116,15 @@ resource "google_project_iam_member" "keycloak_cloudsql_client" {
 
 # Required to read the database and admin passwords from Secret Manager
 resource "google_project_iam_member" "keycloak_db_secret_access" {
-  project   = var.compute_project_id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.keycloak_sa.email}"
+  project = var.compute_project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
 resource "google_project_iam_member" "keycloak_ar_reader" {
-  project    = var.compute_project_id
-  role       = "roles/artifactregistry.reader"
-  member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
+  project = var.compute_project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
 resource "google_project_iam_member" "keycloak_run_admin" {
@@ -142,10 +142,10 @@ resource "google_project_iam_member" "keycloak_sa_user" {
 # IAM binding to allow the Keycloak/Retail-App service account to access the secret.
 # Following AGENTS.md protocol using var.keycloak_serv_acc_account_id.
 resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
-  secret_id = "projects/${var.compute_project_id}/secrets/${var.project1_service_name}-session-secret"
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
-  depends_on = [ google_secret_manager_secret.retail_app_session_secret ]
+  secret_id  = "projects/${var.compute_project_id}/secrets/${var.project1_service_name}-session-secret"
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+  depends_on = [google_secret_manager_secret.retail_app_session_secret]
 }
 
 # ------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ resource "google_cloud_run_service" "keycloak" {
   }
 
   depends_on = [
-    google_service_account.keycloak_sa, 
+    google_service_account.keycloak_sa,
     google_secret_manager_secret_version.keycloak_db_password_val,
     google_secret_manager_secret_version.keycloak_admin_password_val,
     google_secret_manager_secret_version.retail_app_session_secret_version,

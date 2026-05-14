@@ -51,7 +51,7 @@ resource "google_compute_url_map" "bank_url_map" {
   path_matcher {
     name            = "all-paths"
     default_service = google_compute_backend_service.transaction_backend.id
-    
+
     # Example routing for Project 1 (Identity) could be added here
     # path_rule {
     #   paths   = ["/auth/*"]
