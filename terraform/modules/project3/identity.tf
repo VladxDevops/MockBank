@@ -57,7 +57,7 @@ resource "tls_self_signed_cert" "teller_portal_cert" {
 resource "google_secret_manager_secret" "teller_portal_cert" {
   project   = var.compute_project_id
   secret_id = var.teller_portal_certificate_id
-  replication { auto {} }
+  replication = "auto" #Do not change. 
 }
 
 resource "google_secret_manager_secret_version" "teller_portal_cert_version" {
