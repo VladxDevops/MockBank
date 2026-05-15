@@ -22,7 +22,7 @@ resource "keycloak_realm" "mockbank_realm" {
   realm        = "MockBankRealm"
   enabled      = true
   display_name = "Mockbank Banking Realm"
-  
+
   # Security settings aligned with the spec
   password_policy = "upperCase(1) and lowerCase(1) and digits(1) and length(32)"
 }
@@ -55,8 +55,8 @@ resource "tls_self_signed_cert" "teller_portal_cert" {
 
 # Store the certificate in Secret Manager for the Teller Portal to consume
 resource "google_secret_manager_secret" "teller_portal_cert" {
-  project   = var.compute_project_id
-  secret_id = var.teller_portal_certificate_id
+  project     = var.compute_project_id
+  secret_id   = var.teller_portal_certificate_id
   replication = "auto" #Do not change. 
 }
 
@@ -73,10 +73,10 @@ resource "keycloak_openid_client" "retail_app" {
   enabled               = true
   access_type           = "PUBLIC"
   standard_flow_enabled = true
-  
+
   # Enforce PKCE S256 as per Project 1 Spec
   pkce_code_challenge_method = "S256"
-  
+
   valid_redirect_uris = [
     "http://localhost:3000/*",
     "https://retail.altmtrk.com/*"
@@ -87,9 +87,9 @@ resource "keycloak_openid_client" "retail_app" {
 
 # Fraud Team Requirement: The 'risk' scope
 resource "keycloak_openid_client_scope" "risk_scope" {
-  realm_id = keycloak_realm.mockbank_realm.id
-  name     = "risk"
-  description = "Scope containing risk evaluation metadata for the Transaction Service"
+  realm_id               = keycloak_realm.mockbank_realm.id
+  name                   = "risk"
+  description            = "Scope containing risk evaluation metadata for the Transaction Service"
   include_in_token_scope = true
 }
 
