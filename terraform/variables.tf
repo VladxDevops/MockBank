@@ -107,11 +107,13 @@ variable "github_actions_sa_id" {
   type        = string
 }
 
+#Teller Portal: 
 variable "teller_portal_certificate_id" {
   description = "Teller portal Certificate ID"
   type        = string
 }
 
+#Damian_name: 
 variable "domain_name" {
   description = "The domain name for the Bank API (e.g., api.altmtrk.bank)"
   type        = string
