@@ -45,10 +45,24 @@ jobs:
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
     needs: auto-fix
+    environment: DEV
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Verify WIF Config Presence
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.WIF_PROVIDER }}" ]; then
+            echo "❌ ERROR: WIF_PROVIDER secret is empty. Ensure 'environment: DEV' is set in the job and the secret exists in that environment."
+            exit 1
+          fi
+          if [[ "${{ secrets.WIF_PROVIDER }}" == projects/* ]]; then
+            echo "✅ WIF_PROVIDER format looks correct."
+          else
+            echo "⚠️ WARNING: WIF_PROVIDER does not start with 'projects/'. Check your secret value."
+          fi
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2

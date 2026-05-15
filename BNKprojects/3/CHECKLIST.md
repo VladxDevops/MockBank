@@ -15,8 +15,8 @@
 
 
 ## 3. CI/CD Pipeline (GitHub Actions) - IN PROGRESS (Awaiting Verification)
-- [ ] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
-- [ ] **GCP Authentication:** Set up Workload Identity Federation (WIF) for keyless access.
+- [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
+- [ ] **GCP Authentication:** Linked jobs to 'DEV' environment to resolve secret visibility.
 - [ ] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
 - [ ] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
 - [ ] **Security Gate:** Implemented SAST scanning in the pipeline.
