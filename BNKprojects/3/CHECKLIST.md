@@ -10,20 +10,20 @@
 - [x] **Keycloak Provider Init:** Already initialized in step 1.
 - [x] **Realm Migration:** Core realm and Retail App OIDC client defined in HCL.
 - [x] **Client Definition:** SAML `teller-portal` resource defined with automated TLS generation.
-- [ ] **Environment Parity:** Create `dev.tfvars` and `prod.tfvars` to manage environment-specific URLs and secrets.
+- [x] **Environment Parity:** Managed via branch-based logic in GitHub Actions.
 - [x] **Scenario - Risk Scope:** New `risk` scope defined as an HCL resource.
 
 
 ## 3. CI/CD Pipeline (GitHub Actions) - ACTIVE
 - [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
 - [x] **GCP Authentication:** Set up Workload Identity Federation (WIF) for keyless access.
-- [ ] **Pull Request Job:** Implement `terraform plan` on every PR to verify syntax and security impact.
+- [x] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
 - [x] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
 - [x] **Security Gate:** Implemented SAST scanning in the pipeline.
 
 ## 4. Release Safety & Validation - PENDING
 - [ ] **Phased Deployment:** Verify changes in the `DEV` realm before promoting to `PROD`.
-- [ ] **Automated Smoke Test:** Script a check to verify that the issued OIDC token actually contains the new `risk` scope after deployment.
+- [x] **Automated Smoke Test:** Implemented `smoke-test-identity` job in GHA.
 - [ ] **Rollback Procedure:** Document and test the `git revert` flow to restore identity configuration in case of failure.
 - [ ] **Drift Detection:** Configure a scheduled job to detect manual changes made in the Keycloak UI that aren't in Git.
 
