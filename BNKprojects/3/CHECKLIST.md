@@ -14,16 +14,16 @@
 - [x] **Scenario - Risk Scope:** New `risk` scope defined as an HCL resource.
 
 
-## 3. CI/CD Pipeline (GitHub Actions) - ACTIVE
-- [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
-- [x] **GCP Authentication:** Set up Workload Identity Federation (WIF) for keyless access.
-- [x] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
-- [x] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
-- [x] **Security Gate:** Implemented SAST scanning in the pipeline.
+## 3. CI/CD Pipeline (GitHub Actions) - IN PROGRESS (Awaiting Verification)
+- [ ] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
+- [ ] **GCP Authentication:** Set up Workload Identity Federation (WIF) for keyless access.
+- [ ] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
+- [ ] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
+- [ ] **Security Gate:** Implemented SAST scanning in the pipeline.
 
 ## 4. Release Safety & Validation - PENDING
 - [ ] **Phased Deployment:** Verify changes in the `DEV` realm before promoting to `PROD`.
-- [x] **Automated Smoke Test:** Implemented `smoke-test-identity` job in GHA.
+- [ ] **Automated Smoke Test:** Implemented `smoke-test-identity` job in GHA.
 - [ ] **Rollback Procedure:** Document and test the `git revert` flow to restore identity configuration in case of failure.
 - [ ] **Drift Detection:** Configure a scheduled job to detect manual changes made in the Keycloak UI that aren't in Git.
 
@@ -31,6 +31,12 @@
 Based on `BNKprojects/3/PROJECT_DETAILS.md`, the following steps track the final release:
 
 1. [ ] **Export Keycloak Realm config to Terraform.**
+2. [ ] **Create GitHub Actions workflow `.github/workflows/deploy.yml`. (In Progress)**
+3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
+
+---
+**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
+**Classification: INTERNAL**
 2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**
 3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
 
@@ -41,6 +47,8 @@ Based on `BNKprojects/3/PROJECT_DETAILS.md`, the following steps track the final
 3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
 
 ---
+**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
+**Classification: INTERNAL**
 **Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
 **Classification: INTERNAL**
 2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**

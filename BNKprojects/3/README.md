@@ -51,5 +51,15 @@ Project 3 provides the automation engine for the Altmtrk2026 Bank Platform. It f
 
 ## Status: Infrastructure Ready
 *   [x] Terraform Provisioning (WIF + Cloud Deploy)
-*   [ ] GitHub Actions Workflow Integration (pending+not started)
-*   [ ] Skaffold Configuration (pending+not started)
+*   [ ] GitHub Actions Workflow Integration (In Progress - Awaiting Verification)
+*   [ ] Skaffold Configuration (In Progress - Awaiting Verification)
+
+### Troubleshooting WIF
+If the GitHub Action fails at the authentication step, verify the `WIF_PROVIDER` secret matches the output of:
+```bash
+gcloud iam workload-identity-pools providers describe "github-provider" \
+  --workload-identity-pool="github-pool" \
+  --location="global" \
+  --format="value(name)"
+```
+iate

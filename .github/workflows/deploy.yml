@@ -171,6 +171,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify WIF Config Format
+        shell: bash
+        run: |
+          if [[ "${{ secrets.WIF_PROVIDER }}" == projects/* ]]; then
+            echo "✅ WIF_PROVIDER format looks correct (starts with projects/)"
+          else
+            echo "❌ ERROR: WIF_PROVIDER secret is missing or does not start with 'projects/'. Please check GitHub Secrets."
+            exit 1
+          fi
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
