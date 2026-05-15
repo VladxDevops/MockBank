@@ -74,8 +74,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Plan
-        env:
-          TF_VAR_keycloak_admin_password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
         run: |
           cd terraform
           terraform init
@@ -214,8 +212,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Apply (Project 1)
-        env:
-          TF_VAR_keycloak_admin_password: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
         run: |
           cd terraform
           terraform init

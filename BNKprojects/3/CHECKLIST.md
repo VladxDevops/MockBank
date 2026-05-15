@@ -2,7 +2,7 @@
 
 ## 1. Environment & Provider Setup - ACTIVE
 - [x] **Keycloak Provider Init:** Configure the `mrparkers/keycloak` Terraform provider.
-- [x] **Authentication:** Securely map IdP admin credentials from Secret Manager to the Terraform runner.
+- [x] **Authentication:** Map admin credentials from Secret Manager and fetch URL from Cloud Run data source.
 - [ ] **Workspace Strategy:** Initialize Terraform workspaces for `DEV` and `PROD` environments.
 - [ ] **Backend Sync:** Ensure remote state is configured in GCS to prevent state locks during concurrent pipeline runs.
 

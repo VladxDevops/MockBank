@@ -20,7 +20,6 @@ provider "keycloak" {
 
 resource "keycloak_realm" "mockbank_realm" {
   realm        = "MockBankRealm"
-  realm        = "AltmtrkBank"
   enabled      = true
   display_name = "Mockbank Banking Realm"
   
@@ -115,4 +114,3 @@ resource "keycloak_saml_client" "teller_portal" {
     "https://teller.altmtrk.com/saml/consume"
   ]
 }
-
