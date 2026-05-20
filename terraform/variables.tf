@@ -71,6 +71,11 @@ variable "keycloak_admin_password_secret_id" {
   type        = string
 }
 
+variable "keycloak_admin_username" {
+  description = "The Secret ID/name for the Keycloak admin username"
+  type        = string
+}
+
 #Project1 KeyCloak DataBase Password secret id/name: 
 variable "keycloak_database_password_secret_id" {
   description = "name of the secret for the keyCloak DataBase password"

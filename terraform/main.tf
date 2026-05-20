@@ -4,6 +4,23 @@
  * files (e.g., project3.tf) and reusable modules (/modules).
  */
 
+data "google_secret_manager_secret_version" "keycloak_admin_password" {
+  secret  = var.keycloak_admin_password_secret_id
+  project = var.compute_project_id
+}
+
+data "google_secret_manager_secret_version" "keycloak_admin_username" {
+  secret  = var.keycloak_admin_username
+  project = var.compute_project_id
+}
+
+# Fetching the Keycloak URL from the Cloud Run service dynamically
+data "google_cloud_run_service" "keycloak" {
+  name     = var.project1_service_name
+  location = var.compute_region
+  project  = var.compute_project_id
+}
+
 module "project3" {
   source                                    = "./modules/project3"
   compute_project_id                        = var.compute_project_id
@@ -13,4 +30,8 @@ module "project3" {
   github_actions_sa_id                      = var.github_actions_sa_id
   github_repository                         = var.github_repository
   terraform_deployer_service_account        = var.terraform_deployer_service_account
+  keycloak_admin_username                   = data.google_secret_manager_secret_version.keycloak_admin_username.secret_data
+  keycloak_admin_password                   = data.google_secret_manager_secret_version.keycloak_admin_password.secret_data
+  keycloak_url                              = data.google_cloud_run_service.keycloak.status[0].url
+  teller_portal_certificate_id              = var.teller_portal_certificate_id
 }

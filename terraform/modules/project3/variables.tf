@@ -42,11 +42,18 @@ variable "keycloak_url" {
 variable "keycloak_admin_username" {
   description = "The username for the Keycloak admin account."
   type        = string
-  default     = "admin"
+  #default     = "admin"
 }
 
 variable "keycloak_admin_password" {
   description = "The password for the Keycloak admin account, typically sourced from Secret Manager."
   type        = string
-  sensitive   = true
+  #sensitive   = true
 }
+
+#Teller portal: 
+variable "teller_portal_certificate_id" {
+  description = "Teller portal Certificate ID"
+  type        = string
+}
+

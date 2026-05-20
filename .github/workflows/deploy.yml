@@ -42,9 +42,43 @@ jobs:
         with:
           commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
 
+  build-identity-image:
+    name: Build Keycloak Image (Project 1)
+    needs: auto-fix
+    environment: DEV
+    if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build Keycloak Image
+        run: |
+          cd BNKprojects/1/container
+          # Building before Terraform ensures the image exists for Cloud Run deployment
+          # Using github.sha as a tag for immutable releases
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}" .
+
+      - name: Build Legacy Image (v1 Tag)
+        run: |
+          cd BNKprojects/1/container
+          # Also pushing the v1 tag as requested for manual deployment parity
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:v1" .
+
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
-    needs: auto-fix
+    # Depend on build-identity-image to ensure the plan reflects the availability of the image
+    needs: [auto-fix, build-identity-image]
+    if: always() && (needs.build-identity-image.result == 'success' || needs.build-identity-image.result == 'skipped')
     environment: DEV
     runs-on: ubuntu-latest
     steps:
@@ -198,15 +232,6 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Build Keycloak Image
-        run: |
-          cd BNKprojects/1/container
-          # Using github.sha as a tag ensures immutable releases and triggers Cloud Run revisions correctly
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}" .
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
