@@ -77,6 +77,24 @@ resource "google_project_iam_member" "github_actions_service_usage_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}" #Mock Comment to rePush. Remove later. 
 }
 
+resource "google_project_iam_member" "github_actions_cloud_build_editor" {
+  project = var.compute_project_id
+  role    = "roles/cloudbuild.builds.editor"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_storage_admin" {
+  project = var.compute_project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_service_usage_consumer" {
+  project = var.compute_project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 resource "google_project_iam_member" "cloud_deploy_admin" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.admin"
