@@ -74,7 +74,7 @@ resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
 resource "google_project_iam_member" "github_actions_service_usage_admin" {
   project = var.compute_project_id
   role    = "roles/serviceusage.serviceUsageAdmin"
-  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}" #Mock Comment to rePush. Remove later. 
 }
 
 resource "google_project_iam_member" "cloud_deploy_admin" {
