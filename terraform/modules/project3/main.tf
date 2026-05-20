@@ -55,6 +55,7 @@ resource "google_service_account_iam_member" "workload_identity_federation_bindi
 
 # --- IAM Roles (Separated per AGENTS.md Standards) ---
 
+#Terraform service account: 
 resource "google_project_iam_member" "terraform_sa_workload_identity_admin" {
   project = var.compute_project_id
   role    = "roles/iam.workloadIdentityPoolAdmin"
@@ -65,6 +66,15 @@ resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.admin"
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+#Github Actions Service account Deployer:
+# Grant Service Usage Admin to the GitHub Actions Service Account.
+# This allows the CI/CD pipeline to enable or disable GCP services as defined in Terraform configurations.
+resource "google_project_iam_member" "github_actions_service_usage_admin" {
+  project = var.compute_project_id
+  role    = "roles/serviceusage.serviceUsageAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
 resource "google_project_iam_member" "cloud_deploy_admin" {
