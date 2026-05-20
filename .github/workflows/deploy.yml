@@ -66,6 +66,11 @@ jobs:
       - name: Build Keycloak Image
         run: |
           cd BNKprojects/1/container
+          # Satisfy Dockerfile COPY requirement for realm-export.json.
+          # Since configuration is managed via Terraform GitOps, we use a placeholder 
+          # to allow the container build to succeed without hardcoding config in the image.
+          echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
+          
           # Building before Terraform ensures the image exists for Cloud Run deployment
           # Using github.sha as a tag for immutable releases
           gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}" .
@@ -73,6 +78,9 @@ jobs:
       - name: Build Legacy Image (v1 Tag)
         run: |
           cd BNKprojects/1/container
+          # Ensure the placeholder exists for the legacy tag build as well.
+          [ -f realm-export.json ] || echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
+          
           # Also pushing the v1 tag as requested for manual deployment parity
           gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:v1" .
 
