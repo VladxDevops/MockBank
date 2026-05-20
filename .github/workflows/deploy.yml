@@ -154,7 +154,13 @@ jobs:
           cache-dependency-path: BNKprojects/2/package*.json
 
       - name: Install dependencies
-        run: cd BNKprojects/2 && npm ci
+        run: |
+          cd BNKprojects/2
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Run tests
         run: cd BNKprojects/2 && npm test || echo "No tests defined yet"
@@ -166,6 +172,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Ensure dependencies for audit
+        run: |
+          cd BNKprojects/2
+          # npm audit requires a lockfile to function
+          [ -f package-lock.json ] || npm install --package-lock-only
 
       - name: Node.js Audit
         run: |
