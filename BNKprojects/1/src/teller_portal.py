@@ -21,6 +21,7 @@ app.config['SAML_PATH'] = os.path.join(os.path.dirname(__file__), 'certs')
 def init_saml_auth(req):
     """Initializes the SAML settings based on current environment."""
     keycloak_url = os.getenv('KEYCLOAK_URL', 'http://localhost:8080')
+    app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000')
 
     # Settings dictionary for python3-saml
     settings = {
@@ -29,11 +30,11 @@ def init_saml_auth(req):
         "sp": {
             "entityId": "teller-portal",
             "assertionConsumerService": {
-                "url": "http://localhost:5000/saml/acs",
+                "url": f"{app_base_url}/saml/acs",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
             },
             "singleLogoutService": {
-                "url": "http://localhost:5000/saml/sls",
+                "url": f"{app_base_url}/saml/sls",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
             "x509cert": open(os.path.join(app.config['SAML_PATH'], 'sp.crt')).read(),

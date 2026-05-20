@@ -35,6 +35,8 @@ jobs:
       - name: NPM Audit Fix
         run: |
           cd BNKprojects/2
+          # npm audit requires a lockfile. Create one if missing to allow the fix to run.
+          [ -f package-lock.json ] || npm install --package-lock-only
           npm audit fix || echo "Manual intervention required for some vulnerabilities"
 
       - name: Commit fixes
@@ -185,11 +187,11 @@ jobs:
           # Fails on high/critical vulnerabilities
           npm audit --audit-level=high
 
-  build-and-release:
-    name: Build and Trigger Cloud Deploy
-    needs: [sast-scan, unit-tests, dependency-scan]
+  deploy-project2:
+    name: Release Transaction Service (Project 2)
+    needs: [terraform-apply, sast-scan, unit-tests, dependency-scan]
     environment: DEV
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
     runs-on: ubuntu-latest
     env:
       GCP_REGION: ${{ vars.GCP_COMPUTE_REGION }}
@@ -219,9 +221,9 @@ jobs:
             --delivery-pipeline="${{ env.PIPELINE_NAME }}" \
             --source="BNKprojects/2"
 
-  release-identity:
-    name: Build and Deploy Project 1 (Identity)
-    needs: [terraform-plan, sast-scan]
+  terraform-apply:
+    name: Terraform Apply (Identity & Release Infra)
+    needs: [terraform-plan, sast-scan, build-identity-image]
     environment: DEV
     if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
     runs-on: ubuntu-latest
@@ -252,9 +254,7 @@ jobs:
         run: |
           cd terraform
           terraform init
-          # Targeted apply ensures we only update Keycloak and its dependencies
           terraform apply -auto-approve \
-            -target=module.project1 \
             -var-file="dev.tfvars" \
             -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
@@ -262,9 +262,9 @@ jobs:
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
             -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}"
 
-  smoke-test-identity:
-    name: Automated Smoke Test (Identity)
-    needs: release-identity
+  smoke-test:
+    name: Automated Smoke Test
+    needs: [terraform-apply, deploy-project2]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
