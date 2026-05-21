@@ -65,6 +65,7 @@ jobs:
 
       - name: Build Keycloak Image
         run: |
+          cd BNKprojects/1/container
           PROJECT_ID=$(gcloud config get-value project)
           REPO_NAME="project1-repo" 
           gcloud builds submit --tag us-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/keycloak:v1 .
