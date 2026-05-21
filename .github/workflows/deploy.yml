@@ -71,18 +71,12 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          # Building before Terraform ensures the image exists for Cloud Run deployment
-          # Using github.sha as a tag for immutable releases
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" .
-
-      - name: Build Legacy Image (v1 Tag)
-        run: |
-          cd BNKprojects/1/container
-          # Ensure the placeholder exists for the legacy tag build as well.
-          [ -f realm-export.json ] || echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
-          
-          # Also pushing the v1 tag as requested for manual deployment parity
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" .
+          # Building with multiple tags in one command is more efficient
+          # This ensures the image exists for Cloud Run and maintains v1 parity
+          gcloud builds submit \
+            --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
+            --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" \
+            .
 
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
