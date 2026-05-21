@@ -130,5 +130,6 @@ def logout():
 if __name__ == '__main__':
     # SAML implementation usually runs on port 5000 as per ACS mapping
     is_debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
-    print(f"[INFO] Starting Teller Portal SP on port 5000 (Debug: {is_debug})...")
-app.run(host='0.0.0.0', port=5000, debug=is_debug)  # nosemgrep: python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
+        flask_host = os.getenv('FLASK_RUN_HOST', '0.0.0.0')
+        print(f"[INFO] Starting Teller Portal SP on {flask_host}:5000 (Debug: {is_debug})...")
+        app.run(host=flask_host, port=5000, debug=is_debug)

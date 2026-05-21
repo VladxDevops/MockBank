@@ -72,12 +72,12 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          # Building with multiple tags in one command is more efficient
-          # This ensures the image exists for Cloud Run and maintains v1 parity
-          gcloud builds submit \
-            --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
-            --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" \
-            .
+          # We build with the unique SHA tag first.
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" .
+          
+          # Attempt to update the 'v1' tag. If the repo is immutable and v1 exists, this may fail, 
+          # so we use '|| true' to allow the pipeline to continue since the SHA tag is the primary target.
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" . || echo "Warning: v1 tag update skipped (likely due to tag immutability)"
           echo "Keycloak image build and push command completed successfully."
 
   terraform-plan:
@@ -126,6 +126,7 @@ jobs:
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
+            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
             -out=tfplan
 
   sast-scan:
