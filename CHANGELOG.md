@@ -17,6 +17,19 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Fixed` for any bug fixes.
     *   `Security` in case of vulnerabilities.
 
+## [2.5.0] - 2024-05-24 (In Progress)
+### Added
+- **CI/CD**: Integrated GitHub Actions with Workload Identity Federation (WIF) and environment-gated secrets.
+- **CI/CD**: Implemented automated Keycloak image builds using Google Cloud Build within the pipeline.
+- **CI/CD**: Added Semgrep SAST scanning as a mandatory security gate for all PRs and pushes.
+### Fixed
+- **Build**: Resolved Keycloak build failure by using a placeholder `realm-export.json` to satisfy Docker context requirements while maintaining Terraform as the source of truth for config.
+- **Dependencies**: Fixed `npm ci` failures in Project 2 by implementing a fallback to `npm install` when `package-lock.json` is absent.
+- **IAM**: Resolved `403 Forbidden` errors for Cloud Build by granting `Service Usage Consumer` and `Storage Admin` roles to the GitHub Actions Service Account.
+- **SAML**: Hardened `teller_portal.py` to use dynamic `APP_BASE_URL`, fixing redirect loops in Cloud Run.
+### Security
+- **IAM**: Enforced Least Privilege by mapping specific roles (Cloud Build Editor, Cloud Deploy Releaser) to the ephemeral WIF principal. 
+
 ## [2.4.0] - 2024-05-24
 ### Added
 - **GitOps**: Initialized Keycloak Terraform provider and migrated the `AltmtrkBank` realm to HCL.

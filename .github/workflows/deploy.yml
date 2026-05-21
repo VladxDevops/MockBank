@@ -73,7 +73,7 @@ jobs:
           
           # Building before Terraform ensures the image exists for Cloud Run deployment
           # Using github.sha as a tag for immutable releases
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}" .
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" .
 
       - name: Build Legacy Image (v1 Tag)
         run: |
@@ -82,7 +82,7 @@ jobs:
           [ -f realm-export.json ] || echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
           # Also pushing the v1 tag as requested for manual deployment parity
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:v1" .
+          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" .
 
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
@@ -268,7 +268,7 @@ jobs:
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/main-repository/keycloak:${{ github.sha }}"
+            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}"
 
   smoke-test:
     name: Automated Smoke Test

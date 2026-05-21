@@ -7,15 +7,15 @@ cd /home/arisvargas/bankdir/Bank/BNKprojects/2/container
 
 Build Docker Container: 
 Build Image: 
-docker build -t us-south1-docker.pkg.dev/bankproject-486308/main-repository/transaction-service:v1 .
-Template: docker build -t us-south1-docker.pkg.dev/bankproject-486308/main-repository/transaction-service:v1 .
+docker build -t us-south1-docker.pkg.dev/bankproject-486308/<ARTIFACT_REGISTRY_REPOSITORY_ID>/transaction-service:v1 .
+Template: docker build -t us-south1-docker.pkg.dev/bankproject-486308/<ARTIFACT_REGISTRY_REPOSITORY_ID>/transaction-service:v1 .
 
 # Format: LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY/IMAGE:TAG
-docker tag bank-transaction-service:v1 us-south1-docker.pkg.dev/bankproject-486308/main-repository/transaction-service:v1
+docker tag bank-transaction-service:v1 us-south1-docker.pkg.dev/bankproject-486308/<ARTIFACT_REGISTRY_REPOSITORY_ID>/transaction-service:v1
 
 
 Push Docker Image using Docker push: 
-docker push us-south1-docker.pkg.dev/bankproject-486308/main-repository/transaction-service:v1
+docker push us-south1-docker.pkg.dev/bankproject-486308/<ARTIFACT_REGISTRY_REPOSITORY_ID>/transaction-service:v1
 Template: docker push us-central1-docker.pkg.dev/<YOUR_GCP_PROJECT_ID>/<REPO_NAME>/transaction-service:v1
 
 

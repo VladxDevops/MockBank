@@ -66,6 +66,9 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 
 Please keep the changelog.md up to date.
 
+### 7. GitOps Build Protocol
+*   **Placeholder Configs:** If a container requires a configuration file at build-time (e.g., `realm-export.json`) that is actually managed via Terraform at runtime, Agents must use an `echo` command in the CI/CD pipeline to generate a placeholder file. This ensures the build succeeds without baking sensitive or dynamic configuration into the static image.
+
 ### 7. IAM Resource Standards
 *   **Explicit Declaration:** Do NOT use `for_each` or `count` to loop through a list of roles for a single identity (e.g., `google_project_iam_member`).
 *   **Readability:** Every IAM role assignment must be its own unique Terraform resource. This improves visibility during `terraform plan` and allows for granular management (dependencies, lifecycle rules, and comments).

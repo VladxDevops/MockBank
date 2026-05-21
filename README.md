@@ -174,8 +174,8 @@ gcloud projects add-iam-policy-binding <YOUR_PROJECT_ID> \
 Once the build is successful, deploy the service to Cloud Run. The following command will automatically fetch your current GCP Project ID.
 
 ```bash
-PROJECT_ID=$(gcloud config get-value project) && gcloud run deploy transaction-service \
-    --image "us-south1-docker.pkg.dev/${PROJECT_ID}/main-repository/transaction-service:v1" \
+    PROJECT_ID=$(gcloud config get-value project) && REPO_ID="<ARTIFACT_REGISTRY_REPOSITORY_ID>" && gcloud run deploy transaction-service \
+        --image "us-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_ID}/transaction-service:v1" \
     --region us-south1 \
     --no-allow-unauthenticated \
     --set-secrets MONGO_URI=transaction-service-db-connection-string:latest \

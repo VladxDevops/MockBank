@@ -16,10 +16,10 @@
 
 ## 3. CI/CD Pipeline (GitHub Actions) - IN PROGRESS (Awaiting Verification)
 - [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
-- [ ] **GCP Authentication:** Linked jobs to 'DEV' environment to resolve secret visibility.
-- [ ] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
+- [x] **GCP Authentication:** Linked jobs to 'DEV' environment and resolved IAM permissions.
+- [x] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
 - [ ] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
-- [ ] **Security Gate:** Implemented SAST scanning in the pipeline.
+- [x] **Security Gate:** Implemented SAST scanning in the pipeline.
 
 ## 4. Release Safety & Validation - PENDING
 - [ ] **Phased Deployment:** Verify changes in the `DEV` realm before promoting to `PROD`.
