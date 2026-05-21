@@ -72,16 +72,15 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          # Construct and lowercase the image path to prevent "could not parse reference" errors
-          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
-          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
+          # Construct and lowercase the image path, stripping all whitespace/newlines
+          IMAGE_PATH=$(echo "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
           
-          # Build the image once using the unique SHA
-          gcloud builds submit --tag "$IMAGE_PATH:${{ github.sha }}" .
-          
-          # Add the v1 tag to the image we just built. 
-          # We use '|| true' to prevent failure if 'v1' is immutable and already exists.
-          gcloud artifacts docker tags add "$IMAGE_PATH:${{ github.sha }}" "$IMAGE_PATH:v1" --quiet || echo "Warning: Could not update v1 tag (it may be immutable)"
+          # Build the image once with both the unique SHA and the v1 tag.
+          # This is more atomic and avoids issues with 'gcloud artifacts docker tags add'.
+          gcloud builds submit \
+            --tag "${IMAGE_PATH}:${{ github.sha }}" \
+            --tag "${IMAGE_PATH}:v1" \
+            .
           echo "Keycloak image build and push command completed successfully."
 
   terraform-plan:
@@ -125,16 +124,15 @@ jobs:
           ENV_FILE="dev.tfvars"
           [[ "${{ github.ref }}" == "refs/heads/main" ]] && ENV_FILE="prod.tfvars"
           
-          # Construct and lowercase the image path for consistency with the build step
-          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
-          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
+          # Construct and lowercase the image path, stripping all whitespace/newlines
+          IMAGE_PATH=$(echo "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
           
           terraform plan -var-file="$ENV_FILE" \
             -var="compute_project_id=${{ secrets.DEV_GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=$IMAGE_PATH:${{ github.sha }}" \
+            -var="docker_image=${IMAGE_PATH}:${{ github.sha }}" \
             -out=tfplan
 
   sast-scan:
@@ -268,9 +266,8 @@ jobs:
           cd terraform
           terraform init
           
-          # Construct and lowercase the image path for consistency
-          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
-          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
+          # Construct and lowercase the image path, stripping all whitespace/newlines
+          IMAGE_PATH=$(echo "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
           
           terraform apply -auto-approve \
             -var-file="dev.tfvars" \
@@ -278,7 +275,7 @@ jobs:
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=$IMAGE_PATH:${{ github.sha }}"
+            -var="docker_image=${IMAGE_PATH}:${{ github.sha }}"
 
   smoke-test:
     name: Automated Smoke Test
