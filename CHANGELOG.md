@@ -19,6 +19,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
  - **CI/CD:** Restructured `deploy.yml` into a five-stage progressive pipeline: APIs -> Foundation Resources -> App Infra -> Artifacts -> Release.
  - **CI/CD:** Cleaned up malformed image path construction and redundant Terraform logic in the deployment workflow.
 - **Security:** Centralized IAM role assignments for the GitHub Actions Service Account within Project 0 to ensure least-privilege consistency across environments.
+ - **GitOps:** Provisioned Terraform code for Project 0 (Modular Foundation) including API enablement, Networking, and centralized IAM management.
  - **Architecture:** Documented the rationale for a monolithic `deploy.yml` orchestrator to manage linear foundation dependencies.
  - **Environments:** Provisioned a new dedicated GCP Project for the `DEV` environment to isolate baseline infrastructure testing.
 
