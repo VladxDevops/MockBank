@@ -1,0 +1,8 @@
+# Ignore virtual environments
+venv/
+.venv/
+**/venv/
+
+# Ignore dependencies and build artifacts
+node_modules/
+terraform/.terraform/

@@ -65,6 +65,7 @@ jobs:
 
       - name: Build Keycloak Image
         run: |
+          set -eux # Exit immediately if a command exits with a non-zero status, and print commands.
           cd BNKprojects/1/container
           # Satisfy Dockerfile COPY requirement for realm-export.json.
           # Since configuration is managed via Terraform GitOps, we use a placeholder 
@@ -77,6 +78,7 @@ jobs:
             --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
             --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" \
             .
+          echo "Keycloak image build and push command completed successfully."
 
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
