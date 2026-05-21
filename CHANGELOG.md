@@ -5,6 +5,24 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## Usage Guide
 1.  **Update Frequency:** Update this file immediately after any significant architectural decision or code merge.
 2.  **Format:** Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
+
+## [Unreleased]
+### Fixed
+- **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
+- **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
+- **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_PROJECT_ID`).
+### Changed
+- **CI/CD:** Reorganized `deploy.yml` to follow a "Foundation First" logic. Infrastructure (Terraform) now provisions the Artifact Registry before builds are attempted.
+- **Documentation:** Created `PIPELINE_RESTRUCTURING.md` to document the new deployment strategy.
+### Added
+ - **Architecture:** Decomposed **Project 0 (Foundation)** into a progressive, multi-phase deployment: Phase A (Services/APIs) and Phase B (VPC/Registry).
+ - **CI/CD:** Restructured `deploy.yml` into a five-stage progressive pipeline: APIs -> Foundation Resources -> App Infra -> Artifacts -> Release.
+ - **CI/CD:** Cleaned up malformed image path construction and redundant Terraform logic in the deployment workflow.
+- **Security:** Centralized IAM role assignments for the GitHub Actions Service Account within Project 0 to ensure least-privilege consistency across environments.
+ - **Environments:** Provisioned a new dedicated GCP Project for the `DEV` environment to isolate baseline infrastructure testing.
+
+
+
 3.  **Categories:**
     *   `Added` for new features.
     *   `Changed` for changes in existing functionality.
