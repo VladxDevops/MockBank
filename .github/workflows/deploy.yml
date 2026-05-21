@@ -72,7 +72,9 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          IMAGE_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
+          # Construct and lowercase the image path to prevent "could not parse reference" errors
+          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
+          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
           
           # Build the image once using the unique SHA
           gcloud builds submit --tag "$IMAGE_PATH:${{ github.sha }}" .
@@ -123,12 +125,16 @@ jobs:
           ENV_FILE="dev.tfvars"
           [[ "${{ github.ref }}" == "refs/heads/main" ]] && ENV_FILE="prod.tfvars"
           
+          # Construct and lowercase the image path for consistency with the build step
+          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
+          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
+          
           terraform plan -var-file="$ENV_FILE" \
             -var="compute_project_id=${{ secrets.DEV_GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
+            -var="docker_image=$IMAGE_PATH:${{ github.sha }}" \
             -out=tfplan
 
   sast-scan:
@@ -261,13 +267,18 @@ jobs:
         run: |
           cd terraform
           terraform init
+          
+          # Construct and lowercase the image path for consistency
+          RAW_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
+          IMAGE_PATH=$(echo "$RAW_PATH" | tr '[:upper:]' '[:lower:]' | xargs)
+          
           terraform apply -auto-approve \
             -var-file="dev.tfvars" \
             -var="compute_project_id=${{ secrets.DEV_GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}"
+            -var="docker_image=$IMAGE_PATH:${{ github.sha }}"
 
   smoke-test:
     name: Automated Smoke Test
