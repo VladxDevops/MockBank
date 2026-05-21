@@ -72,7 +72,7 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          IMAGE_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
+          IMAGE_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
           
           # Build the image once using the unique SHA
           gcloud builds submit --tag "$IMAGE_PATH:${{ github.sha }}" .
@@ -124,11 +124,11 @@ jobs:
           [[ "${{ github.ref }}" == "refs/heads/main" ]] && ENV_FILE="prod.tfvars"
           
           terraform plan -var-file="$ENV_FILE" \
-            -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
+            -var="compute_project_id=${{ secrets.DEV_GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
+            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" \
             -out=tfplan
 
   sast-scan:
@@ -223,7 +223,7 @@ jobs:
       - name: Create Cloud Deploy Release
         run: |
           gcloud deploy releases create "rel-${{ github.run_number }}" \
-            --project="${{ vars.GCP_PROJECT_ID }}" \
+            --project="${{ secrets.DEV_GCP_PROJECT_ID }}" \
             --region="${{ env.GCP_REGION }}" \
             --delivery-pipeline="${{ env.PIPELINE_NAME }}" \
             --source="BNKprojects/2"
@@ -263,11 +263,11 @@ jobs:
           terraform init
           terraform apply -auto-approve \
             -var-file="dev.tfvars" \
-            -var="compute_project_id=${{ vars.GCP_PROJECT_ID }}" \
+            -var="compute_project_id=${{ secrets.DEV_GCP_PROJECT_ID }}" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}"
+            -var="docker_image=${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}"
 
   smoke-test:
     name: Automated Smoke Test
