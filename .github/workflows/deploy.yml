@@ -70,21 +70,6 @@ jobs:
           REPO_NAME="project1-repo" 
           gcloud builds submit --tag us-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/keycloak:v1 .
           
-          if [ -z "$PROJECT" ] || [ -z "$REPO" ] || [ -z "$REGION" ]; then
-            echo "❌ ERROR: One or more required deployment variables are empty."
-            echo "Check REGION: [$REGION], PROJECT: [$PROJECT], REPO: [$REPO]"
-            exit 1
-          fi
-
-          IMAGE_PATH=$(echo "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/keycloak" | sed 's/\/\{2,\}/\//g' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-
-          # Build the image once with both the unique SHA and the v1 tag.
-          # This is more atomic and avoids issues with 'gcloud artifacts docker tags add'.
-          gcloud builds submit \
-            --tag "${IMAGE_PATH}:${{ github.sha }}" \
-            --tag "${IMAGE_PATH}:v1" \
-            .
-          echo "Keycloak image build and push command completed successfully."
 
   terraform-plan:
     name: Terraform Plan (Identity GitOps)
