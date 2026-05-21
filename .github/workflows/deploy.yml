@@ -1,5 +1,4 @@
-name: Project 3 - CI/CD Release Safety
-name: Platform Deployment - Progressive Foundation
+name: CI-CD Deployment Orchestrator
 
 on:
   push:
@@ -45,10 +44,9 @@ jobs:
         with:
           commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
 
-  project0-foundation:
-    name: Project 0 - Foundation (Networking & Registry)
   foundation-services:
-    name: Project 0 (Phase A) - Enable GCP Services
+    name: Project 0A - Enable APIs
+    environment: DEV
     needs: auto-fix
     environment: DEV
     if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
@@ -64,9 +62,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
       - name: Terraform Apply (Project 0)
-      - name: Terraform Apply (APIs)
         run: |
-          cd terraform/foundation
           cd terraform/foundation/services
           terraform init
           RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
@@ -75,13 +71,11 @@ jobs:
             -var="compute_project_id=$PROJECT" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}"
 
-  terraform-app-infra:
-    name: Project 1 & 2 - App Infrastructure
-    needs: project0-foundation
   foundation-resources:
-    name: Project 0 (Phase B) - Networking & Registry
+    name: Project 0B - Networking & Registry
     needs: foundation-services
     environment: DEV
+    if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -135,106 +129,37 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Build Keycloak Image
-      - name: Terraform Plan
-      - name: Terraform Apply (Services)
-        run: |
-          cd BNKprojects/1/container
-          PROJECT_ID=$(gcloud config get-value project)
-          REPO_NAME="project1-repo" 
-          gcloud builds submit --tag us-south1-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/keycloak:v1 .
-          cd terraform
-          terraform init
-          ENV_FILE="dev.tfvars"
-          [[ "${{ github.ref }}" == "refs/heads/main" ]] && ENV_FILE="prod.tfvars"
-          
-          RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
-          PROJECT=$(echo "$RAW_PROJECT" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          
-          terraform plan -var-file="$ENV_FILE" \
-            -var="compute_project_id=$PROJECT" \
-            -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
-            -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
-            -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -out=tfplan
-
-  terraform-plan:
-    name: Terraform Plan (Identity GitOps)
-    # Depend on build-identity-image to ensure the plan reflects the availability of the image
-    needs: [auto-fix, build-identity-image]
-    if: always() && (needs.build-identity-image.result == 'success' || needs.build-identity-image.result == 'skipped')
-  terraform-apply:
-    name: Terraform Apply (Foundation)
-    needs: terraform-plan
-    environment: DEV
-    if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Verify WIF Config Presence
-        shell: bash
-        run: |
-          if [ -z "${{ secrets.WIF_PROVIDER }}" ]; then
-            echo "❌ ERROR: WIF_PROVIDER secret is empty. Ensure 'environment: DEV' is set in the job and the secret exists in that environment."
-            exit 1
-          fi
-          if [[ "${{ secrets.WIF_PROVIDER }}" == projects/* ]]; then
-            echo "✅ WIF_PROVIDER format looks correct."
-          else
-            echo "⚠️ WARNING: WIF_PROVIDER does not start with 'projects/'. Check your secret value."
-          fi
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
-          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Plan
-      - name: Terraform Apply
+      - name: Terraform Apply (App Infrastructure)
         run: |
           cd terraform
           terraform init
-          # Determine environment based on branch
-          ENV_FILE="dev.tfvars"
-          [[ "${{ github.ref }}" == "refs/heads/main" ]] && ENV_FILE="prod.tfvars"
-          
-          # Sanitize components individually to remove hidden characters, quotes, or accidental whitespace
           RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
-          REGION=$(echo "${{ vars.GCP_COMPUTE_REGION }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           PROJECT=$(echo "$RAW_PROJECT" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          REPO=$(echo "${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           
-          if [ -z "$PROJECT" ] || [ -z "$REPO" ] || [ -z "$REGION" ]; then
-            echo "❌ ERROR: Deployment variables missing in plan stage."
-            exit 1
-          fi
-
-          IMAGE_PATH=$(echo "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/keycloak" | sed 's/\/\{2,\}/\//g' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-          
-          terraform plan -var-file="$ENV_FILE" \
-          # This stage deploys Cloud Run with placeholder images because registries now exist
           terraform apply -auto-approve \
             -var-file="dev.tfvars" \
             -var="compute_project_id=$PROJECT" \
             -var="compute_region=${{ vars.GCP_COMPUTE_REGION }}" \
             -var="atlas_org_id=${{ vars.ATLAS_ORG_ID }}" \
-            -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}" \
-            -var="docker_image=${IMAGE_PATH}:${{ github.sha }}" \
-            -out=tfplan
             -var="compute_project_number=${{ vars.GCP_PROJECT_NUMBER }}"
 
   sast-scan:
     name: Security Scan (SAST)
     needs: auto-fix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Semgrep Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/nodejs
+
   build-images:
     name: Build & Push Images
-    needs: terraform-apply
     needs: [terraform-app-infra, sast-scan]
     environment: DEV
     if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
@@ -242,45 +167,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Semgrep Scan
-        uses: returntocorp/semgrep-action@v1
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          config: >-
-            p/security-audit
-            p/secrets
-            p/nodejs
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
-
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-
-      - name: Build Keycloak & Transaction Images
         run: |
           RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
           REGION=$(echo "${{ vars.GCP_COMPUTE_REGION }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           PROJECT=$(echo "$RAW_PROJECT" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           REPO=$(echo "${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          
-          IMAGE_PATH=$(echo "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}/keycloak" | sed 's/\/\{2,\}/\//g' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
           IMAGE_PATH=$(echo "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}" | sed 's/\/\{2,\}/\//g' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-          
-          # Build Project 1
+
           cd BNKprojects/1/container
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           gcloud builds submit --tag "${IMAGE_PATH}/keycloak:${{ github.sha }}" --tag "${IMAGE_PATH}/keycloak:v1" .
-          
-          # Build Project 2
+
           cd ../../../BNKprojects/2
           gcloud builds submit --tag "${IMAGE_PATH}/transaction-service:${{ github.sha }}" --tag "${IMAGE_PATH}/transaction-service:v1" .
 
   deploy-services:
     name: Release & Update Services
     needs: [build-images]
-    needs: [build-images, unit-tests, dependency-scan]
     environment: DEV
     if: github.event_name == 'push' && github.ref == 'refs/heads/DEV'
     runs-on: ubuntu-latest
@@ -294,25 +204,16 @@ jobs:
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
-      # ... standard auth and setup steps ...
-      - name: Deploy
         run: |
           RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
           REGION=$(echo "${{ vars.GCP_COMPUTE_REGION }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           PROJECT=$(echo "$RAW_PROJECT" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           REPO=$(echo "${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           IMAGE_PATH=$(echo "${REGION}-docker.pkg.dev/${PROJECT}/${REPO}" | sed 's/\/\{2,\}/\//g' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-          # ... sanitize logic ...
-          # Update Keycloak with versioned image
-          gcloud run deploy keycloak-service --image "${IMAGE_PATH}/keycloak:v1" ...
-
-          # Update Project 1 (Keycloak) Cloud Run
           gcloud run deploy keycloak-service \
             --image "${IMAGE_PATH}/keycloak:v1" \
             --region "$REGION" \
             --project "$PROJECT"
-          
-          # Create Project 2 Release
           gcloud deploy releases create "rel-${{ github.run_number }}" \
             --project="$PROJECT" \
             --region="$REGION" \
