@@ -72,12 +72,14 @@ jobs:
           # to allow the container build to succeed without hardcoding config in the image.
           echo '{"realm": "placeholder", "enabled": true}' > realm-export.json
           
-          # We build with the unique SHA tag first.
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:${{ github.sha }}" .
+          IMAGE_PATH="${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak"
           
-          # Attempt to update the 'v1' tag. If the repo is immutable and v1 exists, this may fail, 
-          # so we use '|| true' to allow the pipeline to continue since the SHA tag is the primary target.
-          gcloud builds submit --tag "${{ vars.GCP_COMPUTE_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ secrets.ARTIFACT_REGISTRY_REPOSITORY_ID }}/keycloak:v1" . || echo "Warning: v1 tag update skipped (likely due to tag immutability)"
+          # Build the image once using the unique SHA
+          gcloud builds submit --tag "$IMAGE_PATH:${{ github.sha }}" .
+          
+          # Add the v1 tag to the image we just built. 
+          # We use '|| true' to prevent failure if 'v1' is immutable and already exists.
+          gcloud artifacts docker tags add "$IMAGE_PATH:${{ github.sha }}" "$IMAGE_PATH:v1" --quiet || echo "Warning: Could not update v1 tag (it may be immutable)"
           echo "Keycloak image build and push command completed successfully."
 
   terraform-plan:
