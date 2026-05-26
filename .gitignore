@@ -81,3 +81,7 @@ GEMINI-TEST-PROTOCOL.md
 cloudbuild.yaml
 cloudrun.yaml
 mirror-keycloak.yaml
+
+#Governance files: 
+SERVICE_ACCOUNT_GOVERNANCE.md
+RESOURCE_TAGGING_POLICY.md

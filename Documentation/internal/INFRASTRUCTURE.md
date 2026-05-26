@@ -2,7 +2,21 @@
 
 We will be working in one single GCP project. Please keep in mind that this is a brand new GCP project, thus GCP services may need to be enabled. Most infrastructure will need to be build/deployed. 
 
-Terraform state will be backup at a GCS bucket.
+## Terraform State Management
+All Terraform state files are centrally managed in GCS buckets located within **Project 0**. This ensures that the state survives environment-specific lifecycle events and remains protected by centralized IAM policies. Each environment (DEV, TEST, PROD) will have its own prefix/folder within the foundation bucket.
+
+### State Prefix Convention
+To maintain clarity and prevent state collision, the following path structure is mandated:
+`gs://[STATE_BUCKET_NAME]/[ENVIRONMENT]/[PROJECT_NAME]/default.tfstate`
+
+### Workspace Usage
+Developers must use Terraform Workspaces to manage environment-specific states. 
+*   **Project 0:** The primary terraform workspace is named `projectZERO`. Environment-specific variations should follow the `projectZERO-[env]` pattern.
+*   **Project 2:** Workspaces should be named by project and environment (e.g., `project2-dev`) if shared prefixes are used.
+Always verify your active workspace using `terraform workspace show` before running an `apply`.
+
+*Example:*
+`gs://altmtrk-foundation-tfstate/dev/project2/default.tfstate`
 
 **CLASSIFICATION: INTERNAL**
 

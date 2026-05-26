@@ -12,6 +12,12 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
 - **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_PROJECT_ID`).
 ### Changed
+- Governance: Established the `SERVICE_ACCOUNT_GOVERNANCE.md` library to track identity roles across projects.
+- Governance: Defined `RESOURCE_TAGGING_POLICY.md` to standardize metadata for cost and ownership audits.
+- Infrastructure: Initialized the `projectZERO` Terraform workspace for foundational resource management.
+- Infrastructure: Documented Phase A "Provider Only" execution using `-target=google_project_service.gcp_services` to enable APIs before networking.
+- Migration: Migrated shared networking (VPC, Main Subnet, Cloud NAT) from Project 2 into Project 0 Phase B.
+- Migration: Refactored Project 1 and Project 2 Terraform modules to reference shared resources in Project 0 via remote state or data sources, ensuring modularity.
 - **CI/CD:** Reorganized `deploy.yml` to follow a "Foundation First" logic. Infrastructure (Terraform) now provisions the Artifact Registry before builds are attempted.
 - **Documentation:** Created `PIPELINE_RESTRUCTURING.md` to document the new deployment strategy.
 ### Added

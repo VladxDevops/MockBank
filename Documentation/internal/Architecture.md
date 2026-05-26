@@ -9,6 +9,11 @@ This architecture describes a secure, cloud-native banking platform designed for
 
 ## 2. Core Components
 
+### Project 0: Foundation Infrastructure
+*   **API Management:** Centralized enablement of GCP Service APIs.
+*   **Shared Networking:** Global VPC design, subnets for serverless access, and Cloud NAT for secure egress.
+*   **Shared Registry:** Centralized Artifact Registry for all containerized microservices.
+
 ### Identity & Access Management (IAM)
 *   **Primary IdP:** Centralized Identity Provider handling OIDC and SAML flows.
 *   **Orchestration:** Logic layer to handle Step-Up Authentication (MFA) based on risk signals.
@@ -25,6 +30,10 @@ This architecture describes a secure, cloud-native banking platform designed for
 
 ## 3. Infrastructure & Operations
 *   **Cloud Provider:** Google Cloud Platform (GCP).
+*   **Governance Pillar:** 
+    *   **IAM Library:** Centralized tracking of Service Accounts and roles (`SERVICE_ACCOUNT_GOVERNANCE.md`).
+    *   **Resource Metadata:** Mandatory tagging for cost and ownership tracking (`RESOURCE_TAGGING_POLICY.md`).
+    *   **State Policy:** Centralized state management in Project 0.
 *   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
 *   **Declarative Operations:** All application-level configurations (e.g., Identity Clients, Auth Policies) must be declared in code. Manual configuration is an anti-pattern that violates the reproducibility requirement.
 *   **Orchestration & Delivery (Hybrid Model):**
@@ -64,11 +73,18 @@ To maintain a clean and navigable codebase, the following directory standards ap
 *   **`Documentation/`**: Central repository for all project documentation.
     *   `internal/`: Policy and governance documents.
 *   **`Infrastructure/`**: Terraform and cloud configuration.
+*   **`BNKprojects/0/`**: Foundation infrastructure (Networking, APIs, Registry).
 *   **Service Directories (e.g., `Services/{name}` or Project folders):**
     *   `src/`: Application logic and source code.
     *   `container/`: Containerization assets (`Dockerfile`, `docker-compose.yml`, entrypoint scripts).
     *   `tests/`: Unit and integration tests.
         *   `config/`: Non-sensitive configuration files.
+    *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
+*   **`Infrastructure/`**: Terraform and cloud configuration.
+    *   `tests/`: Unit and integration tests.
+        *   `config/`: Non-sensitive configuration files.
+    *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
+*   **`Infrastructure/`**: Terraform and cloud configuration.
     *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
 *   **`Infrastructure/`**: Terraform and cloud configuration.
     *   `tests/`: Unit and integration tests.

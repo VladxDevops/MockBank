@@ -14,6 +14,7 @@ This repository hosts the source code for the Altmtrk2026 Banking Platform. It i
 *   **[Agents & Bots](./AGENTS.md):** Rules for CI/CD and AI usage.
 *   **[Changelog](./CHANGELOG.md):** History of architectural decisions.
 *   **Projects:**
+    *   Project 0: Foundation Infrastructure (Networking & APIs)
     *   Project 1: Identity Service
     *   Project 2: Transaction Service
     *   Project 3: CI/CD & Release Safety
