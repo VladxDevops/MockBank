@@ -7,8 +7,14 @@
 set -e
 
 # 1. Variables - Ensure these are set or provided as arguments. Step1: 
-PROJECT_ID=$(gcloud config get-value project)
+PROJECT_ID=$(gcloud config get-value project --quiet 2>/dev/null | tr -d '[:space:]')
 SERVICE_ACCOUNT_EMAIL=$1
+
+if [ -z "$PROJECT_ID" ]; then
+    echo "Error: No active GCP project found in gcloud config."
+    echo "Please run 'gcloud config set project [PROJECT_ID]' first."
+    exit 1
+fi
 
 if [ -z "$SERVICE_ACCOUNT_EMAIL" ]; then
     read -p "Enter the Terraform Service Account Email for Project 0: " SERVICE_ACCOUNT_EMAIL
@@ -72,15 +78,17 @@ if [[ ! "$SKIP_STEP1" =~ ^[Yy]$ ]]; then
     done
 fi
 
-#Step2: 
+# Step 2: Cross-Project Terraform State Access
 echo "------------------------------------------------------------"
-echo "Step 2: Cross-Project Terraform State Access"
-read -p "Enter the GCP Project ID where the remote state is stored (Leave blank to skip): " TERRAFORM_GCP_PROJECT
+echo "Step 2: Terraform State Access (GCS)"
+echo "Terraform states are often stored in a central project's GCS bucket."
+echo "Current project is: $PROJECT_ID"
+read -p "Enter the Project ID where the remote state is stored [Default: $PROJECT_ID, type 'skip' to skip]: " TERRAFORM_GCP_PROJECT
 
-# Sanitize: Trim whitespace
-TERRAFORM_GCP_PROJECT=$(echo "$TERRAFORM_GCP_PROJECT" | tr -d '[:space:]')
+# Handle default and skip
+TERRAFORM_GCP_PROJECT=$(echo "${TERRAFORM_GCP_PROJECT:-$PROJECT_ID}" | tr -d '[:space:]')
 
-if [ ! -z "$TERRAFORM_GCP_PROJECT" ]; then
+if [[ "$TERRAFORM_GCP_PROJECT" != "skip" ]]; then
     echo "Assigning storage.admin to $SERVICE_ACCOUNT_EMAIL in $TERRAFORM_GCP_PROJECT..."
     if ! gcloud projects add-iam-policy-binding "$TERRAFORM_GCP_PROJECT" \
         --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
