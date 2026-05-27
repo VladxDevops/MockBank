@@ -19,7 +19,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
 - **Terraform**: Declared the `bootstrap` variable at the root level to support targeted Foundation-only deployments.
 - **Operations**: Documented the multi-target bootstrap command to simultaneously enable APIs and provision Secret Manager resources.
-### Changed
+- **Architecture**: Transitioned to Phase-Based Orchestration. `project0.tf` is now the primary entry point for foundational bootstrapping.
+- **Refactor**: Removed root-level `project3.tf` and `gcp_services.tf` to prevent dependency leakage during initial deployment stages.
 - **Architecture**: Moved Terraform provider configurations (`provider "mongodbatlas"`, `provider "keycloak"`) from `module.project0` to the root `terraform/` directory. 
 - **Refactor**: Established root-level provider management to ensure consistent authentication context and resolve potential "Provider Proxy" issues during complex deployments.
 - **Infrastructure**: Centralized all Terraform provider declarations (`google`, `mongodbatlas`, `keycloak`) within the `project0` module.
