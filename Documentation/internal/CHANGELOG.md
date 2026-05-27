@@ -14,6 +14,14 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.7.0] - 2024-05-24
+### Added
+- **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
+- **Infrastructure**: Created `project4` module to centralize GCP Service API enablement across all banking projects.
+- **Decision**: Adopted a "Single Pane of Glass" for infrastructure. Provisioning all services from the Project0 Terraform workspace ensures consistency across environments and simplifies CI/CD pipeline secrets management.
+### Removed
+- **Redundancy**: Removed SAML certificate generation as part of the OIDC-only migration strategy.
+
 ## [0.6.0] - 2024-05-24
 ### Added
 - **Infrastructure**: Completed the modularization of Project 3. Verified successful creation of identity federation and delivery pipelines.
@@ -175,6 +183,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Updated `BNKprojects/1/ARCHITECTURE.md` with explicit Ingress/Egress flow details for the Identity Service.
     - Refactored `BNKprojects/1/ARCHITECTURE.md` to group traffic flow under a dedicated "Networking" section.
     - Clarified the decision to use Cloud Run's built-in Load Balancer instead of a dedicated resource in `BNKprojects/1/ARCHITECTURE.md`.
+    - Documented `keycloak-sa` Service Account purpose and the requirement for parameterizing IAM names in `BNKprojects/1/ARCHITECTURE.md`.
+    - Updated `Documentation/internal/Architecture.md`, `Documentation/internal/AGENTS.md`, and `BNKprojects/1/AGENTS.md` to enforce the prohibition of hardcoded Service Account names.
+    - Created `BNKprojects/1/TROUBLESHOOTING.md` to institutionalize knowledge about Cloud Run/Java deployment issues.
+    - Added `BNKprojects/1/localTSkeycloakContainer.md` to assist developers with local container debugging workflows.
+    - Updated `BNKprojects/1/localTSkeycloakContainer.md` with Docker socket permission fixes.
+    - Enhanced `BNKprojects/1/localTSkeycloakContainer.md` with an explanation of Docker Compose's detached (`-d`) mode.
+    - Updated `BNKprojects/1/localTSkeycloakContainer.md` to reflect successful verification steps.
     - Documented `keycloak-sa` Service Account purpose and the requirement for parameterizing IAM names in `BNKprojects/1/ARCHITECTURE.md`.
     - Updated `Documentation/internal/Architecture.md`, `Documentation/internal/AGENTS.md`, and `BNKprojects/1/AGENTS.md` to enforce the prohibition of hardcoded Service Account names.
     - Created `BNKprojects/1/TROUBLESHOOTING.md` to institutionalize knowledge about Cloud Run/Java deployment issues.

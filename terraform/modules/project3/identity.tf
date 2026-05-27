@@ -1,12 +1,11 @@
+# identity.tf
+# Part of the consolidated Foundation Infrastructure.
+# Manages Keycloak Realm and OIDC configuration.
 terraform {
   required_providers {
     keycloak = {
       source  = "mrparkers/keycloak"
       version = ">= 4.4.0"
-    }
-    tls = {
-      source  = "hashicorp/tls"
-      version = ">= 4.0.0"
     }
   }
 }
@@ -25,44 +24,6 @@ resource "keycloak_realm" "mockbank_realm" {
 
   # Security settings aligned with the spec
   password_policy = "upperCase(1) and lowerCase(1) and digits(1) and length(32)"
-}
-
-# --- SAML Certificate Generation ---
-
-# Generate a private key for the Teller Portal (SP)
-resource "tls_private_key" "teller_portal_key" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
-# Generate a self-signed certificate using the private key
-resource "tls_self_signed_cert" "teller_portal_cert" {
-  private_key_pem = tls_private_key.teller_portal_key.private_key_pem
-
-  subject {
-    common_name  = "teller.altmtrk.com"
-    organization = "Altmtrk Bank"
-  }
-
-  validity_period_hours = 8760 # 1 year
-
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-  ]
-}
-
-# Store the certificate in Secret Manager for the Teller Portal to consume
-resource "google_secret_manager_secret" "teller_portal_cert" {
-  project     = var.compute_project_id
-  secret_id   = var.teller_portal_certificate_id
-  replication = "auto" #Do not change. 
-}
-
-resource "google_secret_manager_secret_version" "teller_portal_cert_version" {
-  secret      = google_secret_manager_secret.teller_portal_cert.id
-  secret_data = tls_self_signed_cert.teller_portal_cert.cert_pem
 }
 
 # The Retail Banking App (OIDC Client)
@@ -91,26 +52,4 @@ resource "keycloak_openid_client_scope" "risk_scope" {
   name                   = "risk"
   description            = "Scope containing risk evaluation metadata for the Transaction Service"
   include_in_token_scope = true
-}
-
-# --- Legacy Teller Portal (SAML Client) ---
-
-resource "keycloak_saml_client" "teller_portal" {
-  realm_id  = keycloak_realm.mockbank_realm.id
-  client_id = "teller-portal"
-  name      = "Legacy Teller Portal"
-  enabled   = true
-
-  include_authn_statement = true
-  sign_documents          = true
-  sign_assertions         = true
-  encrypt_assertions      = true
-
-  # Keycloak uses this public cert to verify SP signatures and encrypt assertions
-  encryption_certificate = tls_self_signed_cert.teller_portal_cert.cert_pem
-  signing_certificate    = tls_self_signed_cert.teller_portal_cert.cert_pem
-
-  valid_redirect_uris = [
-    "https://teller.altmtrk.com/saml/consume"
-  ]
 }

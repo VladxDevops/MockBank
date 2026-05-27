@@ -19,6 +19,11 @@ if [ -z "$SERVICE_ACCOUNT_EMAIL" ]; then
     exit 1
 fi
 
+# Sanitize: Trim whitespace and remove 'serviceAccount:' prefix if user provided it
+SERVICE_ACCOUNT_EMAIL=$(echo "$SERVICE_ACCOUNT_EMAIL" | tr -d '[:space:]')
+# Ensure we strip the prefix if it exists so we can add it safely in the gcloud flags
+SERVICE_ACCOUNT_EMAIL=${SERVICE_ACCOUNT_EMAIL#serviceAccount:}
+
 echo "------------------------------------------------------------"
 echo "Target Project: $PROJECT_ID"
 echo "Service Account: $SERVICE_ACCOUNT_EMAIL"
@@ -55,10 +60,15 @@ if [[ ! "$SKIP_STEP1" =~ ^[Yy]$ ]]; then
 
     for ROLE in "${ROLES[@]}"; do
         echo "Adding $ROLE..."
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+        if ! gcloud projects add-iam-policy-binding "$PROJECT_ID" \
             --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
             --role="$ROLE" \
-            --quiet > /dev/null
+            --quiet; then
+            echo "[DEBUG] Failed to add role. Arguments used:"
+            echo "  Project ID: '$PROJECT_ID'"
+            echo "  Member String: 'serviceAccount:$SERVICE_ACCOUNT_EMAIL'"
+            exit 1
+        fi
     done
 fi
 
@@ -67,12 +77,20 @@ echo "------------------------------------------------------------"
 echo "Step 2: Cross-Project Terraform State Access"
 read -p "Enter the GCP Project ID where the remote state is stored (Leave blank to skip): " TERRAFORM_GCP_PROJECT
 
+# Sanitize: Trim whitespace
+TERRAFORM_GCP_PROJECT=$(echo "$TERRAFORM_GCP_PROJECT" | tr -d '[:space:]')
+
 if [ ! -z "$TERRAFORM_GCP_PROJECT" ]; then
     echo "Assigning storage.admin to $SERVICE_ACCOUNT_EMAIL in $TERRAFORM_GCP_PROJECT..."
-    gcloud projects add-iam-policy-binding "$TERRAFORM_GCP_PROJECT" \
+    if ! gcloud projects add-iam-policy-binding "$TERRAFORM_GCP_PROJECT" \
         --member="serviceAccount:$SERVICE_ACCOUNT_EMAIL" \
         --role="roles/storage.admin" \
-        --quiet > /dev/null
+        --quiet; then
+        echo "[DEBUG] Failed to add cross-project role. Arguments used:"
+        echo "  Target Project ID: '$TERRAFORM_GCP_PROJECT'"
+        echo "  Member String: 'serviceAccount:$SERVICE_ACCOUNT_EMAIL'"
+        exit 1
+    fi
 fi
 
 echo "------------------------------------------------------------"
