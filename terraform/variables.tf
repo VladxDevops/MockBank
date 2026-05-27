@@ -74,12 +74,14 @@ variable "keycloak_admin_password_secret_id" {
 variable "keycloak_admin_username" {
   description = "The Secret ID/name for the Keycloak admin username"
   type        = string
+  default     = null
 }
 
 #Project1 KeyCloak DataBase Password secret id/name: 
 variable "keycloak_database_password_secret_id" {
   description = "name of the secret for the keyCloak DataBase password"
   type        = string
+  default     = null
 }
 
 variable "project1_service_name" {
@@ -116,6 +118,7 @@ variable "github_actions_sa_id" {
 variable "teller_portal_certificate_id" {
   description = "Teller portal Certificate ID"
   type        = string
+  default     = null
 }
 
 #Damian_name: 
@@ -124,3 +127,34 @@ variable "domain_name" {
   type        = string
   default     = null
 }
+
+# --- Foundation & State ---
+variable "terraform_state_bucket_name" {
+  description = "The name of the GCS bucket used for Terraform remote state"
+  type        = string
+}
+
+# --- Identity Credentials (for Providers) ---
+variable "keycloak_admin_password" {
+  description = "The password for the Keycloak admin account"
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "keycloak_url" {
+  description = "The URL of the Keycloak instance"
+  type        = string
+  default     = null
+}
+
+variable "atlas_public_key" { 
+  type = string 
+  default = null
+  }
+
+variable "atlas_private_key" { 
+  type = string
+  sensitive = true
+  default = null
+  }

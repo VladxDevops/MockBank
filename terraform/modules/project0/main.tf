@@ -1,4 +1,4 @@
-# project4/main.tf - Centralized GCP Service Enablement
+# modules/project0/main.tf - Centralized GCP Service Enablement
 
 resource "google_project_service" "compute" {
   project            = var.compute_project_id

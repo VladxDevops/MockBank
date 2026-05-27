@@ -10,13 +10,6 @@ terraform {
   }
 }
 
-provider "keycloak" {
-  client_id = "admin-cli"
-  username  = var.keycloak_admin_username
-  password  = var.keycloak_admin_password
-  url       = var.keycloak_url
-}
-
 resource "keycloak_realm" "mockbank_realm" {
   realm        = "MockBankRealm"
   enabled      = true

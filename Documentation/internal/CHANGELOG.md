@@ -17,8 +17,18 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ## [0.7.0] - 2024-05-24
 ### Added
 - **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
-- **Infrastructure**: Created `project4` module to centralize GCP Service API enablement across all banking projects.
+- **Terraform**: Declared the `bootstrap` variable at the root level to support targeted Foundation-only deployments.
+- **Operations**: Documented the multi-target bootstrap command to simultaneously enable APIs and provision Secret Manager resources.
+### Changed
+- **Architecture**: Moved Terraform provider configurations (`provider "mongodbatlas"`, `provider "keycloak"`) from `module.project0` to the root `terraform/` directory. 
+- **Refactor**: Established root-level provider management to ensure consistent authentication context and resolve potential "Provider Proxy" issues during complex deployments.
+- **Infrastructure**: Centralized all Terraform provider declarations (`google`, `mongodbatlas`, `keycloak`) within the `project0` module.
+- **Infrastructure**: Migrated GCP Service API enablement logic to the `project0` module.
 - **Decision**: Adopted a "Single Pane of Glass" for infrastructure. Provisioning all services from the Project0 Terraform workspace ensures consistency across environments and simplifies CI/CD pipeline secrets management.
+### Fixed
+- **Terraform**: Resolved missing argument errors in `main.tf` by correctly passing variables to `module.project3`.
+### Fixed
+- **Terraform**: Resolved duplicate provider declarations in `project0` and syntax errors in the root `main.tf` orchestrator.
 ### Removed
 - **Redundancy**: Removed SAML certificate generation as part of the OIDC-only migration strategy.
 

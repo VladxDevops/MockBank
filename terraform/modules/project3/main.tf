@@ -1,14 +1,3 @@
-# --- Required GCP Services for Project 3 ---
-# project4/main.tf - Centralized GCP Service Enablement
-
-resource "google_project_service" "cloud_deploy" {
-resource "google_project_service" "compute" {
-  project            = var.compute_project_id
-  service            = "clouddeploy.googleapis.com"
-  service            = "compute.googleapis.com"
-  disable_on_destroy = false
-}
-
 # --- Workload Identity Federation for GitHub Actions ---
 
 resource "google_iam_workload_identity_pool" "github_pool" {
@@ -21,10 +10,6 @@ resource "google_iam_workload_identity_pool" "github_pool" {
   depends_on = [
     google_project_iam_member.terraform_sa_workload_identity_admin
   ]
-resource "google_project_service" "iam" {
-  project            = var.compute_project_id
-  service            = "iam.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
@@ -44,10 +29,6 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
-resource "google_project_service" "cloud_run" {
-  project            = var.compute_project_id
-  service            = "run.googleapis.com"
-  disable_on_destroy = false
 }
 
 # Service Account that GitHub Actions will impersonate
@@ -55,10 +36,6 @@ resource "google_service_account" "github_actions_sa" {
   project      = var.compute_project_id
   account_id   = var.github_actions_sa_id
   display_name = "GitHub Actions CI/CD Service Account"
-resource "google_project_service" "secret_manager" {
-  project            = var.compute_project_id
-  service            = "secretmanager.googleapis.com"
-  disable_on_destroy = false
 }
 
 # Allow GitHub to impersonate the SA
@@ -66,10 +43,6 @@ resource "google_service_account_iam_member" "workload_identity_federation_bindi
   service_account_id = google_service_account.github_actions_sa.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"
-resource "google_project_service" "cloud_sql" {
-  project            = var.compute_project_id
-  service            = "cloudsql.googleapis.com"
-  disable_on_destroy = false
 }
 
 # --- IAM Roles (Separated per AGENTS.md Standards) ---
@@ -79,20 +52,12 @@ resource "google_project_iam_member" "terraform_sa_workload_identity_admin" {
   project = var.compute_project_id
   role    = "roles/iam.workloadIdentityPoolAdmin"
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
-resource "google_project_service" "vpc_access" {
-  project            = var.compute_project_id
-  service            = "vpcaccess.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.admin"
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
-resource "google_project_service" "service_networking" {
-  project            = var.compute_project_id
-  service            = "servicenetworking.googleapis.com"
-  disable_on_destroy = false
 }
 
 #Github Actions Service account Deployer:
@@ -102,60 +67,36 @@ resource "google_project_iam_member" "github_actions_service_usage_admin" {
   project = var.compute_project_id
   role    = "roles/serviceusage.serviceUsageAdmin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}" #Mock Comment to rePush. Remove later. 
-resource "google_project_service" "artifact_registry" {
-  project            = var.compute_project_id
-  service            = "artifactregistry.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "github_actions_cloud_build_editor" {
   project = var.compute_project_id
   role    = "roles/cloudbuild.builds.editor"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-resource "google_project_service" "cloud_build" {
-  project            = var.compute_project_id
-  service            = "cloudbuild.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "github_actions_storage_admin" {
   project = var.compute_project_id
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-resource "google_project_service" "cloud_deploy" {
-  project            = var.compute_project_id
-  service            = "clouddeploy.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "github_actions_service_usage_consumer" {
   project = var.compute_project_id
   role    = "roles/serviceusage.serviceUsageConsumer"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-resource "google_project_service" "service_usage" {
-  project            = var.compute_project_id
-  service            = "serviceusage.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "cloud_deploy_admin" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.admin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-resource "google_project_service" "logging" {
-  project            = var.compute_project_id
-  service            = "logging.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "cloud_run_admin" {
   project = var.compute_project_id
   role    = "roles/run.admin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-resource "google_project_service" "monitoring" {
-  project            = var.compute_project_id
-  service            = "monitoring.googleapis.com"
-  disable_on_destroy = false
 }
 
 resource "google_project_iam_member" "artifact_registry_writer" {
