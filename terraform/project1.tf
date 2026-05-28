@@ -1,5 +1,3 @@
-# In terraform/project1.tf
-
 module "project1" {
   source = "./modules/project1"
 
@@ -13,12 +11,12 @@ module "project1" {
   project1_service_name                = var.project1_service_name
 
 
-  # Pass network details to the module
-  vpc_network_id   = google_compute_network.vpc.id
-  vpc_connector_id = google_vpc_access_connector.connector.id
+  # Pass network details to the module using foundation outputs
+  vpc_network_id   = module.project0.vpc_id
+  vpc_connector_id = module.project0.connector_id
 
-  # Ensure the VPC peering for private services is complete before creating module resources
-  depends_on = [google_service_networking_connection.private_vpc_connection]
+  # Ensure foundation networking is complete
+  depends_on = [module.project0.private_vpc_connection]
 
   #Cloud Run Service account: 
   keycloak_serv_acc_account_id = var.keycloak_serv_acc_account_id

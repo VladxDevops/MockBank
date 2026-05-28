@@ -22,6 +22,8 @@ This project demonstrates:
 ## Getting Started
 
 ### 1. Infrastructure Deployment
+**Prerequisite**: Project 0 (Foundation) must be deployed to establish the VPC and networking.
+
 Navigate to the `terraform` directory and apply the configuration for Project 1.
 
 ```bash

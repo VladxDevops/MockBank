@@ -76,54 +76,39 @@ Since this project uses MongoDB Atlas, you will need to create a free account an
 6.  **Configure IP Access:**
     *   Go to "Network Access" and add an IP address. For development purposes, you can allow access from anywhere by entering `0.0.0.0/0`. **For production, you should restrict this to the IP addresses of your services.**
 
-### Terraform Deployment
+### Terraform Deployment (Foundation First)
 
-This project uses Terraform to manage the GCP infrastructure. The configuration is located in the `terraform` directory.
+The infrastructure is managed using a decoupled, multi-stack approach. **Project 0 (Foundation) must be deployed before any other services.**
 
-#### Initial Setup
+#### 1. Initial Setup
+*   **Configure Remote State (Optional):** See `terraform/terraform.tf` to configure a GCS backend.
+*   **Update `terraform/dev.tfvars`:**
+    ```hcl
+    compute_project_id     = "your-gcp-project-id"
+    compute_project_number = "your-gcp-project-number"
+    atlas_org_id           = "your-atlas-organization-id"
+    ```
 
-1.  **Configure Remote State (Optional but Recommended):**
-    *   The `terraform/backend.tf` file is provided to configure a GCS bucket as the remote backend for your Terraform state.
-    *   To use it, you need to create a GCS bucket and then uncomment the content of the file, replacing `"your-terraform-state-bucket-name"` with the name of your bucket.
-    *   Run `terraform init` to initialize the backend.
+#### 2. Deploy Project 0 (Foundation)
+This module enables 16+ GCP APIs, configures the Global VPC, NAT, and Artifact Registry.
+```bash
+cd terraform
+terraform init
+terraform workspace select projectZERO || terraform workspace new projectZERO
 
-2.  **Update `terraform/dev.tfvars`:**
-    *   Open the `terraform/dev.tfvars` file and fill in the following values:
-        ```hcl
-        compute_project_id = "your-gcp-project-id"
-        atlas_org_id       = "your-atlas-organization-id"
-        compute_project_number = "your-gcp-project-number"
-        ```
+# Bootstrap APIs and Core Infrastructure
+terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.project0
+```
 
-3.  **Enable GCP Services:**
-    *   Run the following command to enable the necessary GCP APIs (requires `bootstrap=true` to skip secret validation):
-        ```bash
-        terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=google_project_service.gcp_services
-        ```
+#### 3. Shared Secrets Management
+Provision placeholders for shared secrets (e.g., MongoDB Atlas keys):
+```bash
+terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.atlas_public_key_secret -target=module.atlas_private_key_secret
+```
+*Note: Manually populate these values in the GCP Console after creation.*
 
-4.  **Store your Atlas API Keys in Secret Manager:**
-    *   Run the following command to create empty secrets for your Atlas API keys (using bootstrap mode):
-        ```bash
-        terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.atlas_public_key_secret -target=module.atlas_private_key_secret
-        ```
-    *   Go to the GCP Console -> Secret Manager and add the values for `atlas_public_key` and `atlas_private_key` manually.
-
-5.  **Import Existing Atlas Project (Optional):**
-    *   If you want Terraform to use the project you created manually in the UI instead of creating a new one, you must import it into the Terraform state.
-    *   Identify the resource name in your Terraform code (e.g., `mongodbatlas_project.atlas_project`) and get the Project ID from the Atlas UI.
-    *   Run: `terraform import mongodbatlas_project.atlas_project <your-atlas-project-id>`
-    *   **Note:** Ensure the project name in your Terraform configuration matches the existing project name to avoid renaming.
-
-6.  **Deploy the Infrastructure:**
-    *   Navigate to the `terraform` directory and run the following commands:
-        ```bash
-        terraform init
-        terraform workspace select project2 || terraform workspace new project2
-        terraform apply
-        ```
-    *   **Note on Atlas Deployment:** The `apply` command will create projects and clusters in your MongoDB Atlas organization. It will also automatically store the generated MongoDB connection string in Secret Manager. If you encounter an `IP_ADDRESS_NOT_ON_ACCESS_LIST` error, it means the IP of the machine running Terraform is not allowed to make API calls. Please see the detailed instructions in `terraform/mongodb_TROUBLESHOOTING.md` to resolve this.
-    *   **Note on Cloud Run:** Terraform deploys a placeholder "Hello World" image initially. This ensures the infrastructure is healthy before you deploy your actual application code. You will see this running service in the console.
-    *   **Network Note:** The configuration creates a VPC (`main-vpc`) and a subnet (`main-subnet`). The subnet's `/28` CIDR block is required for the Serverless VPC Access Connector. This connector allows Cloud Run to route traffic through your VPC. To provide a static IP for services on the public internet (like MongoDB Atlas), a **Cloud NAT** gateway must also be deployed in the VPC. This static IP can then be added to external service allow-lists.
+#### 4. Deploy Application Projects
+Once the foundation is live, you can deploy Project 1 (Identity), Project 2 (Transactions), or Project 3 (CI/CD) by targeting their respective modules or using the unified workspace.
 
 ### Infrastructure Preservation
 

@@ -1,24 +1,50 @@
-## Verifirstime seting up project zero:
-Use script to give IAM roles to terraform service account: 
+# Project 0: Foundational Infrastructure (Networking & APIs)
 
-Before that: Can use this commd to retrive roles from the other GCP project: 
-gcloud projects get-iam-policy $(gcloud config get-value project) \
-    --flatten="bindings[].members" \
-    --filter="bindings.members:serviceAccount:[SERVICE_ACCOUNT_EMAIL]" \
-    --format="value(bindings.role)"
+## Overview
+Project 0 establishes the "Zero Trust" foundation for the Altmtrk2026 Bank Platform. It centralizes networking, API management, and global identity federation to ensure security and consistency across all application-specific projects.
 
-*Replace placeholder: SERVICE_ACCOUNT_EMAIL with actual service account email. 
+## Core Components
+- **Global VPC & Subnets**: Standardized networking for all services.
+- **Serverless VPC Access**: Connectivity for Cloud Run services.
+- **Cloud NAT & Router**: Secure, static egress for external API calls (e.g., MongoDB Atlas).
+- **Artifact Registry**: Centralized Docker repository for all microservices.
+- **Workload Identity Federation (WIF)**: Keyless authentication for GitHub Actions.
+- **GCP Service APIs**: Centralized enablement of 16+ required services.
 
-After that: 
-give execute permission to script: 
+## Getting Started
+
+### 1. Initial Bootstrap (IAM Setup)
+Before running Terraform, ensure the execution service account has the necessary permissions. Use the provided script:
+
+```bash
+# From the root of the repo
+cd BNKprojects/zero
 chmod +x project0firstrun.sh
-
-Run script: 
-cd BNKprojects/0
 ./project0firstrun.sh
+```
 
+### 2. Deploy Foundation via Terraform
+Navigate to the `terraform` directory and apply the Project 0 module:
 
+```bash
+cd ../../terraform
 
+# Initialize and select workspace
+terraform init
+terraform workspace select projectZERO || terraform workspace new projectZERO
 
+# Bootstrap APIs and Networking
+terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.project0
+```
 
-##
+### 3. Shared Secrets Management
+Once the foundation is live, provision the secret placeholders:
+
+```bash
+terraform apply -var="bootstrap=true" -var-file="dev.tfvars" -target=module.atlas_public_key_secret -target=module.atlas_private_key_secret
+```
+*Note: After creation, manually populate the secret values in the GCP Secret Manager console.*
+
+## Documentation
+- **[Detailed Planning](PROJECT0DETAILS.MD)**: Implementation rationale and architecture.
+- **[Troubleshooting](../../Documentation/internal/TROUBLESHOOTING_PROJECT0.md)**: Known issues and resolutions.

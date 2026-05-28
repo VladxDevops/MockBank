@@ -1,48 +1,33 @@
-# identity.tf
-# Part of the consolidated Foundation Infrastructure.
-# Manages Keycloak Realm and OIDC configuration.
-terraform {
-  required_providers {
-    keycloak = {
-      source  = "mrparkers/keycloak"
-      version = ">= 4.4.0"
-    }
-  }
-}
+# --- Workload Identity Federation for GitHub Actions ---
+# Keycloak identity resources commented out for initial bootstrap.
+# These require a running Keycloak instance to be managed via the Keycloak provider.
 
+/*
 resource "keycloak_realm" "mockbank_realm" {
-  realm        = "MockBankRealm"
-  enabled      = true
-  display_name = "Mockbank Banking Realm"
-
-  # Security settings aligned with the spec
-  password_policy = "upperCase(1) and lowerCase(1) and digits(1) and length(32)"
+  realm             = "mockbank"
+  enabled           = true
+  display_name      = "MockBank Digital"
+  registration_allowed = true
 }
 
-# The Retail Banking App (OIDC Client)
 resource "keycloak_openid_client" "retail_app" {
   realm_id              = keycloak_realm.mockbank_realm.id
   client_id             = "retail-app"
   name                  = "Retail Banking Application"
   enabled               = true
-  access_type           = "PUBLIC"
+  access_type           = "CONFIDENTIAL"
   standard_flow_enabled = true
-
-  # Enforce PKCE S256 as per Project 1 Spec
-  pkce_code_challenge_method = "S256"
-
+  
   valid_redirect_uris = [
     "http://localhost:3000/*",
-    "https://retail.altmtrk.com/*"
+    "https://retail-app.mockbank.com/*"
   ]
-
-  web_origins = ["*"]
 }
 
-# Fraud Team Requirement: The 'risk' scope
 resource "keycloak_openid_client_scope" "risk_scope" {
   realm_id               = keycloak_realm.mockbank_realm.id
-  name                   = "risk"
-  description            = "Scope containing risk evaluation metadata for the Transaction Service"
+  name                   = "risk_assessment"
+  description            = "Access to risk assessment services"
   include_in_token_scope = true
 }
+*/

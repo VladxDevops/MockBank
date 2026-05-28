@@ -1,5 +1,11 @@
-resource "google_project_iam_member" "compute_sa_secret_accessor" {
-  project = var.compute_project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${var.compute_project_number}-compute@developer.gserviceaccount.com"
+module "atlas_public_key_secret" {
+  source    = "./modules/secret_manager"
+  project_id = var.compute_project_id
+  secret_id  = "atlas_public_key"
+}
+
+module "atlas_private_key_secret" {
+  source    = "./modules/secret_manager"
+  project_id = var.compute_project_id
+  secret_id  = "atlas_private_key"
 }

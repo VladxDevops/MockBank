@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.0"
     }
+    keycloak = {
+      source  = "mrparkers/keycloak"
+      version = ">= 4.4.0"
+    }
   }
 }
 
@@ -22,11 +26,12 @@ provider "google" {
   #user_project_override = true #Disabled to remediate error failing to deploy keycloak instance. 
 }
 
-variable "bootstrap" {
-  description = "Set to true to skip secret lookup during initial secret creation"
-  type        = bool
-  default     = false
-}
+# provider "keycloak" {
+#   client_id = "admin-cli"
+#   username  = var.keycloak_admin_username
+#   password  = var.keycloak_admin_password
+#   url       = var.keycloak_url != "" ? var.keycloak_url : "http://localhost" # Placeholder to allow planning
+# }
 
 provider "mongodbatlas" {
   public_key  = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data

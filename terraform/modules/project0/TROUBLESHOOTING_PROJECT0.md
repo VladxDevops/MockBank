@@ -21,18 +21,28 @@ This document tracks the debugging steps, failed experiments, and successful res
     *   **Step taken:** Used `-var="bootstrap=true" -target=google_project_service.gcp_services`.
     *   **Outcome:** Allows APIs to be enabled first, skipping resource validation that requires those APIs.
 
-### [2024-05-24] Duplicate Provider Declarations
-*   **Issue:** Syntax errors and "duplicate provider" warnings in `main.tf`.
-*   **Symptoms:** `Error: Duplicate provider configuration`.
-*   **Resolution:** Cleaned up redundant provider blocks in `project0.tf` and the root `main.tf` orchestrator to establish a "Single Pane of Glass" management style.
+### [2026-05-28] Service Account Propagation
+*   **Issue:** Occasional 400 Bad Request or 403 Forbidden errors when performing IAM bindings immediately after service account creation.
+*   **Symptoms:** `Error: Identity 'service-ACCOUNT@PROJECT.iam.gserviceaccount.com' does not exist.`
+*   **Resolution:** Implemented a retry strategy. Allowing 60-120 seconds for global propagation or simply retrying the `apply` usually resolves this transient sync issue.
+
+### [2026-05-28] Secret Already Exists (409 Conflict)
+*   **Issue:** Terraform fails to create secrets that were previously created manually or by a different process.
+*   **Symptoms:** `Error: googleapi: Error 409: Secret already exists...`
+*   **Resolution:** Used `terraform import` with the `bootstrap=true` flag. This allows Terraform to take ownership of existing GCP secrets without attempting a destructive recreation.
+
+### [2026-05-28] Cloud SQL API Permission Error
+*   **Issue:** `cloudsql.googleapis.com` service enablement failed during automation.
+*   **Symptoms:** `Error 403: Forbidden. The caller does not have permission.`
+*   **Status:** **ACTIVE INVESTIGATION**. Currently, Cloud SQL is manually managed or its enablement is skipped in the foundation module. Requires "Project Owner" or specific Service Usage Admin permissions.
 
 ## 3. Pending Issues & Active Debugging
 
-### Issue: [Title of current issue]
-*   **Description:** 
-*   **Steps Taken:**
-*   **What Didn't Work:**
-*   **Current Hypothesis:**
+### Issue: Keycloak Identity Provider Integration
+*   **Description:** The Keycloak provider cannot initialize until the Cloud Run service is stable and reachable.
+*   **Steps Taken:** Commented out identity resources in `modules/project3/identity.tf`.
+*   **What Didn't Work:** Direct deployment without a live endpoint.
+*   **Current Hypothesis:** Once the Keycloak image is pushed to the new registry and the service is live, the provider can be safely re-enabled.
 
 ## 4. Environment Checklist
 Before running Project 0 deployments, ensure:

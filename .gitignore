@@ -32,6 +32,7 @@ Bank/BNKprojects/1/test-env.sh
 *.tfplan
 .terraform.lock.h
 .terraform.lock.hcl
+plan_output.txt
 
 # --- Google Cloud Platform ---
 # Service account keys

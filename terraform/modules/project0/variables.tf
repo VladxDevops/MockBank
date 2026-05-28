@@ -3,6 +3,26 @@ variable "compute_project_id" {
   type        = string
 }
 
+variable "compute_region" {
+  description = "The GCP region for resources"
+  type        = string
+}
+
+
+variable "compute_project_number" {
+  description = "The GCP Project Number"
+  type        = string
+}
+
+variable "service_name" {
+  description = "The name of the service"
+  type        = string
+}
+
+variable "artifact_registry_repository_id" {
+  description = "The ID of the Artifact Registry repository"
+  type        = string
+}
 
 variable "atlas_public_key" {
   description = "MongoDB Atlas Public API Key"

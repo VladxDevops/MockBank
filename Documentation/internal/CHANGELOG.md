@@ -14,16 +14,32 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
-## [0.7.1] - 2024-05-24
+## [0.8.0] - 2026-05-28
+### Added
+- **Terraform Foundation**: Successfully consolidated core infrastructure into the `project0` module, establishing a "Single Pane of Glass" for foundational services.
+- **Networking**: Implemented a Global VPC (`main-vpc`), private subnets, and a Serverless VPC Access Connector (`avechector`) to support secure service communication.
+- **Egress & Connectivity**: Provisioned Cloud Router and NAT Gateway for secure private egress, and enabled VPC Peering for Private Service Access (e.g., Cloud SQL).
+- **Load Balancing**: Configured a Global External HTTP Load Balancer with a Serverless NEG to route traffic to the Transaction Service.
+- **Artifact Registry**: Established a centralized repository (`bank-apps-registry`) for all microservice container images.
+- **Secret Management**: Automated the creation of managed secrets for MongoDB Atlas API keys and standardized secret creation via the `secret_manager` module.
+- **CI/CD**: Configured GitHub Actions Workload Identity Federation (WIF) and Cloud Deploy pipelines (dev, test, prod) for the Transaction Service.
+
+### Changed
+- **Architecture**: Migrated all core networking (`network.tf`, `nat.tf`), load balancing (`load_balancer.tf`), and foundational IAM (`iam.tf`) from root-level files into the `project0` module.
+- **Standardization**: Unified variable naming (e.g., `compute_region`) across all modules and root configurations for consistency.
+- **Service Management**: Centralized enablement for 16+ GCP services within `project0` with explicit dependency chains to resolve race conditions.
+
+### Fixed
+- **Terraform**: Resolved "Undeclared Variable" and "Duplicate Variable" errors by centralizing all root variables in a single top-level `variables.tf`.
+- **Race Conditions**: Fixed API enablement issues by adding `depends_on` blocks for the Cloud Resource Manager API.
+- **State Management**: Resolved secret creation conflicts (409 errors) by importing existing GCP secrets into the Terraform state.
+
+## [0.7.1] - 2026-05-24
 ### Added
 - **Terraform**: Initialized root-level `variables.tf` and `project0.tf` to support phase-based bootstrapping.
 - **Governance**: Enforced `bootstrap` variable usage to resolve API-enablement race conditions documented in `TROUBLESHOOTING_PROJECT0.md`.
 
-## [0.7.0] - 2024-05-24
-### Added
-- **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
-
-## [0.7.0] - 2024-05-24
+## [0.7.0] - 2026-05-24
 ### Added
 - **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
 - **Terraform**: Declared the `bootstrap` variable at the root level to support targeted Foundation-only deployments.
@@ -37,7 +53,6 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Decision**: Adopted a "Single Pane of Glass" for infrastructure. Provisioning all services from the Project0 Terraform workspace ensures consistency across environments and simplifies CI/CD pipeline secrets management.
 ### Fixed
 - **Terraform**: Resolved missing argument errors in `main.tf` by correctly passing variables to `module.project3`.
-### Fixed
 - **Terraform**: Resolved duplicate provider declarations in `project0` and syntax errors in the root `main.tf` orchestrator.
 ### Removed
 - **Redundancy**: Removed SAML certificate generation as part of the OIDC-only migration strategy.

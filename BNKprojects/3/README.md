@@ -10,12 +10,17 @@ Project 3 provides the automation engine for the Altmtrk2026 Bank Platform. It f
 *   **Workload Identity Federation:** Keyless GCP authentication.
 
 ## Getting Started
-1.  **Infrastructure:** Deploy the CI/CD base via Terraform.
+1.  **Foundation:** Ensure Project 0 (Foundation) is deployed. It provides the base VPC and WIF Pool.
+    ```bash
+    cd ../zero
+    # Follow instructions in Project 0 README
+    ```
+2.  **Infrastructure:** Deploy the CI/CD pipelines via Terraform.
     ```bash
     cd ../../terraform
     terraform apply -target=module.project3
     ```
-2.  **Identity Federation:** Configure the OIDC provider for GitHub Actions (see `PROJECT3_DETAILS.md`).
+3.  **Identity Federation:** Configure the OIDC provider for GitHub Actions (now managed in Project 0).
 3.  **Triggers:** Configure Cloud Build triggers for the `DEV` branch.
 
 ## Documentation
@@ -36,12 +41,17 @@ Project 3 provides the automation engine for the Altmtrk2026 Bank Platform. It f
 *   **Workload Identity Federation:** Keyless GCP authentication.
 
 ## Getting Started
-1.  **Infrastructure:** Deploy the CI/CD base via Terraform.
+1.  **Foundation:** Ensure Project 0 (Foundation) is deployed. It provides the base VPC and WIF Pool.
+    ```bash
+    cd ../zero
+    # Follow instructions in Project 0 README
+    ```
+2.  **Infrastructure:** Deploy the CI/CD pipelines via Terraform.
     ```bash
     cd ../../terraform
     terraform apply -target=module.project3
     ```
-2.  **Identity Federation:** Configure the OIDC provider for GitHub Actions (see `PROJECT3_DETAILS.md`).
+3.  **Identity Federation:** Configure the OIDC provider for GitHub Actions (now managed in Project 0).
 3.  **Triggers:** Configure Cloud Build triggers for the `DEV` branch.
 
 ## Documentation
