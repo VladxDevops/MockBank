@@ -14,6 +14,15 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.7.1] - 2024-05-24
+### Added
+- **Terraform**: Initialized root-level `variables.tf` and `project0.tf` to support phase-based bootstrapping.
+- **Governance**: Enforced `bootstrap` variable usage to resolve API-enablement race conditions documented in `TROUBLESHOOTING_PROJECT0.md`.
+
+## [0.7.0] - 2024-05-24
+### Added
+- **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.
+
 ## [0.7.0] - 2024-05-24
 ### Added
 - **Architecture**: Commenced migration of Project 1, 2, and 3 infrastructure declarations into a consolidated Project 0 (Foundation) root.

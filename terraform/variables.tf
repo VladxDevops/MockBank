@@ -1,160 +1,27 @@
-variable "compute_region" {
-  description = "The GCP region for resources."
-  type        = string
-}
-
 variable "compute_project_id" {
-  description = "The GCP project ID to deploy resources into."
+  description = "The GCP Project ID where resources will be deployed."
   type        = string
 }
 
 variable "compute_project_number" {
-  description = "The GCP project number, used for IAM bindings to Google-managed service accounts."
+  description = "The GCP Project Number."
   type        = string
 }
+
+variable "compute_region" {
+  description = "The default region for GCP resources."
+  type        = string
+  default     = "us-south1"
+}
+
 
 variable "atlas_org_id" {
-  description = "The MongoDB Atlas Organization ID."
+  description = "MongoDB Atlas Organization ID."
   type        = string
 }
 
-variable "mongodb_atlas_cluster_region" {
-  description = "The region for the MongoDB Atlas cluster."
-  type        = string
-  default     = "US_CENTRAL"
-}
-
-variable "docker_image" {
-  description = "The Docker image to deploy for the transaction service."
-  type        = string
-  default     = "gcr.io/cloudrun/hello" # Default to a placeholder image as per README
-}
-
-variable "service_name" {
-  description = "The name of the Cloud Run service for Project 2."
-  type        = string
-  default     = "transaction-service"
-}
-
-variable "mongodb_atlas_project_id" {
-  description = "The ID of the MongoDB Atlas project. If not provided, a new project will be created."
-  type        = string
-  default     = null
-}
-
-
-#project1: 
-
-variable "terraform_deployer_service_account" {
-  description = "The service account email used to deploy Terraform resources"
-  type        = string
-}
-
-#Artifact Registry repository for Project1: 
-variable "project1_repository" {
-  description = "name of the Artifact Registry Repository"
-  type        = string
-}
-
-#Cloud Run Service account: 
-variable "keycloak_serv_acc_account_id" {
-  description = "The account ID for the Keycloak Service Account (passed from tfvars to avoid hardcoding)."
-  type        = string
-}
-
-#Secret manager:
-
-#Project1:
-#Project1 KeyCloak admin Password secret id/name: 
-variable "keycloak_admin_password_secret_id" {
-  description = "name of the secret for the keyCloak admin password"
-  type        = string
-}
-
-variable "keycloak_admin_username" {
-  description = "The Secret ID/name for the Keycloak admin username"
-  type        = string
-  default     = null
-}
-
-#Project1 KeyCloak DataBase Password secret id/name: 
-variable "keycloak_database_password_secret_id" {
-  description = "name of the secret for the keyCloak DataBase password"
-  type        = string
-  default     = null
-}
-
-variable "project1_service_name" {
-  description = "The name of the service for Project 1, used to derive resource IDs (e.g., retail-app)."
-  type        = string
-}
-
-###End of project1 Secrets. 
-
-###Project3: 
-
-#Github: 
-variable "github_repository" {
-  description = "The GitHub repository in 'owner/repo' format"
-  type        = string
-}
-
-variable "workforce_identity_federation_pool_id" {
-  description = "The ID for the Workload Identity Pool"
-  type        = string
-}
-
-variable "workforce_identity_federation_provider_id" {
-  description = "The ID for the Workload Identity Pool Provider"
-  type        = string
-}
-
-variable "github_actions_sa_id" {
-  description = "The account ID for the GitHub Actions Service Account"
-  type        = string
-}
-
-#Teller Portal: 
-variable "teller_portal_certificate_id" {
-  description = "Teller portal Certificate ID"
-  type        = string
-  default     = null
-}
-
-#Damian_name: 
-variable "domain_name" {
-  description = "The domain name for the Bank API (e.g., api.altmtrk.bank)"
-  type        = string
-  default     = null
-}
-
-# --- Foundation & State ---
-variable "terraform_state_bucket_name" {
-  description = "The name of the GCS bucket used for Terraform remote state"
-  type        = string
-}
-
-# --- Identity Credentials (for Providers) ---
 variable "keycloak_admin_password" {
-  description = "The password for the Keycloak admin account"
+  description = "Password for the Keycloak administrator."
   type        = string
   sensitive   = true
-  default     = null
 }
-
-variable "keycloak_url" {
-  description = "The URL of the Keycloak instance"
-  type        = string
-  default     = null
-}
-
-variable "atlas_public_key" { 
-  type = string 
-  default = null
-  }
-
-variable "atlas_private_key" { 
-  type = string
-  sensitive = true
-  default = null
-  }

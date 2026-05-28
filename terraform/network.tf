@@ -28,7 +28,7 @@ resource "google_vpc_access_connector" "connector" {
 
   # Ensures the VPC Access API is enabled before creating the connector.
   depends_on = [
-    google_project_service.gcp_services
+    module.project0
   ]
 }
 
@@ -65,5 +65,5 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   reserved_peering_ranges = [google_compute_global_address.private_service_access_range.name]
 
   # This depends on the Service Networking API being enabled.
-  depends_on = [google_project_service.gcp_services]
+  depends_on = [module.project0]
 }
