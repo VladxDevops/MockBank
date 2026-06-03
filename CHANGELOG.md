@@ -7,16 +7,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
 2.  **Format:** Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
 ## [Unreleased]
-### Added
-- **Infrastructure:** Created `import_project0.sh` script in `terraform/` to import existing landing zone resources into the `projectZERO` workspace state.
-- **Documentation:** Added detailed instructions in `Documentation/internal/INFRASTRUCTURE.md` for importing pre-existing network, routing, firewall, and load balancer resources to resolve "already exists" errors.
 ### Fixed
 - **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
 - **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
 - **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_PROJECT_ID`).
 ### Pending
 ### Changed
-- **Infrastructure:** Performed manual state reconciliation for Project 0 core resources (VPC, NAT IP, LB IP, and NEG) using `terraform import` to resolve 409 Conflict errors.
+- **Security:** Centralized all application-layer secret placeholders (Keycloak Admin/DB passwords, MongoDB connection strings) into the Project 0 foundation module.
 - **Infrastructure:** Documented resolution for `Backend configuration changed` errors when migrating to cross-project state management.
 - **Infrastructure:** Defined cross-project state management protocol allowing the DEV project service account to manage state in a centralized remote project.
 - **Governance:** Activated the AI Skills Registry and implemented a modular "one-file-per-skill" architecture with token-saving protocols (AAAK/TOON).

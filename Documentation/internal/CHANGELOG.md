@@ -22,6 +22,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Load Balancing**: Configured a Global External HTTP Load Balancer with a Serverless NEG to route traffic to the Transaction Service.
 - **Artifact Registry**: Established a centralized repository (`bank-apps-registry`) for all microservice container images.
 - **Secret Management**: Automated the creation of managed secrets for MongoDB Atlas API keys and standardized secret creation via the `secret_manager` module.
+- **Secret Centralization**: Migrated secret placeholders for Projects 1 (Identity), 2 (Transactions), and 3 (CI/CD) into the Project 0 module.
 - **CI/CD**: Configured GitHub Actions Workload Identity Federation (WIF) and Cloud Deploy pipelines (dev, test, prod) for the Transaction Service.
 
 ### Changed
