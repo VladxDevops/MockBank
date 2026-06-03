@@ -1,0 +1,101 @@
+# --- Node.js ---
+node_modules/
+dist/
+build/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Security & Secrets (CRITICAL) ---
+# Never commit environment config or secrets
+.env
+.env.local
+.env.*
+! .env.example
+start_local.sh
+venv/
+.venv/
+
+
+# Keycloak test environment variables
+Bank/BNKprojects/1/test-env.sh
+
+
+
+# --- Terraform ---
+# Exclude state and sensitive variable files
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+.terraform.lock.h
+.terraform.lock.hcl
+plan_output.txt
+
+# --- Google Cloud Platform ---
+# Service account keys
+*.json
+!package.json
+!tsconfig.json
+!nodemon.json
+!manifest.json
+gcp-key.json
+bankproject-486308-34dfd0dbef72.json
+
+# --- IDE & OS ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Logs & Local Data ---
+logs/
+*.log
+data/db/
+
+
+#.md and documentation files: 
+internalREADME.md
+spec.md
+Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
+PYTHON_CODE_EXPLANATION.md
+RELEASE_SAFETY.md
+Documentation/internal/SERVICE_ACCOUNT_GOVERNANCE.md
+PROJECTDETAILS.md
+PROJECT_DETAILS.md
+
+
+
+#Project0: 
+ansible.md
+PROJECT0DETAILS.,d
+
+#Project1: 
+docker-compose.yml
+
+#Project3: 
+PROJECT3_DETAILS.md
+SAML_INTERVIEW_QA.md
+
+
+
+
+
+
+# AI Agent Long-Term Memory (LTM) Files
+Documentation/internal/KNOWLEDGE_MAP.md
+Documentation/internal/GLOSSARY_TOON_AAAK.md
+Bank/BNKprojects/1/GEMINI-TEST-PROTOCOL.md
+GEMINI-TEST-PROTOCOL.md
+
+
+# yaml files: 
+cloudbuild.yaml
+cloudrun.yaml
+mirror-keycloak.yaml
+
+#Governance files: 
+SERVICE_ACCOUNT_GOVERNANCE.md
+RESOURCE_TAGGING_POLICY.md
