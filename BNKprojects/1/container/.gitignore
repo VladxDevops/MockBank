@@ -73,7 +73,8 @@ ansible.md
 PROJECT0DETAILS.,d
 
 #Project1: 
-docker-compose.yml
+docker-compose.yaml
+NBKprojects/1/container/docker-compose.yaml
 
 #Project3: 
 PROJECT3_DETAILS.md
