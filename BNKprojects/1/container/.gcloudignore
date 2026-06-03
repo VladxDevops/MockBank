@@ -1,0 +1,4 @@
+# Custom .gcloudignore to ensure realm-export.json is uploaded for Cloud Build
+.git/
+.gitignore
+.gcloudignore

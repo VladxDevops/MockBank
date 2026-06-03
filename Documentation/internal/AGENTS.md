@@ -82,3 +82,8 @@ Please keep the changelog.md up to date.
     }
     ```
 *   **Consistency:** Use the service account's email attribute for the `member` field to ensure the dependency graph is correctly built by Terraform.
+## 8. AI Skill Development
+Specialized AI personas and meta-prompts are managed in the externalized library:
+*   **Registry:** `/home/pochitawork/InterviewCloud Projects/Altmtrk2026/Bank/Documentation/internal/skills/agents.md`
+
+This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.

@@ -9,6 +9,15 @@ All Terraform state files are centrally managed in GCS buckets located within **
 To maintain clarity and prevent state collision, the following path structure is mandated:
 `gs://[STATE_BUCKET_NAME]/[ENVIRONMENT]/[PROJECT_NAME]/default.tfstate`
 
+### Cross-Project Initialization
+When the target infrastructure project differs from the state project, use the following initialization pattern:
+```bash
+terraform init \
+  -backend-config="bucket=[REMOTE_BUCKET]" \
+  -backend-config="project=[REMOTE_STATE_PROJECT_ID]" \
+  -backend-config="credentials=[LOCAL_PATH_TO_TARGET_PROJECT_KEY]"
+```
+
 ### Workspace Usage
 Developers must use Terraform Workspaces to manage environment-specific states. 
 *   **Project 0:** The primary terraform workspace is named `projectZERO`. Environment-specific variations should follow the `projectZERO-[env]` pattern.
@@ -17,6 +26,92 @@ Always verify your active workspace using `terraform workspace show` before runn
 
 *Example:*
 `gs://altmtrk-foundation-tfstate/dev/project2/default.tfstate`
+
+### Importing Existing Foundation Resources (Fixing "Already Exists" Errors)
+If landing zone/foundation resources were deployed via a separate configuration or direct execution (e.g., Project 0B resources or pre-existing network configs), running a target plan or apply on `module.project0` may result in `"already exists"` conflicts.
+
+To reconcile the active Terraform state in the `projectZERO` workspace with GCP, run the following import commands from the `terraform/` directory:
+
+```bash
+# Set variables
+PROJECT_ID="dev-mockbank"
+REGION="us-south1"
+
+# VPC Network
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_network.vpc \
+  projects/${PROJECT_ID}/global/networks/main-vpc
+
+# Subnetwork
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_subnetwork.private \
+  projects/${PROJECT_ID}/regions/${REGION}/subnetworks/main-subnet
+
+# VPC Connector
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_vpc_access_connector.connector \
+  projects/${PROJECT_ID}/locations/${REGION}/connectors/avechector
+
+# Router
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_router.router \
+  projects/${PROJECT_ID}/regions/${REGION}/routers/main-router
+
+# NAT IP Address
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_address.nat_ip \
+  projects/${PROJECT_ID}/regions/${REGION}/addresses/nat-static-ip
+
+# Router NAT
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_router_nat.nat_gateway \
+  ${PROJECT_ID}/${REGION}/main-router/main-nat-gateway
+
+# Global Load Balancer IP
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_global_address.bank_lb_ip \
+  projects/${PROJECT_ID}/global/addresses/bank-platform-lb-ip
+
+# Private Service Access Range
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_global_address.private_service_access_range \
+  projects/${PROJECT_ID}/global/addresses/private-service-access-range
+
+# VPC Peering Connection
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_service_networking_connection.private_vpc_connection \
+  projects/${PROJECT_ID}/global/networks/main-vpc:servicenetworking.googleapis.com
+
+# Firewall egress rule
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_firewall.allow_egress \
+  projects/${PROJECT_ID}/global/firewalls/main-vpc-allow-egress
+
+# Serverless NEG
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_region_network_endpoint_group.transaction_svc_neg \
+  projects/${PROJECT_ID}/regions/${REGION}/networkEndpointGroups/transaction-svc-neg
+
+# Backend Service
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_backend_service.transaction_backend \
+  projects/${PROJECT_ID}/global/backendServices/transaction-backend
+
+# URL Map
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_url_map.bank_url_map \
+  projects/${PROJECT_ID}/global/urlMaps/bank-platform-url-map
+
+# Target HTTP Proxy
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_target_http_proxy.http_proxy \
+  projects/${PROJECT_ID}/global/targetHttpProxies/bank-http-proxy
+
+# Global Forwarding Rule
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_compute_global_forwarding_rule.forwarding_rule \
+  projects/${PROJECT_ID}/global/forwardingRules/bank-frontend-rule
+```
 
 **CLASSIFICATION: INTERNAL**
 
@@ -32,7 +127,7 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
 
 ## 2. Security & Identity (Zero Trust)
 *   **Secret Manager**: The centralized vault for all secrets.
-    *   *Usage:* Stores DB credentials, OIDC signing keys, and API tokens.
+    *   *Usage:* All application-layer secret placeholders are provisioned via Project 0. This includes Keycloak passwords, MongoDB URI, and Atlas API keys.
 *   **Cloud IAM**:
     *   **Service Accounts**: Dedicated identities for each Cloud Run service (e.g., `sa-transaction-svc`, `sa-keycloak`).
     *   **Workload Identity Federation**: To allow GitHub Actions (Project 3) to deploy infrastructure without long-lived JSON keys.
