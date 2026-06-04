@@ -70,3 +70,9 @@ variable "workforce_identity_federation_provider_id" {
   description = "The ID for the Workload Identity Provider"
   type        = string
 }
+
+variable "terraform_deployer_service_account" {
+  description = "The email address of the service account used to run Terraform, used for administrative IAM bindings."
+  type        = string
+}
+

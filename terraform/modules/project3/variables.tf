@@ -23,6 +23,11 @@ variable "github_actions_sa_id" {
   type        = string
 }
 
+variable "github_actions_sa_email" {
+  description = "The email address of the GitHub Actions service account, migrated from module.project0."
+  type        = string
+}
+
 variable "github_repository" {
   description = "The GitHub repository (owner/repo) allowed to authenticate via Workload Identity Federation."
   type        = string
@@ -56,4 +61,3 @@ variable "teller_portal_certificate_id" {
   description = "Teller portal Certificate ID"
   type        = string
 }
-

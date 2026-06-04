@@ -17,3 +17,7 @@ output "private_vpc_connection" {
   description = "The VPC peering connection for private services"
   value       = google_service_networking_connection.private_vpc_connection
 }
+
+output "github_actions_sa_email" {
+  value = google_service_account.github_actions_sa.email
+}

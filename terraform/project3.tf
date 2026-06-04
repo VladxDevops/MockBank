@@ -6,6 +6,7 @@ module "project3" {
   workforce_identity_federation_pool_id     = var.workforce_identity_federation_pool_id
   workforce_identity_federation_provider_id = var.workforce_identity_federation_provider_id
   github_actions_sa_id                      = var.github_actions_sa_id
+  github_actions_sa_email                   = module.project0.github_actions_sa_email
   github_repository                         = var.github_repository
   terraform_deployer_service_account        = var.terraform_deployer_service_account
   
