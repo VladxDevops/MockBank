@@ -8,6 +8,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Enabled automated Google Cloud Deploy releases in `cd.yaml` for the `transaction-service-pipeline`.
+- **CI/CD**: Corrected syntax errors in GitHub Action workflows (`rrun` typo, malformed `terraform init` arguments, and missing hyphen for `-var-file`).
+- **CI/CD**: Created `ci.yaml` and `cd.yaml` to automate Project 0 (Foundation) infrastructure management via GitHub Actions.
+- **Security**: Implemented Workload Identity Federation (WIF) in workflows to eliminate the need for long-lived service account keys.
 - **Migration**: Resolved 409 Conflict (Entity already exists) for Workload Identity Federation resources by importing existing GCP assets into the `project0` state.
 - **Migration**: Added `prevent_destroy` lifecycle protection to foundational Identity Pool and Provider resources.
 - **Infrastructure:** Switched Load Balancer and `bank-platform-lb-ip` to Regional/Standard Network Tier. Provisions are now explicitly disabled/commented for non-PROD environments to prevent unnecessary costs.
