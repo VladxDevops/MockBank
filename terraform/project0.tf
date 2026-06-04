@@ -16,4 +16,8 @@ module "project0" {
   keycloak_admin_username = var.keycloak_admin_username
   keycloak_admin_password = var.keycloak_admin_password
   keycloak_url            = var.keycloak_url
+  github_repository                        = var.github_repository
+  github_actions_sa_id                     = var.github_actions_sa_id
+  workforce_identity_federation_pool_id    = var.workforce_identity_federation_pool_id
+  workforce_identity_federation_provider_id = var.workforce_identity_federation_provider_id
 }
