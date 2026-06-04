@@ -217,6 +217,10 @@ resource "google_iam_workload_identity_pool" "github_pool" {
   workload_identity_pool_id = var.workforce_identity_federation_pool_id
   display_name              = "GitHub Actions Pool"
   description               = "Identity pool for GitHub Actions automation"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_iam_workload_identity_pool_provider" "github_provider" {
@@ -232,6 +236,10 @@ resource "google_iam_workload_identity_pool_provider" "github_provider" {
   attribute_condition = "attribute.repository == '${var.github_repository}'"
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 

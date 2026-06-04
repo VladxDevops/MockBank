@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Migration**: Resolved 409 Conflict (Entity already exists) for Workload Identity Federation resources by importing existing GCP assets into the `project0` state.
+- **Migration**: Added `prevent_destroy` lifecycle protection to foundational Identity Pool and Provider resources.
 - **Infrastructure:** Switched Load Balancer and `bank-platform-lb-ip` to Regional/Standard Network Tier. Provisions are now explicitly disabled/commented for non-PROD environments to prevent unnecessary costs.
 - **Documentation:** Corrected `DEV` ingress documentation across `Architecture.md` and Project 1. Services must be accessed via `gcloud run services proxy` to maintain the "No Unauthenticated Access" policy; direct Cloud Run URLs will not work for browser-based testing due to IAM enforcement.
 - **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
