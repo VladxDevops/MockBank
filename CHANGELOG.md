@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Infrastructure:** Switched Load Balancer and `bank-platform-lb-ip` to Regional/Standard Network Tier. Provisions are now explicitly disabled/commented for non-PROD environments to prevent unnecessary costs.
+- **Documentation:** Corrected `DEV` ingress documentation across `Architecture.md` and Project 1. Services must be accessed via `gcloud run services proxy` to maintain the "No Unauthenticated Access" policy; direct Cloud Run URLs will not work for browser-based testing due to IAM enforcement.
 - **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
 - **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
 - **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_PROJECT_ID`).
@@ -241,7 +243,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Documentation**: Updated `BNKprojects/1/CHECKLIST.md` to reflect full completion of OIDC integration tasks.
 ## [2.1.36] - 2024-05-24
 ### Changed
-- **Security**: Updated Identity Service IAM policy to allow `allUsers` (unauthenticated) ingress. This is a prerequisite for the OIDC front-channel flow, allowing users' browsers to reach the Keycloak login page.
+- **Security**: Updated Identity Service IAM policy to allow `allUsers` (unauthenticated) ingress. This is a prerequisite for the OIDC front-channel flow, allowing users' browsers to reach the Keycloak login page. Note: This should not work like this. By design "allow `allUsers`" is forbiden. Please refer to security.md for more details.
+
 
 ## [2.1.5] - 2024-05-24
 ### Changed

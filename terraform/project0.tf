@@ -1,3 +1,7 @@
+# NOTE: Regional Load Balancer (Standard Network Tier) and static IP resources 
+# inside this module are DISABLED for non-PROD environments to minimize costs.
+# These resources should only be uncommented/enabled for PROD deployments.
+
 module "project0" {
   source = "./modules/project0"
 

@@ -220,65 +220,77 @@ resource "google_artifact_registry_repository" "repository" {
   depends_on    = [google_project_service.artifact_registry]
 }
 
-# --- Global Load Balancer ---
+# ==============================================================================
+# COST OPTIMIZATION: Regional Load Balancer (Standard Tier)
+# NOTE: For non-PROD environments (DEV/TEST), the Load Balancer is DISABLED.
+# In DEV, ingress is handled via 'gcloud run services proxy'. 
+# This architecture uses a Regional External LB on the STANDARD Network Tier 
+# instead of Global/Premium to minimize regional data costs.
+# ==============================================================================
 
-resource "google_compute_global_address" "bank_lb_ip" {
-  name         = "bank-platform-lb-ip"
-  project      = var.compute_project_id
-  address_type = "EXTERNAL"
-  ip_version   = "IPV4"
-}
+# resource "google_compute_address" "bank_lb_ip" {
+#   name         = "bank-platform-lb-ip"
+#   project      = var.compute_project_id
+#   region       = var.compute_region
+#   address_type = "EXTERNAL"
+#   network_tier = "STANDARD" # Downgraded for regional cost optimization
+# }
 
-resource "google_compute_region_network_endpoint_group" "transaction_svc_neg" {
-  name                  = "transaction-svc-neg"
-  network_endpoint_type = "SERVERLESS"
-  region                = var.compute_region
-  project               = var.compute_project_id
-  cloud_run {
-    service = var.service_name
-  }
-}
+# resource "google_compute_region_network_endpoint_group" "transaction_svc_neg" {
+#   name                  = "transaction-svc-neg"
+#   network_endpoint_type = "SERVERLESS"
+#   region                = var.compute_region
+#   project               = var.compute_project_id
+#   cloud_run {
+#     service = var.service_name
+#   }
+# }
 
-resource "google_compute_backend_service" "transaction_backend" {
-  name                  = "transaction-backend"
-  project               = var.compute_project_id
-  protocol              = "HTTP"
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-  timeout_sec           = 30
+# resource "google_compute_region_backend_service" "transaction_backend" {
+#   name                  = "transaction-backend"
+#   project               = var.compute_project_id
+#   region                = var.compute_region
+#   protocol              = "HTTP"
+#   load_balancing_scheme = "EXTERNAL_MANAGED"
+#   timeout_sec           = 30
 
-  backend {
-    group = google_compute_region_network_endpoint_group.transaction_svc_neg.id
-  }
-}
+#   backend {
+#     group = google_compute_region_network_endpoint_group.transaction_svc_neg.id
+#   }
+# }
 
-resource "google_compute_url_map" "bank_url_map" {
-  name            = "bank-platform-url-map"
-  project         = var.compute_project_id
-  default_service = google_compute_backend_service.transaction_backend.id
+# resource "google_compute_region_url_map" "bank_url_map" {
+#   name            = "bank-platform-url-map"
+#   project         = var.compute_project_id
+#   region          = var.compute_region
+#   default_service = google_compute_region_backend_service.transaction_backend.id
 
-  host_rule {
-    hosts        = ["*"]
-    path_matcher = "all-paths"
-  }
+#   host_rule {
+#     hosts        = ["*"]
+#     path_matcher = "all-paths"
+#   }
 
-  path_matcher {
-    name            = "all-paths"
-    default_service = google_compute_backend_service.transaction_backend.id
-  }
-}
+#   path_matcher {
+#     name            = "all-paths"
+#     default_service = google_compute_region_backend_service.transaction_backend.id
+#   }
+# }
 
-resource "google_compute_target_http_proxy" "http_proxy" {
-  name    = "bank-http-proxy"
-  project = var.compute_project_id
-  url_map = google_compute_url_map.bank_url_map.id
-}
+# resource "google_compute_region_target_http_proxy" "http_proxy" {
+#   name    = "bank-http-proxy"
+#   project = var.compute_project_id
+#   region  = var.compute_region
+#   url_map = google_compute_region_url_map.bank_url_map.id
+# }
 
-resource "google_compute_global_forwarding_rule" "forwarding_rule" {
-  name                  = "bank-frontend-rule"
-  project               = var.compute_project_id
-  ip_address            = google_compute_global_address.bank_lb_ip.address
-  ip_protocol           = "TCP"
-  port_range            = "80"
-  target                = google_compute_target_http_proxy.http_proxy.id
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-}
+# resource "google_compute_forwarding_rule" "forwarding_rule" {
+#   name                  = "bank-frontend-rule"
+#   project               = var.compute_project_id
+#   region                = var.compute_region
+#   ip_address            = google_compute_address.bank_lb_ip.address
+#   ip_protocol           = "TCP"
+#   port_range            = "80"
+#   target                = google_compute_region_target_http_proxy.http_proxy.id
+#   load_balancing_scheme = "EXTERNAL_MANAGED"
+#   network_tier          = "STANDARD" # Must match the IP tier
+# }

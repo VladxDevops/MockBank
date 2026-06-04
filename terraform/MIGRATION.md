@@ -35,7 +35,7 @@ The migration is **COMPLETE**. The infrastructure has been successfully consolid
     *   **Networking**: VPC (`main-vpc`), private subnet (`main-subnet`), and VPC Access Connector (`avechector`).
     *   **Connectivity**: Cloud Router and NAT Gateway for private egress; VPC Peering for private service access.
     *   **Artifact Registry**: Standardized repository `bank-apps-registry`.
-    *   **Load Balancing**: Global External HTTP Load Balancer with Backend Service and Serverless NEG for transaction services.
+    *   **Load Balancing**: Regional External HTTP Load Balancer (Standard Tier). **NOTE: Should be DISABLED in Terraform code for non-PROD cost optimization.**
 2.  **Project 1 (Keycloak)**:
     *   **Database**: Cloud SQL Postgres instance (`keycloak-db-...`) with private IP and managed secrets.
     *   **Service**: Keycloak Cloud Run service defined and pointing to the new registry (requires image push to start).

@@ -42,9 +42,10 @@ graph TD
 ### Traffic Flow
 
 #### Ingress (Incoming)
-*   **Type:** External (Public Internet).
-*   **Mechanism:** Traffic enters via the global Google Cloud Load Balancer (Cloud Run default).
-    *   *Decision:* We utilize the built-in shared load balancer for cost efficiency. A dedicated Global External Load Balancer is reserved for future hardening (to enable Cloud Armor WAF).
+*   **Type:** IAM-Gated (Private Service).
+*   **Mechanism (DEV):** Traffic is tunneled via `gcloud run services proxy`. This allows developers to reach the service on `localhost` while the proxy handles the OIDC identity token exchange.
+*   **Mechanism (PROD):** (Planned) Regional External HTTP(S) Load Balancer.
+*   **Security:** Services are deployed with `no-allow-unauthenticated`. Direct browser access to `*.run.app` URLs will result in a 403 Forbidden.
 *   **Termination:** TLS is terminated at the edge. The container receives unencrypted HTTP traffic on port 8080.
 *   **Security:** The container is configured with `KC_PROXY=edge` and `KC_HOSTNAME_STRICT=false` to ensure it recognizes the original `https` protocol while allowing for Cloud Run's dynamic service URLs.
 

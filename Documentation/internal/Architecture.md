@@ -37,7 +37,7 @@ This architecture describes a secure, cloud-native banking platform designed for
 *   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
 *   **Declarative Operations:** All application-level configurations (e.g., Identity Clients, Auth Policies) must be declared in code. Manual configuration is an anti-pattern that violates the reproducibility requirement.
 *   **Orchestration & Delivery (Hybrid Model):**
-    *   **Cloud Run Services:** Managed via **Google Cloud Deploy** for automated promotion through `DEV`, `TEST`, and `PROD` targets.
+    *   **Cloud Run Services:** Managed via **Google Cloud Deploy**. In `DEV`, services are accessed via authenticated proxies or Identity-Token-bearing requests to minimize networking costs while maintaining the "No Unauthenticated Access" policy.
     *   **GitOps (Future):** **ArgoCD** hosted on GKE Autopilot provides continuous drift detection and reconciliation for Kubernetes-native workloads.
 *   **Release Safety:** Staggered deployments are enforced by automated gates (SAST, functional verification) as defined in `RELEASE_SAFETY.md`.
     *   **Configuration:** Use `variables.tf` for declarations.
@@ -56,7 +56,9 @@ Infrastructure and GCP services are listed under the infrastructure.md.
 *   **Just-In-Time (JIT) Access:** Production write access is restricted via **IAM Privileged Access Manager (PAM)**. No user shall have standing "Owner" or "Editor" roles in the `PROD` environment.
 
 ### Network Traffic & Isolation for project1: 
-*   **Ingress (Incoming):** Services are exposed via public HTTPS endpoints (`*.run.app`). TLS is terminated at the Cloud Run edge (Google Front End). Traffic reaches the container via HTTP/8080.
+*   **Ingress (Incoming):** 
+    *   `DEV`: Authenticated developer proxies (`gcloud run services proxy`) are used to tunnel traffic to private endpoints.
+    *   `PROD`: (Planned) Regional External HTTP(S) Load Balancer on **Standard Network Tier**. (Note: Must remain disabled in non-PROD environments).
 *   **Egress (Outgoing):** All outbound traffic is routed through the **Serverless VPC Access Connector**.
     *   *Internal:* Database connections use Private IPs.
     *   *Internet:* Routed via Cloud NAT for static IP stability.
@@ -90,4 +92,5 @@ To maintain a clean and navigable codebase, the following directory standards ap
     *   `tests/`: Unit and integration tests.
         *   `config/`: Non-sensitive configuration files.
     *   **(Service Root)**: Dependency manifests (`requirements.txt`, `package.json`), `.env` templates, and `README.md`.
+*   **`Infrastructure/`**: Terraform and cloud configuration.
 *   **`Infrastructure/`**: Terraform and cloud configuration.

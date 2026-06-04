@@ -32,87 +32,6 @@ If landing zone/foundation resources were deployed via a separate configuration 
 
 To reconcile the active Terraform state in the `projectZERO` workspace with GCP, run the following import commands from the `terraform/` directory:
 
-```bash
-# Set variables
-PROJECT_ID="dev-mockbank"
-REGION="us-south1"
-
-# VPC Network
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_network.vpc \
-  projects/${PROJECT_ID}/global/networks/main-vpc
-
-# Subnetwork
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_subnetwork.private \
-  projects/${PROJECT_ID}/regions/${REGION}/subnetworks/main-subnet
-
-# VPC Connector
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_vpc_access_connector.connector \
-  projects/${PROJECT_ID}/locations/${REGION}/connectors/avechector
-
-# Router
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_router.router \
-  projects/${PROJECT_ID}/regions/${REGION}/routers/main-router
-
-# NAT IP Address
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_address.nat_ip \
-  projects/${PROJECT_ID}/regions/${REGION}/addresses/nat-static-ip
-
-# Router NAT
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_router_nat.nat_gateway \
-  ${PROJECT_ID}/${REGION}/main-router/main-nat-gateway
-
-# Global Load Balancer IP
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_global_address.bank_lb_ip \
-  projects/${PROJECT_ID}/global/addresses/bank-platform-lb-ip
-
-# Private Service Access Range
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_global_address.private_service_access_range \
-  projects/${PROJECT_ID}/global/addresses/private-service-access-range
-
-# VPC Peering Connection
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_service_networking_connection.private_vpc_connection \
-  projects/${PROJECT_ID}/global/networks/main-vpc:servicenetworking.googleapis.com
-
-# Firewall egress rule
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_firewall.allow_egress \
-  projects/${PROJECT_ID}/global/firewalls/main-vpc-allow-egress
-
-# Serverless NEG
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_region_network_endpoint_group.transaction_svc_neg \
-  projects/${PROJECT_ID}/regions/${REGION}/networkEndpointGroups/transaction-svc-neg
-
-# Backend Service
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_backend_service.transaction_backend \
-  projects/${PROJECT_ID}/global/backendServices/transaction-backend
-
-# URL Map
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_url_map.bank_url_map \
-  projects/${PROJECT_ID}/global/urlMaps/bank-platform-url-map
-
-# Target HTTP Proxy
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_target_http_proxy.http_proxy \
-  projects/${PROJECT_ID}/global/targetHttpProxies/bank-http-proxy
-
-# Global Forwarding Rule
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_global_forwarding_rule.forwarding_rule \
-  projects/${PROJECT_ID}/global/forwardingRules/bank-frontend-rule
-```
-
 **CLASSIFICATION: INTERNAL**
 
 This document lists the foundational Google Cloud Platform (GCP) infrastructure components required by all three banking simulation projects. These resources form the "Landing Zone" for the applications.
@@ -123,7 +42,7 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
 *   **VPC Network**: A custom Virtual Private Cloud to isolate traffic.
     *   **Serverless VPC Access Connector**: To allow Cloud Run services to communicate with private data services (Cloud SQL/MongoDB).
     *   **Private Service Access**: VPC Peering allocated range for Google Managed Services (Cloud SQL).
-    *   **Cloud NAT**: Configured with `MANUAL_ONLY` IP allocation to provide a stable static IP for outbound traffic (required for external service allow-listing).
+    *   **Cloud NAT**: Configured with `MANUAL_ONLY` IP allocation using **Standard Network Tier** for cost optimization on outbound traffic.
 
 ## 2. Security & Identity (Zero Trust)
 *   **Secret Manager**: The centralized vault for all secrets.
@@ -132,7 +51,9 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
     *   **Service Accounts**: Dedicated identities for each Cloud Run service (e.g., `sa-transaction-svc`, `sa-keycloak`).
     *   **Workload Identity Federation**: To allow GitHub Actions (Project 3) to deploy infrastructure without long-lived JSON keys.
 
-## 3. Compute & Delivery
+## 3. Compute & Delivery (Zero Trust & Cost Optimized)
+    *   *Note:* Provisioning of the regional Load balancer and its Static IP (`bank-platform-lb-ip`) on the **Standard Network Tier** is **DISABLED** for the `DEV` environment. Services must be accessed via authenticated developer proxies (`gcloud run services proxy`) to comply with the "No Unauthenticated Access" policy without the cost of a Load Balancer.
+
 *   **Artifact Registry**: A central Docker repository to store container images for:
     *   Transaction Service (Project 2)
     *   Keycloak Custom Image (Project 1)
@@ -142,6 +63,11 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
 *   **Google Cloud Deploy**: Managed CD service for Cloud Run; handles promotion targets and rollback automation.
 *   **Cloud Build**: Primary CI engine for image creation and security scanning (SAST).
 *   **Google Kubernetes Engine (GKE) Autopilot**: Cost-optimized Kubernetes cluster to host ArgoCD for future Kubernetes-native GitOps.
+
+## 4. Observability
+*   **Cloud Logging**: Centralized log aggregation.
+    *   *Requirement:* Must capture structured JSON logs from Node.js apps for the "Audit Agents".
+*   **Cloud Monitoring**: Metrics collection for system health and alerting.
 
 ## 4. Observability
 *   **Cloud Logging**: Centralized log aggregation.
