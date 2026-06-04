@@ -42,10 +42,12 @@ data "google_secret_manager_secret_version" "atlas_public_key" {
   count   = var.bootstrap ? 0 : 1
   project = var.compute_project_id
   secret  = "atlas_public_key"
+  version = "latest"
 }
 
 data "google_secret_manager_secret_version" "atlas_private_key" {
   count   = var.bootstrap ? 0 : 1
   project = var.compute_project_id
   secret  = "atlas_private_key"
+  version = "latest"
 }

@@ -50,3 +50,23 @@ variable "keycloak_url" {
   description = "The URL of the Keycloak instance"
   type        = string
 }
+
+variable "github_repository" {
+  description = "The GitHub repository in 'username/repo' format"
+  type        = string
+}
+
+variable "github_actions_sa_id" {
+  description = "The ID for the GitHub Actions Service Account"
+  type        = string
+}
+
+variable "workforce_identity_federation_pool_id" {
+  description = "The ID for the Workload Identity Pool"
+  type        = string
+}
+
+variable "workforce_identity_federation_provider_id" {
+  description = "The ID for the Workload Identity Provider"
+  type        = string
+}

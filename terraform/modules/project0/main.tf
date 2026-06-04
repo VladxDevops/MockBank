@@ -210,6 +210,57 @@ resource "google_project_iam_member" "sql_private_ip_permissions" {
   member  = "serviceAccount:service-${var.compute_project_number}@service-networking.iam.gserviceaccount.com"
 }
 
+# --- Workload Identity Federation (Migrated from Project 3) ---
+
+resource "google_iam_workload_identity_pool" "github_pool" {
+  project                   = var.compute_project_id
+  workload_identity_pool_id = var.workforce_identity_federation_pool_id
+  display_name              = "GitHub Actions Pool"
+  description               = "Identity pool for GitHub Actions automation"
+}
+
+resource "google_iam_workload_identity_pool_provider" "github_provider" {
+  project                            = var.compute_project_id
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
+  workload_identity_pool_provider_id = var.workforce_identity_federation_provider_id
+  display_name                       = "GitHub Provider"
+  attribute_mapping = {
+    "google.subject"       = "assertion.sub"
+    "attribute.repository" = "assertion.repository"
+    "attribute.actor"      = "assertion.actor"
+  }
+  attribute_condition = "attribute.repository == '${var.github_repository}'"
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+}
+
+# Shared CI/CD Service Account
+resource "google_service_account" "github_actions_sa" {
+  project      = var.compute_project_id
+  account_id   = var.github_actions_sa_id
+  display_name = "GitHub Actions CI/CD Service Account"
+}
+
+resource "google_service_account_iam_member" "workload_identity_federation_binding" {
+  service_account_id = google_service_account.github_actions_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"
+}
+
+# --- Shared Secret Placeholders ---
+
+resource "google_secret_manager_secret" "retail_app_session_secret" {
+  project   = var.compute_project_id
+  secret_id = "retail-app-session-secret"
+  replication {
+    auto {}
+  }
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 # --- Artifact Registry ---
 
 resource "google_artifact_registry_repository" "repository" {

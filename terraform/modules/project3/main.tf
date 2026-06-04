@@ -1,42 +1,5 @@
 # --- Workload Identity Federation for GitHub Actions ---
-
-resource "google_iam_workload_identity_pool" "github_pool" {
-  project                   = var.compute_project_id
-  workload_identity_pool_id = var.workforce_identity_federation_pool_id
-  display_name              = "GitHub Actions Pool"
-  description               = "Identity pool for GitHub Actions automation"
-
-  # Enforce that deployer permissions are established before creation
-  depends_on = [
-    google_project_iam_member.terraform_sa_workload_identity_admin
-  ]
-}
-
-resource "google_iam_workload_identity_pool_provider" "github_provider" {
-  project                            = var.compute_project_id
-  workload_identity_pool_id          = google_iam_workload_identity_pool.github_pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = var.workforce_identity_federation_provider_id
-  display_name                       = "GitHub Provider"
-  attribute_mapping = {
-    "google.subject"       = "assertion.sub"
-    "attribute.repository" = "assertion.repository"
-    "attribute.actor"      = "assertion.actor"
-  }
-
-  # Security: Restrict authentication to the specific repository defined in variables
-  attribute_condition = "attribute.repository == '${var.github_repository}'"
-
-  oidc {
-    issuer_uri = "https://token.actions.githubusercontent.com"
-  }
-}
-
-# Service Account that GitHub Actions will impersonate
-resource "google_service_account" "github_actions_sa" {
-  project      = var.compute_project_id
-  account_id   = var.github_actions_sa_id
-  display_name = "GitHub Actions CI/CD Service Account"
-}
+# Migrated to module.project0 for foundational security architecture.
 
 # Allow GitHub to impersonate the SA
 resource "google_service_account_iam_member" "workload_identity_federation_binding" {
