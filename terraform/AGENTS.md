@@ -37,3 +37,9 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/GEMINI.md`**: AI usage rules and data sanitization.
 *   **`Documentation/internal/TESTING.md`**: Testing strategies (Mocking, Journeys).
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
+
+### Recent Architectural Shifts
+*   **CI/CD Consolidation (Migration):** Foundational security resources (Workload Identity Federation, GitHub Actions Service Accounts, and Project-wide IAM) are now centralized in `modules/project0`. Service-specific modules (e.g., `project3`) must consume these via variables to maintain a single source of truth for identity.
+
+### Recent Architectural Shifts
+*   **CI/CD Consolidation (Migration 2024.1):** Foundational security resources (Workload Identity Federation, GitHub Actions Service Accounts, and Project-wide IAM) are now centralized in `modules/project0`. Service-specific modules (e.g., `project3`) must consume these via variables to maintain a single source of truth for identity.

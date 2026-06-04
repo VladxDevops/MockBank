@@ -62,6 +62,8 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 ### 6. Modular Infrastructure Directive
 *   **Reusability:** All CI/CD and release safety infrastructure (Workload Identity, Cloud Deploy pipelines) must be encapsulated in reusable modules.
 *   **Standardization:** Service-specific logic (e.g., repository name, service name) must be passed as variables to these modules.
+*   **Centralization:** Foundational identity resources (Service Accounts, WIF Pools) should be declared once in the foundation module (`project0`).
+*   **Dependency Management:** Downstream modules must reference shared identities using input variables (e.g., `var.github_actions_sa_email`) to avoid "undeclared resource" errors and state duplication.
 *   **Constraint:** Root configuration files (like `project3.tf`) should ideally act as orchestrators that call these modules rather than containing flat resource definitions.
 
 Please keep the changelog.md up to date.
@@ -85,5 +87,7 @@ Please keep the changelog.md up to date.
 ## 8. AI Skill Development
 Specialized AI personas and meta-prompts are managed in the externalized library:
 *   **Registry:** `/home/pochitawork/InterviewCloud Projects/Altmtrk2026/Bank/Documentation/internal/skills/agents.md`
+
+This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.
 
 This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.

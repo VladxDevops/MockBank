@@ -248,6 +248,95 @@ resource "google_service_account_iam_member" "workload_identity_federation_bindi
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"
 }
 
+# --- Centralized CI/CD IAM Roles (Migrated from Project 3) ---
+# Following AGENTS.md standards for explicit IAM declaration.
+
+# Terraform Deployer Service Account Roles
+resource "google_project_iam_member" "terraform_sa_workload_identity_admin" {
+  project = var.compute_project_id
+  role    = "roles/iam.workloadIdentityPoolAdmin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.admin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+# GitHub Actions Service Account Roles
+resource "google_project_iam_member" "github_actions_service_usage_admin" {
+  project = var.compute_project_id
+  role    = "roles/serviceusage.serviceUsageAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_cloud_build_editor" {
+  project = var.compute_project_id
+  role    = "roles/cloudbuild.builds.editor"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_storage_admin" {
+  project = var.compute_project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_service_usage_consumer" {
+  project = var.compute_project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_cloud_deploy_admin" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_cloud_run_admin" {
+  project = var.compute_project_id
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_artifact_registry_writer" {
+  project = var.compute_project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_iam_workload_identity_admin" {
+  project = var.compute_project_id
+  role    = "roles/iam.workloadIdentityPoolAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_cloud_deploy_releaser" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.releaser"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_cloud_deploy_job_runner" {
+  project = var.compute_project_id
+  role    = "roles/clouddeploy.jobRunner"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_logging_writer" {
+  project = var.compute_project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_iam_service_account_user" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 # --- Shared Secret Placeholders ---
 
 resource "google_secret_manager_secret" "retail_app_session_secret" {
