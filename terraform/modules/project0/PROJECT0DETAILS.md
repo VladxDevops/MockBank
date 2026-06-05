@@ -28,7 +28,7 @@ These are shared services that provide the "base layer" for the banking platform
 ### D. Global IAM & Workload Identity Federation (WIF)
 *   **Workload Identity Federation (WIF) (Migrated from Project 3)**: The Pool and Provider configurations that allow GitHub Actions to authenticate without static secrets.
 *   **Shared CI/CD Service Account (Migrated from Project 3)**: A centralized service account (`sa-github-actions`) used across all automated pipelines.
-*   **Centralized CI/CD IAM Roles (Migrated from Project 3)**: All project-level roles required for deployment (Cloud Build, Cloud Deploy, Storage, etc.) are explicitly declared here to maintain least-privilege consistency.
+*   **Centralized CI/CD IAM Roles (Migrated from Project 3)**: All project-level roles required for deployment (Cloud Build, Cloud Deploy, Storage, Service Account Creator, etc.) are explicitly declared here to maintain least-privilege consistency.
 *   **Terraform Deployer IAM**: Management of administrative roles for the service account executing Terraform.
 
 ### E. Shared Secrets Management

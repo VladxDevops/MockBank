@@ -321,6 +321,12 @@ resource "google_project_iam_member" "github_actions_iam_workload_identity_admin
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "github_actions_iam_service_account_creator" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountCreator"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 resource "google_project_iam_member" "github_actions_cloud_deploy_releaser" {
   project = var.compute_project_id
   role    = "roles/clouddeploy.releaser"

@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Security**: Identified missing `roles/iam.workloadIdentityPoolAdmin` and `roles/clouddeploy.admin` for the Deployer Service Account in the bootstrap script, resolving 403 errors during foundation provisioning.
+- **Security**: Granted `roles/iam.serviceAccountCreator` to the shared GitHub Actions service account in Project 0 and updated the `project0firstsrun.sh` bootstrap scripts to support automated service account management.
+- **Infrastructure**: Added a new empty placeholder secret `mock-secret` to the Project 0 foundation module.
 - **CI/CD**: Removed the automated Cloud Deploy release step from `cd.yaml` to focus exclusively on foundational infrastructure (Project 0) stability.
 - **Migration**: Resolved `terraform state push` argument error by explicitly providing the local state path to synchronize the `projectZERO` workspace with the remote GCS backend.
 - **Migration**: Resolved 403 Permission Denied errors in CI/CD by documenting the "Identity Bootstrapping" requirement; foundational Service Accounts require manual `roles/owner` or `roles/editor` on target projects to manage lifecycle resources.

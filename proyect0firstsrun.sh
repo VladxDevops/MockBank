@@ -33,6 +33,9 @@ ROLES=(
     "roles/storage.admin"                   # Manage GCS Buckets (Terraform State)
     "roles/resourcemanager.projectIamAdmin" # Assign IAM roles to other identities
     "roles/iam.serviceAccountAdmin"         # Create/Manage Service Accounts for Apps
+    "roles/iam.serviceAccountCreator"       # Allow SA to create other service accounts
+    "roles/iam.workloadIdentityPoolAdmin"   # Manage WIF Pools and Providers
+    "roles/clouddeploy.admin"               # Manage Cloud Deploy pipelines
     "roles/secretmanager.admin"             # Initialize shared secrets
     "roles/cloudbuild.builds.editor"        # Required for image builds
     "roles/iam.serviceAccountUser"          # Allow SA to act as other identities
