@@ -443,4 +443,3 @@ resource "google_artifact_registry_repository" "repository" {
 #   network_tier          = "STANDARD" # Must match the IP tier
 # }
 
-###Mock Update
