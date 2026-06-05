@@ -68,11 +68,3 @@ jobs:
             echo "Error: dev.tfvars not found in terraform/ directory."
             exit 1
           fi
-
-      - name: Create Cloud Deploy Release
-        run: |
-          gcloud deploy releases create release-${{ github.run_id }} \
-            --project=${{ vars.GCP_PROJECT_ID }} \
-            --region=${{ vars.GCP_COMPUTE_REGION }} \
-            --delivery-pipeline=transaction-service-pipeline \
-            --source=BNKprojects/2/

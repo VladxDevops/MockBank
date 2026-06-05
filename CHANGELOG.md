@@ -8,6 +8,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Removed the automated Cloud Deploy release step from `cd.yaml` to focus exclusively on foundational infrastructure (Project 0) stability.
+- **Migration**: Resolved `terraform state push` argument error by explicitly providing the local state path to synchronize the `projectZERO` workspace with the remote GCS backend.
+- **Migration**: Resolved 403 Permission Denied errors in CI/CD by documenting the "Identity Bootstrapping" requirement; foundational Service Accounts require manual `roles/owner` or `roles/editor` on target projects to manage lifecycle resources.
+- **Migration**: Fixed State Divergence by synchronizing local infrastructure state with the `projectZERO` workspace in the remote GCS backend.
 - **Documentation**: Elaborated a comprehensive `README.md` for the Project 0 (Foundation) module, detailing the bootstrap process, security standards, and component architecture.
 - **Migration**: Resolved State Divergence between local environment and CI/CD by synchronizing the `projectZERO` workspace with the remote GCS backend.
 - **Security**: Identified and documented the "Identity Bootstrapping" requirement; the GitHub Actions Service Account requires manual `Owner` or `Editor` roles on the target project to manage foundational lifecycle resources (WIF, APIs, SAs).
