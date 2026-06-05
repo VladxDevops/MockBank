@@ -1,7 +1,7 @@
 name: CI - Foundation Validation
 on:
   pull_request:
-    branches: [ DEV, main ]
+    branches: [ DEV, ]
     paths:
       - 'terraform/**'
 
