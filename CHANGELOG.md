@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Added `auto-fix` job to `ci.yaml` and `cd.yaml` to automate `terraform fmt`; deferred NPM audit fixes to simplify migration.
+- **CI/CD**: Renamed legacy `###deploy.yml` to disable GitHub Actions parser errors.
 - **CI/CD**: Fixed "Module not installed" errors in GitHub Actions by reordering `terraform init` to execute before `terraform validate`.
 - **CI/CD**: Cleaned up duplicated release steps and removed misplaced Terraform commands from the Cloud Deploy stage in `cd.yaml`.
 - **CI/CD**: Enabled automated Google Cloud Deploy releases in `cd.yaml` for the `transaction-service-pipeline`.

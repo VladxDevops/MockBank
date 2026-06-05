@@ -2,9 +2,7 @@ name: CI-CD Deployment Orchestrator
 
 on:
   push:
-    branches: [ "DEV", "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "DEV" ]
 
 permissions:
   contents: write
