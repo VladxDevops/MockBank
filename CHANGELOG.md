@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Security**: Formalized the "Secret-to-File Materialization" pattern for CI/CD. The `TFVARS_DEV` secret is used to generate an ephemeral `dev.tfvars` at runtime, ensuring no sensitive variable files are stored in version control (adhering to the Prime Directive).
+- **CI/CD**: Resolved "Invalid character" errors in Terraform by switching to `cat <<'EOF'` for `dev.tfvars` creation, preventing shell-level quote stripping of secrets.
+- **CI/CD**: Simplified workspace selection logic using `terraform workspace select -or-create` to prevent premature job failure.
 - **CI/CD**: Configured `ci.yaml` and `cd.yaml` to reconstruct `dev.tfvars` from the `TFVARS_DEV` GitHub Secret at the environment level.
 - **CI/CD**: Added `environment: DEV` to `ci.yaml` to allow PR validation logic to access environment-protected secrets.
 - **CI/CD**: Hardened Terraform workspace selection logic to prevent runner exits on non-existent workspaces.
