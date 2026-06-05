@@ -8,7 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
-- **Operations**: Documented the `git fetch` and `git diff` workflow to resolve branch divergence caused by the `auto-fix` GitHub Action committing changes back to the `DEV` branch.
+- **Documentation**: Elaborated a comprehensive `README.md` for the Project 0 (Foundation) module, detailing the bootstrap process, security standards, and component architecture.
+- **Migration**: Resolved State Divergence between local environment and CI/CD by synchronizing the `projectZERO` workspace with the remote GCS backend.
+- **Security**: Identified and documented the "Identity Bootstrapping" requirement; the GitHub Actions Service Account requires manual `Owner` or `Editor` roles on the target project to manage foundational lifecycle resources (WIF, APIs, SAs).
 - **Security**: Formalized the "Secret-to-File Materialization" pattern for CI/CD. The `TFVARS_DEV` secret is used to generate an ephemeral `dev.tfvars` at runtime, ensuring no sensitive variable files are stored in version control (adhering to the Prime Directive).
 - **CI/CD**: Resolved "Invalid character" errors in Terraform by switching to `cat <<'EOF'` for `dev.tfvars` creation, preventing shell-level quote stripping of secrets.
 - **CI/CD**: Simplified workspace selection logic using `terraform workspace select -or-create` to prevent premature job failure.
