@@ -358,6 +358,17 @@ resource "google_secret_manager_secret" "retail_app_session_secret" {
   }
 }
 
+resource "google_secret_manager_secret" "mock_secret" {
+  project   = var.compute_project_id
+  secret_id = "mock-secret"
+  replication {
+    auto {}
+  }
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 # --- Artifact Registry ---
 
 resource "google_artifact_registry_repository" "repository" {
@@ -442,4 +453,3 @@ resource "google_artifact_registry_repository" "repository" {
 #   load_balancing_scheme = "EXTERNAL_MANAGED"
 #   network_tier          = "STANDARD" # Must match the IP tier
 # }
-
