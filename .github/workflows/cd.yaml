@@ -30,22 +30,11 @@ jobs:
       - name: Terraform Init & Apply
         run: |
           cd terraform
-          terraform validate
-          terraform init \
+          terraform init -input=false \
           -backend-config="bucket=terraform_state_bckup_bnk-project" \
           -backend-config="project=bankproject-486308"
+          terraform validate
           terraform workspace select projectZERO || terraform workspace new projectZERO
-          terraform apply -auto-approve -var-file="dev.tfvars" -target=module.project0
-
-      - name: Create Cloud Deploy Release
-        run: |
-          gcloud deploy releases create release-${{ github.run_id }} \
-            --project=${{ vars.GCP_PROJECT_ID }} \
-            --region=${{ vars.GCP_COMPUTE_REGION }} \
-            --delivery-pipeline=transaction-service-pipeline \
-            --source=BNKprojects/2/
-          terraform workspace select projectZERO || terraform workspace new projectZERO
-          terraform apply -auto-approve var-file="dev.tfvars" -target=module.project0
           terraform apply -auto-approve -var-file="dev.tfvars" -target=module.project0
 
       - name: Create Cloud Deploy Release

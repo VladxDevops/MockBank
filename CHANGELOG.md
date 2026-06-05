@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Fixed "Module not installed" errors in GitHub Actions by reordering `terraform init` to execute before `terraform validate`.
+- **CI/CD**: Cleaned up duplicated release steps and removed misplaced Terraform commands from the Cloud Deploy stage in `cd.yaml`.
 - **CI/CD**: Enabled automated Google Cloud Deploy releases in `cd.yaml` for the `transaction-service-pipeline`.
 - **CI/CD**: Corrected syntax errors in GitHub Action workflows (`rrun` typo, malformed `terraform init` arguments, and missing hyphen for `-var-file`).
 - **CI/CD**: Created `ci.yaml` and `cd.yaml` to automate Project 0 (Foundation) infrastructure management via GitHub Actions.

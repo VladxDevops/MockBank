@@ -29,9 +29,9 @@ jobs:
       - name: Terraform Init & Plan
         run: |
           cd terraform
-          terraform validate
-          terraform init \
+          terraform init -input=false \
           -backend-config="bucket=terraform_state_bckup_bnk-project" \
           -backend-config="project=bankproject-486308"
+          terraform validate
           terraform workspace select projectZERO || terraform workspace new projectZERO
           terraform plan -var-file="dev.tfvars" -target=module.project0
