@@ -34,6 +34,7 @@ jobs:
     name: 'Terraform Plan'
     needs: auto-fix
     runs-on: ubuntu-latest
+    environment: DEV
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,9 +51,19 @@ jobs:
       - name: Terraform Init & Plan
         run: |
           cd terraform
+          echo "${{ secrets.TFVARS_DEV }}" > dev.tfvars
           terraform init -input=false \
           -backend-config="bucket=terraform_state_bckup_bnk-project" \
           -backend-config="project=bankproject-486308"
           terraform validate
+          # Robust workspace selection: select if exists, otherwise create.
+          # Using -or-create logic to prevent non-zero exit codes from stopping the runner.
           terraform workspace select projectZERO || terraform workspace new projectZERO
-          terraform plan -var-file="dev.tfvars" -target=module.project0
+          # Ensure dev.tfvars exists before planning. 
+          # If this fails, verify dev.tfvars is committed or provided via GitHub Secrets.
+          if [ -f "dev.tfvars" ]; then
+            terraform plan -var-file="dev.tfvars" -target=module.project0
+          else
+            echo "Error: dev.tfvars not found in terraform/ directory. Check .gitignore or repository structure."
+            exit 1
+          fi

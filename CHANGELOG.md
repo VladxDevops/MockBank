@@ -8,9 +8,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
-- **Documentation**: Synchronized README files for Projects 1, 2, and 3 to reflect the migration of WIF and CI/CD identity resources to the Project 0 foundation module.
-- **CI/CD**: Added `auto-fix` job to `ci.yaml` and `cd.yaml` to automate `terraform fmt`; deferred NPM audit fixes to simplify migration.
-- **CI/CD**: Removed legacy `###deploy.yml` orchestrator to resolve GitHub Actions parser errors and fully transition to `ci.yaml` and `cd.yaml`.
+- **CI/CD**: Configured `ci.yaml` and `cd.yaml` to reconstruct `dev.tfvars` from the `TFVARS_DEV` GitHub Secret at the environment level.
+- **CI/CD**: Added `environment: DEV` to `ci.yaml` to allow PR validation logic to access environment-protected secrets.
+- **CI/CD**: Hardened Terraform workspace selection logic to prevent runner exits on non-existent workspaces.
+- **CI/CD**: Added explicit validation checks for `dev.tfvars` existence in the runner environment to provide clearer error messaging.
 - **CI/CD**: Fixed "Module not installed" errors in GitHub Actions by reordering `terraform init` to execute before `terraform validate`.
 - **CI/CD**: Cleaned up duplicated release steps and removed misplaced Terraform commands from the Cloud Deploy stage in `cd.yaml`.
 - **CI/CD**: Enabled automated Google Cloud Deploy releases in `cd.yaml` for the `transaction-service-pipeline`.

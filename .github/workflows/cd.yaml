@@ -51,12 +51,18 @@ jobs:
       - name: Terraform Init & Apply
         run: |
           cd terraform
+          echo "${{ secrets.TFVARS_DEV }}" > dev.tfvars
           terraform init -input=false \
           -backend-config="bucket=terraform_state_bckup_bnk-project" \
           -backend-config="project=bankproject-486308"
           terraform validate
           terraform workspace select projectZERO || terraform workspace new projectZERO
-          terraform apply -auto-approve -var-file="dev.tfvars" -target=module.project0
+          if [ -f "dev.tfvars" ]; then
+            terraform apply -auto-approve -var-file="dev.tfvars" -target=module.project0
+          else
+            echo "Error: dev.tfvars not found in terraform/ directory."
+            exit 1
+          fi
 
       - name: Create Cloud Deploy Release
         run: |
