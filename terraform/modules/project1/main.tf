@@ -267,4 +267,4 @@ resource "google_cloud_run_service" "keycloak" {
     google_sql_database.keycloak_schema,
     google_sql_user.keycloak_user
   ]
-} 
+}
