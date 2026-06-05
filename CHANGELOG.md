@@ -8,6 +8,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Documentation**: Synchronized README files for Projects 1, 2, and 3 to reflect the migration of WIF and CI/CD identity resources to the Project 0 foundation module.
 - **CI/CD**: Added `auto-fix` job to `ci.yaml` and `cd.yaml` to automate `terraform fmt`; deferred NPM audit fixes to simplify migration.
 - **CI/CD**: Removed legacy `###deploy.yml` orchestrator to resolve GitHub Actions parser errors and fully transition to `ci.yaml` and `cd.yaml`.
 - **CI/CD**: Fixed "Module not installed" errors in GitHub Actions by reordering `terraform init` to execute before `terraform validate`.

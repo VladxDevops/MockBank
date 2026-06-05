@@ -38,10 +38,10 @@ Project 3 provides the automation engine for the Altmtrk2026 Bank Platform. It f
 *   **Google Cloud Deploy:** Managed Continuous Delivery for Cloud Run.
 *   **ArgoCD:** GitOps engine for future GKE workloads (on GKE Autopilot).
 *   **Terraform:** Infrastructure automation.
-*   **Workload Identity Federation:** Keyless GCP authentication.
+*   **Workload Identity Federation:** Keyless GCP authentication (Managed in Project 0).
 
 ## Getting Started
-1.  **Foundation:** Ensure Project 0 (Foundation) is deployed. It provides the base VPC and WIF Pool.
+1.  **Foundation:** Ensure Project 0 (Foundation) is deployed. It provides the base VPC, WIF Pool, and the Shared GitHub Actions Service Account.
     ```bash
     cd ../zero
     # Follow instructions in Project 0 README

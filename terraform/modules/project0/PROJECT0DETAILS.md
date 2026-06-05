@@ -26,8 +26,10 @@ These are shared services that provide the "base layer" for the banking platform
 *   **Artifact Registry**: A centralized Docker repository where images for the Identity Service (Project 1) and Transaction Service (Project 2) are stored. 
 
 ### D. Global IAM & Workload Identity Federation (WIF)
-*   **Workload Identity Federation (WIF)**: The Pool and Provider configurations that allow GitHub Actions to authenticate without static secrets.
-*   **Shared Service Accounts**: The primary GitHub Actions service account and foundational IAM bindings.
+*   **Workload Identity Federation (WIF) (Migrated from Project 3)**: The Pool and Provider configurations that allow GitHub Actions to authenticate without static secrets.
+*   **Shared CI/CD Service Account (Migrated from Project 3)**: A centralized service account (`sa-github-actions`) used across all automated pipelines.
+*   **Centralized CI/CD IAM Roles (Migrated from Project 3)**: All project-level roles required for deployment (Cloud Build, Cloud Deploy, Storage, etc.) are explicitly declared here to maintain least-privilege consistency.
+*   **Terraform Deployer IAM**: Management of administrative roles for the service account executing Terraform.
 
 ### E. Shared Secrets Management
 *   **Secret Manager Placeholders**: Definition of secrets that are shared across projects, such as the `atlas_public_key` or `keycloak_administrator_password`.
