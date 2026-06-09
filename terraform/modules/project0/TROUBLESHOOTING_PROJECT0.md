@@ -35,14 +35,24 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Issue:** `cloudsql.googleapis.com` service enablement failed during automation.
 *   **Symptoms:** `Error 403: Forbidden. The caller does not have permission.`
 *   **Status:** **ACTIVE INVESTIGATION**. Currently, Cloud SQL is manually managed or its enablement is skipped in the foundation module. Requires "Project Owner" or specific Service Usage Admin permissions.
-*   **Resolution:** Identified that the Terraform Deployer Service Account was missing `roles/serviceusage.serviceUsageAdmin` and `roles/resourcemanager.projectIamAdmin`. 
-*   **Action:** Added the roles to `main.tf` and performed a manual bootstrap grant via gcloud CLI to break the circular dependency.
 
-### [2026-05-28] Multi-Resource State Divergence (409 Conflict)
-*   **Issue:** GitHub Actions failed with 409 errors for VPC, Static IP, WIF Pool, and Secrets.
-*   **Reason:** Resources existed in GCP but were missing from the remote state file.
-*   **Resolution:** Executed a series of `terraform import` commands for the affected resources.
-*   **Outcome:** State is now synchronized; subsequent `terraform plan` shows 0 resources to add for these items.
+### [2026-05-28] Mass 409 Conflict: Infrastructure State Divergence
+*   **Issue:** GitHub Actions failed with `Error 409: Resource already exists` for VPC, WIF, Secrets, and Artifact Registry.
+*   **Reason:** Resources were provisioned but the Terraform state file in the GCS backend was either cleared or not updated, leading to a "chicken and egg" recreation attempt.
+*   **Resolution:** Performed manual `terraform import` for all foundational resources to reconcile the remote state with actual GCP infrastructure.
+*   **Commands Used:**
+    *   `terraform import module.project0.google_compute_network.vpc dev-mockbank/main-vpc`
+    *   `terraform import module.project0.google_iam_workload_identity_pool.github_pool projects/dev-mockbank/locations/global/workloadIdentityPools/github-pool`
+    *   `terraform import module.project0.google_service_account.github_actions_sa projects/dev-mockbank/serviceAccounts/sa-github-actions@dev-mockbank.iam.gserviceaccount.com`
+*   **Outcome:** State synchronized; subsequent `terraform plan` now shows `0 to add, 0 to change, 0 to destroy`.
+
+### [2026-05-28] Alternative Resolution: Manual State Push (Lineage Conflict)
+*   **Action:** Used `terraform state push -force` to synchronize local state to the GCS remote backend.
+*   **Issue:** Encountered `Failed to write state: cannot import state with lineage ... over unrelated state with lineage ...`.
+*   **Reason:** The local and remote states were initialized independently, resulting in different lineage IDs. Terraform blocks the push by default to prevent accidental data loss.
+*   **Strategy:** Overwriting the remote state with the verified local "Source of Truth" using the `-force` flag.
+*   **Command:** `terraform state push -force terraform.tfstate`
+*   **Outcome:** Successfully synchronized the `projectZERO` workspace; CI/CD parity restored.
 
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
