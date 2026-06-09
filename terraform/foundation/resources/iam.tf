@@ -6,6 +6,7 @@ resource "google_project_iam_member" "terraform_sa_roles" {
     "roles/run.admin",                # Manage Cloud Run services
     "roles/artifactregistry.admin",   # Manage Artifact Registry
     "roles/cloudsql.admin",           # Provision Cloud SQL
+    "roles/serviceusage.serviceUsageAdmin", # Required to enable/disable APIs
     "roles/compute.networkAdmin",     # Manage VPC and Connectors
     "roles/iam.serviceAccountUser",   # Impersonate service accounts
     "roles/secretmanager.admin",      # Manage Secrets
