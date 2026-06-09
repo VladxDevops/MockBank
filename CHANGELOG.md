@@ -8,6 +8,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Documentation**: Created `actimize_roadmap.md` to define a four-phase integration strategy for financial crime management. Projects status: NOT STARTED/PENDING. 
+- **Structure**: Centralized Actimize-related internal documentation within `Documentation/internal/actimize/` for better repository hygiene.
+- **Documentation**: Synchronized AI assistant logic with the project's Prime Directive and specialized skills registry. Verified alignment with Project 0 migration goals and Zero-Trust networking standards.
+- **Governance**: Validated that all automated agent protocols (AGENTS.md) are correctly enforced across root and internal documentation directories.
 - **Security**: Identified missing `roles/iam.workloadIdentityPoolAdmin` and `roles/clouddeploy.admin` for the Deployer Service Account in the bootstrap script, resolving 403 errors during foundation provisioning.
 - **Security**: Granted `roles/iam.serviceAccountCreator` to the shared GitHub Actions service account in Project 0 and updated the `project0firstsrun.sh` bootstrap scripts to support automated service account management.
 - **Infrastructure**: Added a new empty placeholder secret `mock-secret` to the Project 0 foundation module.

@@ -18,6 +18,7 @@ This repository hosts the source code for the Altmtrk2026 Banking Platform. It i
     *   Project 1: Identity Service
     *   Project 2: Transaction Service
     *   Project 3: CI/CD & Release Safety
+    *   Project 4: NICE Actimize Integration (Status: Not Started)
 
 ## Getting Started
 
