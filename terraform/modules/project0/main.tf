@@ -381,6 +381,15 @@ resource "google_project_iam_member" "terraform_sa_logging_writer" {
 }
 
 # GitHub Actions Service Account Roles: 
+
+#resourcemanager.projectIamAdmin"
+resource "google_project_iam_member" "github_actions_sa_resource_manager_adimin" {
+  project = var.compute_project_id
+  role    = "roles/resourcemanager.projectIamAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+
 resource "google_project_iam_member" "github_actions_service_usage_admin" {
   project = var.compute_project_id
   role    = "roles/serviceusage.serviceUsageAdmin"

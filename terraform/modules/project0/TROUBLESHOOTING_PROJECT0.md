@@ -35,6 +35,14 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Issue:** `cloudsql.googleapis.com` service enablement failed during automation.
 *   **Symptoms:** `Error 403: Forbidden. The caller does not have permission.`
 *   **Status:** **ACTIVE INVESTIGATION**. Currently, Cloud SQL is manually managed or its enablement is skipped in the foundation module. Requires "Project Owner" or specific Service Usage Admin permissions.
+*   **Resolution:** Identified that the Terraform Deployer Service Account was missing `roles/serviceusage.serviceUsageAdmin` and `roles/resourcemanager.projectIamAdmin`. 
+*   **Action:** Added the roles to `main.tf` and performed a manual bootstrap grant via gcloud CLI to break the circular dependency.
+
+### [2026-05-28] Multi-Resource State Divergence (409 Conflict)
+*   **Issue:** GitHub Actions failed with 409 errors for VPC, Static IP, WIF Pool, and Secrets.
+*   **Reason:** Resources existed in GCP but were missing from the remote state file.
+*   **Resolution:** Executed a series of `terraform import` commands for the affected resources.
+*   **Outcome:** State is now synchronized; subsequent `terraform plan` shows 0 resources to add for these items.
 
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
