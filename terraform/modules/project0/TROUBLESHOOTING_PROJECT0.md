@@ -36,6 +36,12 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Symptoms:** `Error 403: Forbidden. The caller does not have permission.`
 *   **Status:** **ACTIVE INVESTIGATION**. Currently, Cloud SQL is manually managed or its enablement is skipped in the foundation module. Requires "Project Owner" or specific Service Usage Admin permissions.
 
+### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
+*   **Action:** Manual update of GitHub Actions secrets in the repository settings.
+*   **Secrets Affected:** `WIF_SERVICE_ACCOUNT`, `WIF_PROVIDER`.
+*   **Reason:** Synchronization of the CI/CD environment with the Workload Identity Federation resources provisioned in the foundation layer.
+*   **Outcome:** Verified that GitHub Actions can successfully authenticate using the updated identity provider and service account strings.
+
 ## 3. Pending Issues & Active Debugging
 
 ### Issue: Keycloak Identity Provider Integration
