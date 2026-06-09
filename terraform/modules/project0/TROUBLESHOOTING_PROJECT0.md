@@ -44,6 +44,14 @@ This document tracks the debugging steps, failed experiments, and successful res
     *   `terraform import module.project0.google_compute_network.vpc dev-mockbank/main-vpc`
     *   `terraform import module.project0.google_iam_workload_identity_pool.github_pool projects/dev-mockbank/locations/global/workloadIdentityPools/github-pool`
     *   `terraform import module.project0.google_service_account.github_actions_sa projects/dev-mockbank/serviceAccounts/sa-github-actions@dev-mockbank.iam.gserviceaccount.com`
+*   **Commands Used (Non-Interactive):**
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_compute_network.vpc dev-mockbank/main-vpc`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_compute_address.nat_ip dev-mockbank/us-south1/nat-static-ip`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_iam_workload_identity_pool.github_pool projects/dev-mockbank/locations/global/workloadIdentityPools/github-pool`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_service_account.github_actions_sa projects/dev-mockbank/serviceAccounts/sa-github-actions@dev-mockbank.iam.gserviceaccount.com`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_secret_manager_secret.retail_app_session_secret projects/dev-mockbank/secrets/retail-app-session-secret`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_secret_manager_secret.mock_secret projects/dev-mockbank/secrets/mock-secret`
+    *   `terraform import -var-file="dev.tfvars" module.project0.google_artifact_registry_repository.repository projects/dev-mockbank/locations/us-south1/repositories/bank-apps-registry`
 *   **Outcome:** State synchronized; subsequent `terraform plan` now shows `0 to add, 0 to change, 0 to destroy`.
 
 ### [2026-05-28] Alternative Resolution: Manual State Push (Lineage Conflict)
@@ -59,6 +67,27 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Secrets Affected:** `WIF_SERVICE_ACCOUNT`, `WIF_PROVIDER`.
 *   **Reason:** Synchronization of the CI/CD environment with the Workload Identity Federation resources provisioned in the foundation layer.
 *   **Outcome:** Verified that GitHub Actions can successfully authenticate using the updated identity provider and service account strings.
+
+### [2026-05-28] Provider Initialization Error (Unavailable Provider)
+*   **Issue:** `terraform import` fails with `unavailable provider "registry.terraform.io/hashicorp/http"`.
+*   **Reason:** Terraform requires all providers referenced in any part of the configuration (even unused modules or data sources like `module.project2.data.http.myip`) to be initialized before it can perform an import.
+*   **Resolution:** Run `terraform init` to download and install missing provider plugins.
+*   **Outcome:** Successfully re-initialized the workspace, allowing imports to proceed.
+
+### [2026-05-28] Warning: Missing Backend Configuration
+*   **Issue:** `terraform init` ignored `-backend-config` flags, resulting in local state usage in CI/CD and persistent 409 Conflict errors.
+*   **Symptoms:** `Warning: Missing backend configuration` in logs; Terraform attempting to recreate existing resources.
+*   **Reason:** The Terraform configuration lacked an explicit `backend "gcs" {}` block, which is required even when providing configuration via CLI.
+*   **Resolution:** Added an empty `backend "gcs" {}` block to the root `terraform/` configuration.
+*   **Outcome:** CI/CD now correctly attaches to the GCS remote backend, recognizing existing infrastructure.
+
+### [2026-05-28] Security: Backend De-identification
+*   **Action:** Removed hardcoded `bucket` and `project` from `backend.tf`.
+*   **Status:** **ENFORCED**. 
+*   **Implementation:** Migrated to GitHub Secrets injection.
+*   **Secrets Required:** `GCP_TF_STATE_BUCKET`, `GCP_PROJECT_ID`.
+*   **Protocol:** CI/CD runners must now execute `terraform init` using `-backend-config` flags mapped to these secrets to attach to the remote state.
+*   **Local Use:** Developers must use a local `.tfbackend` file (git-ignored) or pass CLI arguments manually to prevent local state divergence.
 
 ## 3. Pending Issues & Active Debugging
 

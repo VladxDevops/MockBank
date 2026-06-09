@@ -204,7 +204,7 @@ gh repo view --json nameWithOwner
 gh secret set WIF_PROVIDER --env DEV --body "your-DEV-provider-string"
 gh secret set WIF_SERVICE_ACCOUNT --env DEV --body "your-sa-email"
 gh secret set KEYCLOAK_ADMIN_PASSWORD --env DEV --body "your-password"
-gh secret set GCP_PROJECT_ID --env DEV --body "your-actual-dev-project-id"
+gh secret set GCP_BACKEND_PROJECT_ID --env DEV --body "your-actual-dev-project-id"
 
 ```
 
