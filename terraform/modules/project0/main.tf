@@ -41,12 +41,12 @@ resource "google_project_service" "sql_admin" {
   depends_on         = [google_project_service.resource_manager]
 }
 
-# resource "google_project_service" "cloud_sql" {
-#   project            = var.compute_project_id
-#   service            = "cloudsql.googleapis.com"
-#   disable_on_destroy = false
-#   depends_on         = [google_project_service.resource_manager]
-# }
+ resource "google_project_service" "cloud_sql" {
+   project            = var.compute_project_id
+   service            = "cloudsql.googleapis.com"
+   disable_on_destroy = false
+   depends_on         = [google_project_service.resource_manager]
+ }
 
 resource "google_project_service" "vpc_access" {
   project            = var.compute_project_id
