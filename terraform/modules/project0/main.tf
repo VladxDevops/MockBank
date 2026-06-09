@@ -272,7 +272,7 @@ resource "google_project_iam_member" "terraform_sa_google_cloud_deploy_admin" {
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
-# GitHub Actions Service Account Roles
+# GitHub Actions Service Account Roles: 
 resource "google_project_iam_member" "github_actions_service_usage_admin" {
   project = var.compute_project_id
   role    = "roles/serviceusage.serviceUsageAdmin"
@@ -350,6 +350,40 @@ resource "google_project_iam_member" "github_actions_iam_service_account_user" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
+
+#iam.devOps:
+resource "google_project_iam_member" "github_actions_iam_devops" {
+  project = var.compute_project_id
+  role    = "roles/iam.devOps"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+#Secret Manager admin: 
+resource "google_project_iam_member" "github_actions_sa_secret_manager_admin" {
+  project = var.compute_project_id
+  role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+#"roles/compute.networkAdmin"
+resource "google_project_iam_member" "github_actions_sa_network_admin" {
+  project = var.compute_project_id
+  role    = "roles/compute.networkAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+#vpcaccess.user
+resource "google_project_iam_member" "github_actions_sa_vpcaccess_user" {
+  project = var.compute_project_id
+  role    = "roles/vpcaccess.user"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+
+
+
+
+
 
 # --- Shared Secret Placeholders ---
 
