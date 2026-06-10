@@ -12,11 +12,22 @@ To maintain clarity and prevent state collision, the following path structure is
 ### Cross-Project Initialization
 When the target infrastructure project differs from the state project, use the following initialization pattern:
 
-**Note:** In CI/CD, project discovery is handled automatically via Workload Identity Federation (WIF). The GCS backend resolves the project ID via the globally unique bucket name.
+**Identity Requirement:** The credentials used for initialization (e.g., the DEV Service Account) must be granted the `roles/storage.objectAdmin` role on the specific GCS bucket within the remote state project.
+
+**Local Authentication (Using DEV Project Credentials):**
+```bash
+terraform init \
+  -backend-config="bucket=[REMOTE_STATE_BUCKET]" \
+  -backend-config="credentials=[PATH_TO_DEV_PROJECT_SA_KEY]" \
+  -backend-config="reconfigure"
+```
+
+**CI/CD (GitHub Actions):**
+Authentication is handled via Workload Identity Federation (WIF). Terraform automatically uses the assumed identity (the DEV Service Account) to access the backend bucket.
 
 ```bash
 terraform init \
-  -backend-config="bucket=[REMOTE_BUCKET]" \
+  -backend-config="bucket=[REMOTE_STATE_BUCKET]" \
   -backend-config="reconfigure"
 ```
 

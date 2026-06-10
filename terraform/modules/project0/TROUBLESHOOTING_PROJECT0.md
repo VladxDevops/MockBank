@@ -88,6 +88,18 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Resolution:** Simplified `terraform init` in workflows to rely on `backend.tf` for remote state connectivity.
 *   **Status:** **ACTIVE INVESTIGATION**. **EXPLICIT NOTE:** Local `terraform apply` is confirmed to work properly and synchronizes with the remote state without errors. The failure is exclusively manifesting during the GitHub Actions `terraform plan` step, suggesting a disparity in the CI environment's workspace or backend initialization.
 
+### [2026-05-28] Identity Disparity in Cross-Project Backend
+*   **Issue:** Confusion regarding which project's credentials are used for the GCS backend during cross-project deployment.
+*   **Finding:** The `credentials` flag in `-backend-config` (or the identity assumed via WIF) belongs to the **DEV (Target) Project**, while the GCS bucket resides in the **State (Centralized) GCP Project**.
+*   **Requirement:** The DEV Service Account must have `roles/storage.objectAdmin` on the bucket in the State Project to enable successful initialization.
+*   **Status:** Resolved in documentation; verified cross-project IAM requirements.
+
+### [2026-05-28] Backend Bucket 404 Not Found
+*   **Issue:** GitHub Actions failed with `Error 404: The specified bucket does not exist`.
+*   **Reason:** Mismatch between bucket name in `backend.tf` and actual GCP resource, exacerbated by missing project context for cross-project storage.
+*   **Resolution:** Synchronized `backend.tf` with the verified local bucket name (`terraform_state_bckup_bnk-project`) and added `-backend-config="project=..."` to the CI/CD workflows.
+*   **Status:** **RESOLVED**.
+
 ## 3. Pending Issues & Active Debugging
 
 ### Issue: Keycloak Identity Provider Integration

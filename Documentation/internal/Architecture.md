@@ -34,7 +34,8 @@ This architecture describes a secure, cloud-native banking platform designed for
     *   **IAM Library:** Centralized tracking of Service Accounts and roles (`SERVICE_ACCOUNT_GOVERNANCE.md`).
     *   **Resource Metadata:** Mandatory tagging for cost and ownership tracking (`RESOURCE_TAGGING_POLICY.md`).
     *   **State Policy:** Centralized state management in Project 0.
-*   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning.
+*   **Infrastructure as Code:** Terraform is mandated for all infrastructure provisioning. 
+    The terrraform remote state/s are centralized into a single GCP project, for example: (GCP project:) "remote terraform state GCP project".  where the "remote terraform state GCP project" may be a different project that the target project where the infrastructure well be build. 
 *   **Declarative Operations:** All application-level configurations (e.g., Identity Clients, Auth Policies) must be declared in code. Manual configuration is an anti-pattern that violates the reproducibility requirement.
 *   **Orchestration & Delivery (Hybrid Model):**
     *   **Cloud Run Services:** Managed via **Google Cloud Deploy**. In `DEV`, services are accessed via authenticated proxies or Identity-Token-bearing requests to minimize networking costs while maintaining the "No Unauthenticated Access" policy.
