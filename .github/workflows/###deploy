@@ -61,7 +61,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
       - name: Terraform Apply (Project 0)
         run: |
-          cd terraform/foundation/services
+          cd terraform
           terraform init
           RAW_PROJECT="${{ secrets.DEV_GCP_PROJECT_ID || secrets.GCP_PROJECT_ID }}"
           PROJECT=$(echo "$RAW_PROJECT" | tr -d '[:space:]' | tr -d '"' | tr -d "'")

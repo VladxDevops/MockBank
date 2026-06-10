@@ -55,7 +55,10 @@ jobs:
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
-          terraform init -input=false -reconfigure -backend-config="project=${{ secrets.GCP_BACKEND_PROJECT_ID }}"
+
+          # Sanitize Project ID and initialize
+          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
+          terraform init -input=false -reconfigure -backend-config="project=$CLEAN_PROJECT"
           terraform validate
           # Using -or-create flag to handle workspace existence silently.
           terraform workspace select -or-create projectZERO

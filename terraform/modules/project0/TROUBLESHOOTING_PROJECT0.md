@@ -94,12 +94,6 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Requirement:** The DEV Service Account must have `roles/storage.objectAdmin` on the bucket in the State Project to enable successful initialization.
 *   **Status:** Resolved in documentation; verified cross-project IAM requirements.
 
-### [2026-05-28] Backend Bucket 404 Not Found
-*   **Issue:** GitHub Actions failed with `Error 404: The specified bucket does not exist`.
-*   **Reason:** Mismatch between bucket name in `backend.tf` and actual GCP resource, exacerbated by missing project context for cross-project storage.
-*   **Resolution:** Synchronized `backend.tf` with the verified local bucket name (`terraform_state_bckup_bnk-project`) and added `-backend-config="project=..."` to the CI/CD workflows.
-*   **Status:** **RESOLVED**.
-
 ## 3. Pending Issues & Active Debugging
 
 ### Issue: Keycloak Identity Provider Integration
