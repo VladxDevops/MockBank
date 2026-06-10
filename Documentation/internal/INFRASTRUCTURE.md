@@ -11,11 +11,13 @@ To maintain clarity and prevent state collision, the following path structure is
 
 ### Cross-Project Initialization
 When the target infrastructure project differs from the state project, use the following initialization pattern:
+
+**Note:** In CI/CD, project discovery is handled automatically via Workload Identity Federation (WIF). The GCS backend resolves the project ID via the globally unique bucket name.
+
 ```bash
 terraform init \
   -backend-config="bucket=[REMOTE_BUCKET]" \
-  -backend-config="project=[REMOTE_STATE_PROJECT_ID]" \
-  -backend-config="credentials=[LOCAL_PATH_TO_TARGET_PROJECT_KEY]"
+  -backend-config="reconfigure"
 ```
 
 ### Workspace Usage
