@@ -5,6 +5,6 @@ terraform {
     prefix  = "terraform/state"
     project = "bankproject-486308"
   }
-  
+
   required_version = ">= 1.5.0"
 }
