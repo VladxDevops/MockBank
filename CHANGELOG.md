@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Infrastructure**: Expanded Project 0 IAM with `roles/logging.logWriter` and `roles/clouddeploy.releaser`.
+- **Infrastructure**: Refactored Project 0 IAM to use explicit `google_project_iam_member` resources for 17+ administrative roles to ensure granular auditability.
+- **Security**: Added `roles/serviceusage.serviceUsageAdmin` to the Terraform Service Account to resolve 403 errors during `cloudsql.googleapis.com` enablement.
 - **Documentation**: Created `actimize_roadmap.md` to define a four-phase integration strategy for financial crime management. Projects status: NOT STARTED/PENDING. 
 - **Structure**: Centralized Actimize-related internal documentation within `Documentation/internal/actimize/` for better repository hygiene.
 - **Documentation**: Synchronized AI assistant logic with the project's Prime Directive and specialized skills registry. Verified alignment with Project 0 migration goals and Zero-Trust networking standards.
@@ -41,9 +44,14 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Documentation:** Corrected `DEV` ingress documentation across `Architecture.md` and Project 1. Services must be accessed via `gcloud run services proxy` to maintain the "No Unauthenticated Access" policy; direct Cloud Run URLs will not work for browser-based testing due to IAM enforcement.
 - **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
 - **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
-- **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_PROJECT_ID`).
+- **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_BACKEND_PROJECT_ID`).
 ### Pending
 ### Changed
+- **Infrastructure**: (In Progress) Troubleshooting GitHub Actions `terraform plan` failures. **EXPLICIT BLOCKER:** Local `terraform apply` is verified as working properly; the error is isolated to the CI/CD pipeline's execution environment.
+- **Infrastructure**: (In Progress) Investigating persistent 409 Conflict errors and backend configuration warnings in CI/CD despite explicit `backend "gcs"` block.
+- **Migration**: (In Progress) Re-evaluating remote state synchronization; lineage conflicts and state push outcomes are still being verified.
+- **Security**: Renamed `GCP_PROJECT_ID` to `GCP_BACKEND_PROJECT_ID` for backend project identification.
+- **Infrastructure**: Re-initialized workspace to address "Unavailable Provider" errors during resource import; monitoring for recurrence.
 - **Security:** Centralized all application-layer secret placeholders (Keycloak Admin/DB passwords, MongoDB connection strings) into the Project 0 foundation module.
 - **Infrastructure:** Documented resolution for `Backend configuration changed` errors when migrating to cross-project state management.
 - **Infrastructure:** Defined cross-project state management protocol allowing the DEV project service account to manage state in a centralized remote project.

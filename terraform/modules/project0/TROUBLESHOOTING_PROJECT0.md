@@ -60,7 +60,7 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Reason:** The local and remote states were initialized independently, resulting in different lineage IDs. Terraform blocks the push by default to prevent accidental data loss.
 *   **Strategy:** Overwriting the remote state with the verified local "Source of Truth" using the `-force` flag.
 *   **Command:** `terraform state push -force terraform.tfstate`
-*   **Outcome:** Successfully synchronized the `projectZERO` workspace; CI/CD parity restored.
+*   **Outcome:** Attempted synchronization; however, GitHub Actions continues to report 409 Conflict errors. Lineage or state consistency remains under investigation.
 
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
@@ -81,13 +81,12 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Resolution:** Added an empty `backend "gcs" {}` block to the root `terraform/` configuration.
 *   **Outcome:** CI/CD now correctly attaches to the GCS remote backend, recognizing existing infrastructure.
 
-### [2026-05-28] Security: Backend De-identification
-*   **Action:** Removed hardcoded `bucket` and `project` from `backend.tf`.
-*   **Status:** **ENFORCED**. 
-*   **Implementation:** Migrated to GitHub Secrets injection.
-*   **Secrets Required:** `GCP_TF_STATE_BUCKET`, `GCP_PROJECT_ID`.
-*   **Protocol:** CI/CD runners must now execute `terraform init` using `-backend-config` flags mapped to these secrets to attach to the remote state.
-*   **Local Use:** Developers must use a local `.tfbackend` file (git-ignored) or pass CLI arguments manually to prevent local state divergence.
+### [2026-05-28] Infrastructure: Explicit Backend Configuration
+*   **Action:** Re-instated hardcoded `bucket` and `project` in `backend.tf` per project requirements.
+*   **Issue:** `Error: Invalid backend configuration argument` in GitHub Actions.
+*   **Reason:** Conflict between hardcoded HCL values and redundant `-backend-config` CLI flags.
+*   **Resolution:** Simplified `terraform init` in workflows to rely on `backend.tf` for remote state connectivity.
+*   **Status:** **ACTIVE INVESTIGATION**. **EXPLICIT NOTE:** Local `terraform apply` is confirmed to work properly and synchronizes with the remote state without errors. The failure is exclusively manifesting during the GitHub Actions `terraform plan` step, suggesting a disparity in the CI environment's workspace or backend initialization.
 
 ## 3. Pending Issues & Active Debugging
 
@@ -118,4 +117,5 @@ This document serves as a living knowledge base for debugging Project 0. AI Agen
 7.  **Format Adherence:** Maintain the established markdown format for consistency and readability.
 
 ---
+*Refer to `CHANGELOG.md` for historical context on architectural shifts.*
 *Refer to `CHANGELOG.md` for historical context on architectural shifts.*
