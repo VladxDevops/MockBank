@@ -48,15 +48,21 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init & Plan
-        run: |
+      - name: Terraform Validate
+        run: 
           cd terraform
+          terraform validate
+
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: |
+          
           # Use a heredoc to prevent shell quote stripping
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
 
-          terraform validate
 
           # Sanitize Project ID and initialize
           CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
@@ -73,3 +79,10 @@ jobs:
             echo "Error: dev.tfvars not found in terraform/ directory. Check .gitignore or repository structure."
             exit 1
           fi
+
+      - name: Terraform Plan
+        working-directory: ./terraform
+        run: 
+          terraform plan \
+            -var-file="dev.tfvars" \
+            -target=module.project0

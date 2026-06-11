@@ -31,6 +31,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **CI/CD**: Configured `ci.yaml` and `cd.yaml` to reconstruct `dev.tfvars` from the `TFVARS_DEV` GitHub Secret at the environment level.
 - **CI/CD**: Added `environment: DEV` to `ci.yaml` to allow PR validation logic to access environment-protected secrets.
 - **CI/CD**: Hardened Terraform workspace selection logic to prevent runner exits on non-existent workspaces.
+- **CI/CD**: Hardened Terraform workspace selection and re-initialization logic to ensure `.terraform/modules` is populated before validation.
 - **CI/CD**: Added explicit validation checks for `dev.tfvars` existence in the runner environment to provide clearer error messaging.
 - **CI/CD**: Fixed "Module not installed" errors in GitHub Actions by reordering `terraform init` to execute before `terraform validate`.
 - **CI/CD**: Cleaned up duplicated release steps and removed misplaced Terraform commands from the Cloud Deploy stage in `cd.yaml`.
@@ -48,6 +49,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Pending
 ### Changed
 - **Infrastructure**: (In Progress) Troubleshooting GitHub Actions `terraform plan` failures. **EXPLICIT BLOCKER:** Local `terraform apply` is verified as working properly; the error is isolated to the CI/CD pipeline's execution environment.
+- **Infrastructure**: (In Progress) Troubleshooting persistent `Module not installed` errors in GitHub Actions. Verified that the runner requires a fresh `terraform init -upgrade` within the same job context to fetch local modules.
 - **Infrastructure**: (In Progress) Investigating persistent 409 Conflict errors and backend configuration warnings in CI/CD despite explicit `backend "gcs"` block.
 - **Migration**: (In Progress) Re-evaluating remote state synchronization; lineage conflicts and state push outcomes are still being verified.
 - **Security**: Renamed `GCP_PROJECT_ID` to `GCP_BACKEND_PROJECT_ID` for backend project identification.
