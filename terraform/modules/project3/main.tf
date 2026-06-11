@@ -2,6 +2,11 @@
 # Note: Foundational CI/CD resources (GitHub SA, WIF, and project-level IAM) 
 # have been migrated to the foundation module (module.project0).
 
+# DEPENDENCY NOTE:
+# This module assumes that 'google_project_service.cloud_deploy' and 
+# 'google_service_account.github_actions_sa' have been provisioned 
+# and configured within the 'project0' (Foundation) module.
+
 resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
   project     = var.compute_project_id
   location    = var.compute_region
