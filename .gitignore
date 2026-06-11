@@ -59,6 +59,7 @@ data/db/
 
 
 #.md and documentation files: 
+internal/
 internalREADME.md
 spec.md
 Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
