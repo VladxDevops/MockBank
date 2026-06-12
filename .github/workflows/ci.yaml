@@ -67,8 +67,7 @@ jobs:
           
           # Explicitly provide backend config to ensure the remote state is found
           terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project" \
-            -backend-config="project=$CLEAN_PROJECT"
+            -backend-config="bucket=terraform_state_bckup_bnk-project"
           
           terraform workspace select -or-create projectZERO
 
