@@ -1,6 +1,6 @@
 name: CI - Foundation Validation
 on:
-  pull_request:
+  push:
     branches: [ DEV ]
     paths:
       - 'terraform/**'
@@ -31,7 +31,7 @@ jobs:
           commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
 
   terraform-plan:
-    name: 'Terraform Plan'
+    name: 'Terraform RUN'
     needs: auto-fix
     runs-on: ubuntu-latest
     environment: DEV
@@ -62,9 +62,6 @@ jobs:
             exit 1
           fi
 
-          # Sanitize Project ID and initialize
-          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          
           # Explicitly provide backend config to ensure the remote state is found
           terraform init -input=false -reconfigure \
             -backend-config="bucket=terraform_state_bckup_bnk-project"

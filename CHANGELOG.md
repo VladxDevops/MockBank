@@ -8,6 +8,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Updated `ci.yaml` trigger to execute on `push` to the `DEV` branch instead of `pull_request`, ensuring validation runs on direct commits and merges.
+- **Documentation**: Created `github-actions.md` to provide a centralized technical reference for the CI/CD pipeline logic, including the auto-fix job and Terraform lifecycle refinements.
+- **CI/CD**: Standardized `ci.yaml` and `cd.yaml` with YAML block scalars (`|`) and explicit backend configuration to resolve "Module not installed" and remote state synchronization errors.
+- **CI/CD**: Implemented the "Secret-to-File" materialization pattern for `dev.tfvars` using heredocs (`cat <<'EOF'`) to prevent shell-level quote stripping.
 - **Infrastructure**: Expanded Project 0 IAM with `roles/logging.logWriter` and `roles/clouddeploy.releaser`.
 - **Infrastructure**: Refactored Project 0 IAM to use explicit `google_project_iam_member` resources for 17+ administrative roles to ensure granular auditability.
 - **Security**: Added `roles/serviceusage.serviceUsageAdmin` to the Terraform Service Account to resolve 403 errors during `cloudsql.googleapis.com` enablement.
