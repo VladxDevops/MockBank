@@ -420,6 +420,13 @@ resource "google_project_iam_member" "github_actions_cloud_deploy_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+# Cross-Project Backend State Access
+resource "google_project_iam_member" "github_actions_sa_remote_storage_admin" {
+  project = var.remote_terraform_state_gcp_project
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 resource "google_project_iam_member" "github_actions_cloud_run_admin" {
   project = var.compute_project_id
   role    = "roles/run.admin"

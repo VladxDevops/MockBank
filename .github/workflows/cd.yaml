@@ -45,8 +45,8 @@ jobs:
           
           # Explicitly provide backend config to ensure remote state alignment
           terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project" \
-            -backend-config="project=$CLEAN_PROJECT"
+            -backend-config="bucket=terraform_state_bckup_bnk-project"
+
           
           terraform workspace select -or-create projectZERO
 

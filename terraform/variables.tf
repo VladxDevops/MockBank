@@ -39,6 +39,13 @@ variable "service_name" {
   type        = string
 }
 
+#remote_terraform_state_gcp_ptoject:
+variable "remote_terraform_state_gcp_project" {
+  description = "GCP proejct where remote terraform states are stored"
+  type        = string
+}
+
+
 variable "terraform_state_bucket_name" {
   description = "The name of the GCS bucket for Terraform state."
   type        = string

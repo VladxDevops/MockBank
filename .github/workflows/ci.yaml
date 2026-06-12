@@ -31,7 +31,7 @@ jobs:
           commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
 
   terraform-plan:
-    name: 'Terraform RUN'
+    name: 'Terraform Plan'
     needs: auto-fix
     runs-on: ubuntu-latest
     environment: DEV

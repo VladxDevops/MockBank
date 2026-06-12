@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Security**: Provisioned `roles/storage.objectAdmin` for the GitHub Actions Service Account on the `remote_terraform_state_gcp_project` to enable cross-project state management and resolve 403 Forbidden errors during initialization.
+- **Documentation**: Standardized changelog filename and fixed redundant "internal" documentation references in Project 1 AGENTS.md.
 - **CI/CD**: Updated `ci.yaml` trigger to execute on `push` to the `DEV` branch instead of `pull_request`, ensuring validation runs on direct commits and merges.
 - **Documentation**: Created `github-actions.md` to provide a centralized technical reference for the CI/CD pipeline logic, including the auto-fix job and Terraform lifecycle refinements.
 - **CI/CD**: Standardized `ci.yaml` and `cd.yaml` with YAML block scalars (`|`) and explicit backend configuration to resolve "Module not installed" and remote state synchronization errors.
