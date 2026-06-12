@@ -76,3 +76,8 @@ variable "terraform_deployer_service_account" {
   type        = string
 }
 
+#remote_terraform_state_gcp_ptoject:
+variable "remote_terraform_state_gcp_project" {
+  description = "GCP proejct where remote terraform states are stored"
+  type        = string
+}

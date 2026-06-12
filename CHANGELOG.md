@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Infrastructure**: Updated `remote_terraform_state_enabler.sh` to use lowercase environment variables (`remote_state_project_id`, `deployer_sa_email`) to maintain compatibility with the local `.env` configuration.
+- **Governance**: Standardized environment variable casing to UPPERCASE across all shell scripts and documentation to ensure consistency, as shell variables are case-sensitive.
+- **Infrastructure**: Synchronized `remote_terraform_state_enabler.sh` with standardized `.env` variable names (`REMOTE_STATE_PROJECT_ID`, `DEPLOYER_SA_EMAIL`) to ensure reliable IAM provisioning in the centralized state project.
 - **Security**: Provisioned `roles/storage.objectAdmin` for the GitHub Actions Service Account on the `remote_terraform_state_gcp_project` to enable cross-project state management and resolve 403 Forbidden errors during initialization.
 - **Documentation**: Standardized changelog filename and fixed redundant "internal" documentation references in Project 1 AGENTS.md.
 - **CI/CD**: Updated `ci.yaml` trigger to execute on `push` to the `DEV` branch instead of `pull_request`, ensuring validation runs on direct commits and merges.
