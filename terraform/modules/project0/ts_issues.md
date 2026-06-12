@@ -1,10 +1,6 @@
 #There errors when running Gihub actions plus terraform plan 
 #main issues seems to be that when running terraform pla or apply via github actions the remote terraform state store in the GCP storage bucket seems like its not read by github actions and #terraform. 
 
-Alrady tried: 
-
-Check the syntax and indentation in the Ci and 
-
 There are no errors nor issues rhen running via local terminal:
 terraform validate && \
 terraform init \
@@ -18,6 +14,18 @@ terraform apply -auto-approve \
   -var-file="dev.tfvars" \
   -target=module.project0 
 
+
+Alrady tried: 
+
+Check the syntax and indentation in the Ci and ci yaml files. 
+
+Removed: "-backend-config="project=$CLEAN_PROJECT"" since its causing Errors: 
+"│ Error: Invalid backend configuration argument
+
+│ 
+│ The backend configuration argument "project" given on the command line is
+│ not expected for the selected backend type.
+"
 
 
 Github actions-terraform example Errors: 
