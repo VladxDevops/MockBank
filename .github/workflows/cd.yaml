@@ -6,33 +6,12 @@ on:
       - 'terraform/**'
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
-  auto-fix:
-    name: Auto-fix Formatting & Dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Format
-        run: terraform fmt -recursive terraform/
-
-      - name: Commit fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: automated fix for formatting/dependencies [skip ci]"
-
   terraform-apply:
     name: 'Terraform Apply'
-    needs: auto-fix
     runs-on: ubuntu-latest
     environment: DEV
     steps:
@@ -48,26 +27,36 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Init & Apply
+      - name: Terraform Init
+        working-directory: ./terraform
         run: |
-          cd terraform
-          # Use a heredoc to prevent shell quote stripping
+          # Materialize secrets to tfvars
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
 
-          terraform validate
-          
-          # Sanitize Project ID and initialize
-          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          terraform init -input=false -reconfigures
-          
-          # Using -or-create flag to handle workspace existence silently.
-          terraform workspace select -or-create projectZERO
-
-          if [ -f "dev.tfvars" ]; then
-            terraform apply -auto-approve -var-file="dev.tfvars" -target=module.project0
-          else
-            echo "Error: dev.tfvars not found in terraform/ directory."
+          if [ ! -f "dev.tfvars" ]; then
+            echo "Error: Failed to create dev.tfvars from secrets."
             exit 1
           fi
+
+          # Sanitize Project ID for backend
+          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
+          
+          # Explicitly provide backend config to ensure remote state alignment
+          terraform init -input=false -reconfigure \
+            -backend-config="bucket=terraform_state_bckup_bnk-project" \
+            -backend-config="project=$CLEAN_PROJECT"
+          
+          terraform workspace select -or-create projectZERO
+
+      - name: Terraform Validate
+        working-directory: ./terraform
+        run: terraform validate
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: |
+          terraform apply -auto-approve \
+            -var-file="dev.tfvars" \
+            -target=module.project0

@@ -1,7 +1,7 @@
 name: CI - Foundation Validation
 on:
   pull_request:
-    branches: [ DEV, ]
+    branches: [ DEV ]
     paths:
       - 'terraform/**'
 
@@ -48,41 +48,37 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Validate
-        run: 
-          cd terraform
-          terraform validate
-
-
       - name: Terraform Init
         working-directory: ./terraform
         run: |
-          
           # Use a heredoc to prevent shell quote stripping
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
 
-
-          # Sanitize Project ID and initialize
-          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
-          terraform init -input=false -reconfigure
-          
-          # Using -or-create flag to handle workspace existence silently.
-          terraform workspace select -or-create projectZERO
-
-          # Ensure dev.tfvars exists before planning. 
-          # If this fails, verify dev.tfvars is committed or provided via GitHub Secrets.
-          if [ -f "dev.tfvars" ]; then
-            terraform plan -var-file="dev.tfvars" -target=module.project0
-          else
-            echo "Error: dev.tfvars not found in terraform/ directory. Check .gitignore or repository structure."
+          # Verify dev.tfvars was created successfully before proceeding
+          if [ ! -f "dev.tfvars" ]; then
+            echo "Error: Failed to create dev.tfvars from secrets."
             exit 1
           fi
 
+          # Sanitize Project ID and initialize
+          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
+          
+          # Explicitly provide backend config to ensure the remote state is found
+          terraform init -input=false -reconfigure \
+            -backend-config="bucket=terraform_state_bckup_bnk-project" \
+            -backend-config="project=$CLEAN_PROJECT"
+          
+          terraform workspace select -or-create projectZERO
+
+      - name: Terraform Validate
+        working-directory: ./terraform
+        run: terraform validate
+
       - name: Terraform Plan
         working-directory: ./terraform
-        run: 
+        run: |
           terraform plan \
             -var-file="dev.tfvars" \
             -target=module.project0

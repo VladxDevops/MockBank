@@ -3,6 +3,7 @@
 
 Alrady tried: 
 
+Check the syntax and indentation in the Ci and 
 
 There are no errors nor issues rhen running via local terminal:
 terraform validate && \
@@ -16,3 +17,10 @@ terraform plan \
 terraform apply -auto-approve \
   -var-file="dev.tfvars" \
   -target=module.project0 
+
+
+
+Github actions-terraform example Errors: 
+
+  │ Error: Module not installed
+
