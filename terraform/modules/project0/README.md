@@ -20,6 +20,7 @@ Automates the enablement of 15+ Google Cloud APIs (Compute, Cloud Run, SQL Admin
 *   **Workload Identity Federation (WIF):** Provisioning of the WIF Pool and Provider for GitHub Actions.
 *   **Shared Service Account:** The `sa-github-actions` identity used by all CI/CD pipelines.
 *   **Centralized IAM:** Explicit declaration of 10+ project-level IAM roles (Storage Admin, Cloud Build Editor, etc.) for the GitHub Actions identity to ensure least-privilege consistency.
+*   **Cross-Project State Management:** Provisioning of `roles/storage.objectAdmin` and `roles/resourcemanager.projectIamAdmin` for the Deployer and GitHub SAs in the centralized state project.
 
 ### 4. Shared Resources
 *   **Artifact Registry:** The centralized Docker repository for the entire platform.

@@ -8,6 +8,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Infrastructure**: Clarified state lock lifecycle in documentation, distinguishing between automatic release and manual `force-unlock` procedures.
 - **Infrastructure**: Resolved Terraform state lock contention between local development and GitHub Actions by implementing the `force-unlock` protocol for the `projectZERO` workspace.
 - **Infrastructure**: Clarified `terraform state push` workspace targeting logic to prevent accidental state overwrites in `projectZERO`.
 - **Infrastructure**: Updated `remote_terraform_state_enabler.sh` to use lowercase environment variables (`remote_state_project_id`, `deployer_sa_email`) to maintain compatibility with the local `.env` configuration.

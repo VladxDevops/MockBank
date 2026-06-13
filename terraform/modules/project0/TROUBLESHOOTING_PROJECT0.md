@@ -62,6 +62,26 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Command:** `terraform state push -force terraform.tfstate`
 *   **Outcome:** Attempted synchronization; however, GitHub Actions continues to report 409 Conflict errors. Lineage or state consistency remains under investigation.
 
+### [2026-05-28] Error: "no state" during State Push
+*   **Issue:** `terraform state push` fails with `Error reading source state ...: no state`.
+*   **Reason:** The specified path to the local state file (often within `terraform.tfstate.d/`) is incorrect or the file is empty because the state was moved during backend initialization.
+*   **Resolution:** Verify the location of the valid local state file using `find . -name "*.tfstate"` and provide the correct path to the `push` command.
+*   **Status:** **RESOLVED**.
+
+### [2026-05-28] Logic Note: Workspace Targeting during State Push
+*   **Finding:** `terraform state push <file>` targets the **currently selected workspace**. 
+*   **Warning:** Running this command while `projectZERO` is active will overwrite the remote `projectZERO` state with the provided `<file>`. 
+*   **Pre-check:** Always run `terraform workspace show` before a state push to avoid cross-workspace data corruption.
+
+### [2026-05-28] Error: State Lock (Error acquiring the state lock)
+*   **Issue:** GitHub Actions or local terminal reports the state is locked by another process.
+*   **Lifecycle Note:** Under normal operation, Terraform releases the lock automatically upon command completion. There is no manual "stop" command.
+*   **Failure Scenario:** Locks persist if the Terraform process is killed forcefully or loses network during an `apply`.
+*   **Reason:** A previous `apply` or `plan` was interrupted, or a local run is still active while CI/CD triggered.
+*   **Resolution:** Retrieve the Lock ID from the error message. Run `terraform workspace select projectZERO` followed by `terraform force-unlock <LOCK_ID>`.
+*   **Precaution:** Verify no other engineers are currently running an apply before forcing the unlock.
+*   **Status:** **RESOLVED**.
+
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
 *   **Secrets Affected:** `WIF_SERVICE_ACCOUNT`, `WIF_PROVIDER`.

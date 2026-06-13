@@ -14,7 +14,7 @@ This repository hosts the source code for the Altmtrk2026 Banking Platform. It i
 *   **[Agents & Bots](./AGENTS.md):** Rules for CI/CD and AI usage.
 *   **[Changelog](./CHANGELOG.md):** History of architectural decisions.
 *   **Projects:**
-    *   Project 0: Foundation Infrastructure (Networking & APIs)
+    *   Project 0: Foundation Infrastructure (Networking, APIs, & Identity)
     *   Project 1: Identity Service
     *   Project 2: Transaction Service
     *   Project 3: CI/CD & Release Safety
@@ -176,7 +176,7 @@ Once the build is successful, deploy the service to Cloud Run. The following com
 
 This project implements a secure, automated pipeline for the Transaction Service using GitHub Actions and Google Cloud Deploy.
 
-### 1. Setup & Configuration (Prerequisites)
+### 1. Setup & Configuration (WIF managed in Project 0)
 Before the pipeline can run, you must configure the following in your GitHub Repository Settings:
 
 **GitHub Secrets (`Settings > Secrets > Actions` or via `gh` CLI):**
