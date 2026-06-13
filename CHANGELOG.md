@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Automated Keycloak container builds in `cd.yaml` with explicit GCP project targeting using the `GCP_PROJECT_ID` secret for the DEV environment.
+- **Documentation**: Reorganized checklists by moving foundational infrastructure tasks (WIF, State Management, Workspaces) from Project 3 to a new Project 0 checklist.
+- **CI/CD**: Successfully stabilized and verified the GitHub Actions CI/CD pipeline for Project 0 infrastructure, ensuring reliable remote state synchronization and OIDC authentication.
 - **Infrastructure**: Clarified state lock lifecycle in documentation, distinguishing between automatic release and manual `force-unlock` procedures.
 - **Infrastructure**: Resolved Terraform state lock contention between local development and GitHub Actions by implementing the `force-unlock` protocol for the `projectZERO` workspace.
 - **Infrastructure**: Clarified `terraform state push` workspace targeting logic to prevent accidental state overwrites in `projectZERO`.

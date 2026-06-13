@@ -106,7 +106,7 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Issue:** `Error: Invalid backend configuration argument` in GitHub Actions.
 *   **Reason:** Conflict between hardcoded HCL values and redundant `-backend-config` CLI flags.
 *   **Resolution:** Simplified `terraform init` in workflows to rely on `backend.tf` for remote state connectivity.
-*   **Status:** **ACTIVE INVESTIGATION**. **EXPLICIT NOTE:** Local `terraform apply` is confirmed to work properly and synchronizes with the remote state without errors. The failure is exclusively manifesting during the GitHub Actions `terraform plan` step, suggesting a disparity in the CI environment's workspace or backend initialization.
+*   **Status:** **RESOLVED**. Standardized the GitHub Actions initialization sequence to match local execution logic, ensuring consistent workspace and backend synchronization.
 
 ### [2026-05-28] Identity Disparity in Cross-Project Backend
 *   **Issue:** Confusion regarding which project's credentials are used for the GCS backend during cross-project deployment.
