@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Infrastructure**: Resolved Terraform state lock contention between local development and GitHub Actions by implementing the `force-unlock` protocol for the `projectZERO` workspace.
+- **Infrastructure**: Clarified `terraform state push` workspace targeting logic to prevent accidental state overwrites in `projectZERO`.
 - **Infrastructure**: Updated `remote_terraform_state_enabler.sh` to use lowercase environment variables (`remote_state_project_id`, `deployer_sa_email`) to maintain compatibility with the local `.env` configuration.
 - **Governance**: Standardized environment variable casing to UPPERCASE across all shell scripts and documentation to ensure consistency, as shell variables are case-sensitive.
 - **Infrastructure**: Synchronized `remote_terraform_state_enabler.sh` with standardized `.env` variable names (`REMOTE_STATE_PROJECT_ID`, `DEPLOYER_SA_EMAIL`) to ensure reliable IAM provisioning in the centralized state project.

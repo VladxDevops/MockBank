@@ -10,7 +10,6 @@ module "project0" {
   compute_region                  = var.compute_region
   service_name                    = var.service_name
   artifact_registry_repository_id = var.artifact_registry_repository_id
-
   atlas_public_key                          = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data
   atlas_private_key                         = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_private_key[0].secret_data
   keycloak_admin_username                   = var.keycloak_admin_username
@@ -22,8 +21,5 @@ module "project0" {
   workforce_identity_federation_provider_id = var.workforce_identity_federation_provider_id
   terraform_deployer_service_account        = var.terraform_deployer_service_account
   remote_terraform_state_gcp_project        = var.remote_terraform_state_gcp_project
-
-
 }
 
-###Mock changes

@@ -62,17 +62,6 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Command:** `terraform state push -force terraform.tfstate`
 *   **Outcome:** Attempted synchronization; however, GitHub Actions continues to report 409 Conflict errors. Lineage or state consistency remains under investigation.
 
-### [2026-05-28] Error: "no state" during State Push
-*   **Issue:** `terraform state push` fails with `Error reading source state ...: no state`.
-*   **Reason:** The specified path to the local state file (often within `terraform.tfstate.d/`) is incorrect or the file is empty because the state was moved during backend initialization.
-*   **Resolution:** Verify the location of the valid local state file using `find . -name "*.tfstate"` and provide the correct path to the `push` command.
-*   **Status:** **RESOLVED**.
-
-### [2026-05-28] Logic Note: Workspace Targeting during State Push
-*   **Finding:** `terraform state push <file>` targets the **currently selected workspace**. 
-*   **Warning:** Running this command while `projectZERO` is active will overwrite the remote `projectZERO` state with the provided `<file>`. 
-*   **Pre-check:** Always run `terraform workspace show` before a state push to avoid cross-workspace data corruption.
-
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
 *   **Secrets Affected:** `WIF_SERVICE_ACCOUNT`, `WIF_PROVIDER`.
