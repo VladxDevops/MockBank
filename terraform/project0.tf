@@ -5,11 +5,11 @@
 module "project0" {
   source = "./modules/project0"
 
-  compute_project_id              = var.compute_project_id
-  compute_project_number          = var.compute_project_number
-  compute_region                  = var.compute_region
-  service_name                    = var.service_name
-  artifact_registry_repository_id = var.artifact_registry_repository_id
+  compute_project_id                        = var.compute_project_id
+  compute_project_number                    = var.compute_project_number
+  compute_region                            = var.compute_region
+  service_name                              = var.service_name
+  artifact_registry_repository_id           = var.artifact_registry_repository_id
   atlas_public_key                          = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data
   atlas_private_key                         = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_private_key[0].secret_data
   keycloak_admin_username                   = var.keycloak_admin_username

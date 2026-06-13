@@ -9,8 +9,8 @@ module "project3" {
   github_actions_sa_email                   = module.project0.github_actions_sa_email
   github_repository                         = var.github_repository
   terraform_deployer_service_account        = var.terraform_deployer_service_account
-  keycloak_url            = var.keycloak_url
-  keycloak_admin_username = var.keycloak_admin_username
-  keycloak_admin_password = var.keycloak_admin_password
-  teller_portal_certificate_id = var.teller_portal_certificate_id
+  keycloak_url                              = var.keycloak_url
+  keycloak_admin_username                   = var.keycloak_admin_username
+  keycloak_admin_password                   = var.keycloak_admin_password
+  teller_portal_certificate_id              = var.teller_portal_certificate_id
 }
