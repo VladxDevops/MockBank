@@ -62,6 +62,17 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Command:** `terraform state push -force terraform.tfstate`
 *   **Outcome:** Attempted synchronization; however, GitHub Actions continues to report 409 Conflict errors. Lineage or state consistency remains under investigation.
 
+### [2026-05-28] Error: "no state" during State Push
+*   **Issue:** `terraform state push` fails with `Error reading source state ...: no state`.
+*   **Reason:** The specified path to the local state file (often within `terraform.tfstate.d/`) is incorrect or the file is empty because the state was moved during backend initialization.
+*   **Resolution:** Verify the location of the valid local state file using `find . -name "*.tfstate"` and provide the correct path to the `push` command.
+*   **Status:** **RESOLVED**.
+
+### [2026-05-28] Logic Note: Workspace Targeting during State Push
+*   **Finding:** `terraform state push <file>` targets the **currently selected workspace**. 
+*   **Warning:** Running this command while `projectZERO` is active will overwrite the remote `projectZERO` state with the provided `<file>`. 
+*   **Pre-check:** Always run `terraform workspace show` before a state push to avoid cross-workspace data corruption.
+
 ### [2026-05-28] GitHub Secrets: WIF Credentials Synchronization
 *   **Action:** Manual update of GitHub Actions secrets in the repository settings.
 *   **Secrets Affected:** `WIF_SERVICE_ACCOUNT`, `WIF_PROVIDER`.
@@ -95,6 +106,18 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Status:** Resolved in documentation; verified cross-project IAM requirements.
 
 ## 3. Pending Issues & Active Debugging
+
+### Issue: Cross-Project IAM for GitHub Actions SA
+*   **Description:** Provision necessary IAM roles (Storage Admin and Project IAM Admin) to the dev GitHub Actions Service Account in the `remote_terraform_state_gcp_project` using Terraform.
+*   **Steps Taken:** Implemented `roles/storage.objectAdmin` in `project0/main.tf`. Created `setup_remote_state_iam.sh` for manual deployer SA elevation.
+*   **Current Hypothesis:** Full declarative management in Terraform will resolve identity disparity issues during CI/CD initialization and improve auditability.
+- **Status:** **RESOLVED**. Provisioned `storage.objectAdmin` and `projectIamAdmin` via declarative Terraform.
+
+### Issue: Target Project IAM for Terraform Deployer SA
+- **Description:** Ensure the Terraform Deployer Service Account can manage and grant IAM roles within the target project.
+- **Resolution:** Provisioned `roles/resourcemanager.projectIamAdmin`, `roles/iam.securityAdmin`, and `roles/iam.roleAdmin` in `project0/main.tf` for both the compute project and the remote state project.
+- **Status:** **RESOLVED**.
+- **Status:** **RESOLVED**. Provisioned `storage.objectAdmin` and `projectIamAdmin` via declarative Terraform.
 
 ### Issue: Keycloak Identity Provider Integration
 *   **Description:** The Keycloak provider cannot initialize until the Cloud Run service is stable and reachable.

@@ -47,6 +47,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **CI/CD**: Corrected syntax errors in GitHub Action workflows (`rrun` typo, malformed `terraform init` arguments, and missing hyphen for `-var-file`).
 - **CI/CD**: Created `ci.yaml` and `cd.yaml` to automate Project 0 (Foundation) infrastructure management via GitHub Actions.
 - **Security**: Implemented Workload Identity Federation (WIF) in workflows to eliminate the need for long-lived service account keys.
+- **Infrastructure**: Reconciled state divergence by importing existing Networking (VPC, Subnet, NAT, Router) and WIF resources into the Project 0 Terraform state.
 - **Migration**: Resolved 409 Conflict (Entity already exists) for Workload Identity Federation resources by importing existing GCP assets into the `project0` state.
 - **Migration**: Added `prevent_destroy` lifecycle protection to foundational Identity Pool and Provider resources.
 - **Infrastructure:** Switched Load Balancer and `bank-platform-lb-ip` to Regional/Standard Network Tier. Provisions are now explicitly disabled/commented for non-PROD environments to prevent unnecessary costs.
@@ -54,6 +55,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **CI/CD:** Hardened Docker image path construction in `deploy.yml` to prevent `could not parse reference` errors. 
 - **CI/CD:** Added mandatory validation to ensure `PROJECT` and `REPO` identifiers are not empty before attempting builds.
 - **CI/CD:** Harmonized secret names between workflow and documentation (using `GCP_BACKEND_PROJECT_ID`).
+- **Security**: Provisioned `roles/resourcemanager.projectIamAdmin`, `roles/iam.securityAdmin`, and `roles/iam.roleAdmin` for the Terraform Deployer SA to enable declarative IAM management in the target project.
+- **Security**: Granted `roles/resourcemanager.projectIamAdmin` to the Terraform Deployer Service Account on the `remote_terraform_state_gcp_project` to enable cross-project IAM management.
 ### Pending
 ### Changed
 - **Infrastructure**: (In Progress) Troubleshooting persistent `Module not installed` errors in GitHub Actions. Verified that the runner requires a fresh `terraform init -upgrade` within the same job context to fetch local modules.
