@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    keycloak = {
+      source  = "mrparkers/keycloak"
+      version = ">= 4.4.0"
+    }
+  }
+}
+
 # --- Workload Identity Federation for GitHub Actions ---
 # These require a running Keycloak instance to be managed via the Keycloak provider.
 
