@@ -13,7 +13,7 @@
 
 
 ## 3. CI/CD Pipeline (GitHub Actions) - COMPLETED
-- [x] **Workflow Creation:** Defined `.github/workflows/deploy.yml` for automated releases.
+- [x] **Workflow Creation:** Integrated Project 3 plan/apply jobs into `.github/workflows/cd.yaml`.
 - [x] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
 - [x] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
 - [x] **Security Gate:** Implemented SAST scanning in the pipeline.

@@ -1,8 +1,11 @@
 # --- Workload Identity Federation for GitHub Actions ---
-# Keycloak identity resources commented out for initial bootstrap.
 # These require a running Keycloak instance to be managed via the Keycloak provider.
 
-/*
+# ARCHITECTURAL DECISION:
+# This platform is designed as a cloud-native greenfield deployment. There is no requirement 
+# to support legacy systems, applications, or services. As such, OIDC is the primary 
+# authentication protocol, and there is no implementation of legacy SAML support.
+
 resource "keycloak_realm" "mockbank_realm" {
   realm             = "mockbank"
   enabled           = true
@@ -30,4 +33,3 @@ resource "keycloak_openid_client_scope" "risk_scope" {
   description            = "Access to risk assessment services"
   include_in_token_scope = true
 }
-*/

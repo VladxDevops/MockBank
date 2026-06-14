@@ -22,11 +22,12 @@
     - [x] Implement deterministic dependency management (`requirements.in`).
     - [x] Verify connectivity and ID token acquisition logic in `src/app.py`.
     - [x] Successfully bypassed local OIDC restrictions using `gcloud run services proxy`.
-- [ ] **SAML 2.0 Integration (Teller Portal):** [ACTIVE]
-    - [x] Create `teller-portal` client with SAML protocol in `realm-export.json`.
-    - [x] Map Entity ID and ACS URL (`/saml/acs`) for local development.
-    - [x] Configure Keycloak to sign and encrypt SAML Assertions via RSA_SHA256.
-    - [x] Implement `src/teller_portal.py` using `python3-saml` to verify signatures.
+- [x] **OIDC Alignment (Identity Infrastructure):** [COMPLETED]
+    - [x] Activated OIDC client resources in Terraform (`identity.tf`).
+    - [x] Documented exclusion of legacy SAML support for greenfield alignment.
+- [ ] **OIDC Refactor (Teller Portal Code):** [PENDING]
+    - [ ] Replace `python3-saml` with OIDC implementation (Authlib) in `teller_portal.py`.
+    - [ ] Remove legacy SAML `certs/` and entity mapping logic from the source.
 - [ ] **MFA Enforcement:** Mandatory TOTP for all users in Mockbankrealm.
 
 ## 4. Security & Verification - PARTIALLY COMPLETED
@@ -46,9 +47,9 @@ Based on `PROJECT1_DETAILS.md`, the following steps track the final integration:
 3. [x] **Phase 3: OIDC Integration**
     - [x] Configure `retail-app` client with PKCE S256.
     - [x] Build authenticated request logic in `app.py`.
-4. [x] **Phase 4: SAML Integration**
-    - [x] Configure `teller-portal` client in `realm-export.json`.
-    - [x] Implement `src/teller_portal.py` SP handler.
+4. [ ] **Phase 4: OIDC Migration (Greenfield Alignment)**
+    - [ ] Deprecate SAML SP handler in `src/teller_portal.py`.
+    - [ ] Implement OIDC client logic to match `retail-app` standards.
 
 ---
 **Note:** This checklist is maintained by AI and Human review. Last updated based on Changelog v1.6.7.

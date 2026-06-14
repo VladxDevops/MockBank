@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Integrated Project 3 (Identity Configuration) into the primary CD workflow, enabling automated Terraform Plan and Apply for Keycloak realms and clients.
+- **CI/CD**: Resolved Project 1 build failure by adding a placeholder `realm-export.json` generation step in GitHub Actions to satisfy Docker build context.
 - **CI/CD**: Automated Keycloak container builds in `cd.yaml` with explicit GCP project targeting using the `GCP_PROJECT_ID` secret for the DEV environment.
 - **Documentation**: Reorganized checklists by moving foundational infrastructure tasks (WIF, State Management, Workspaces) from Project 3 to a new Project 0 checklist.
 - **CI/CD**: Successfully stabilized and verified the GitHub Actions CI/CD pipeline for Project 0 infrastructure, ensuring reliable remote state synchronization and OIDC authentication.
