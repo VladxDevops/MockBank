@@ -83,6 +83,11 @@ jobs:
       - name: 'Set GCP Project'
         run: 'gcloud config set project ${{ secrets.GCP_PROJECT_ID }}'
 
+      - name: Create Keycloak Realm Placeholder
+        run: |
+          echo '{"realm": "AltmtrkBank", "enabled": true}' > BNKprojects/1/container/realm-export.json
+
+
       - name: 'Build and Push'
         run: |
           gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bank-apps-registry/keycloak:v1" ./BNKprojects/1/container
