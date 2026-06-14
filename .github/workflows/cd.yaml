@@ -85,9 +85,48 @@ jobs:
 
       - name: Create Keycloak Realm Placeholder
         run: |
+          # This satisfies the Docker COPY command without baking real config into the image
           echo '{"realm": "AltmtrkBank", "enabled": true}' > BNKprojects/1/container/realm-export.json
 
 
       - name: 'Build and Push'
         run: |
           gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bank-apps-registry/keycloak:v1" ./BNKprojects/1/container
+
+  deploy-identity:
+    name: 'Deploy Identity Service'
+    runs-on: ubuntu-latest
+    environment: DEV
+    needs: build-keycloak
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: |
+          cat <<'EOF' > dev.tfvars
+          ${{ secrets.TFVARS_DEV }}
+          EOF
+          
+          terraform init -input=false -reconfigure \
+            -backend-config="bucket=terraform_state_bckup_bnk-project"
+          
+          terraform workspace select -or-create projectZERO
+
+      - name: Terraform Apply (Project 1)
+        working-directory: ./terraform
+        run: |
+          # Now we deploy the actual Cloud Run service using the v1 image
+          terraform apply -auto-approve \
+            -var-file="dev.tfvars" \
+            -target=module.project1
