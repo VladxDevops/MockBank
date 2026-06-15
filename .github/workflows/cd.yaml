@@ -96,7 +96,7 @@ jobs:
       - name: 'Build and Push' 
         working-directory: BNKprojects/1/container
         run: |
-          gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ PROJECT1_REPOSITORY }}/keycloak:v1" .
+          gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.PROJECT1_REPOSITORY }}/keycloak:v1" .
 
   deploy-identity:
     name: 'Deploy Identity Service'
