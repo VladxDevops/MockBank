@@ -90,7 +90,8 @@ jobs:
           echo '{"realm": "AltmtrkBank", "enabled": true}' > BNKprojects/1/container/realm-export.json
 
 
-      - name: 'Build and Push'
+      - name: 'Build and Push' 
+        working-directory: BNKprojects/1/container
         run: |
           gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bank-apps-registry/keycloak:v1" ./BNKprojects/1/container
 
