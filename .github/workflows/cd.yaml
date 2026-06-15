@@ -1,5 +1,6 @@
 name: CD - Foundation Deployment
 on:
+  workflow_dispatch:
   push:
     branches: [ DEV ]
     paths:
