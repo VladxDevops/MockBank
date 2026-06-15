@@ -532,6 +532,12 @@ resource "google_project_iam_member" "github_actions_sa_iam_security_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+# roles/viewer: Required for GitHub Actions to stream Cloud Build logs
+resource "google_project_iam_member" "github_actions_sa_viewer" {
+  project = var.compute_project_id
+  role    = "roles/viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
 
 
 

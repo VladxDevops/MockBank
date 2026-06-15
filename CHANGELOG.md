@@ -8,6 +8,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Security**: Granted `roles/viewer` to the GitHub Actions Service Account in Project 0 to enable Cloud Build log streaming.
+- **Documentation**: Clarified the distinction between `GCP_PROJECT_ID` (Compute) and `GCP_BACKEND_PROJECT_ID` (Remote State) to prevent incorrect Artifact Registry path construction in CI/CD.
+- **CI/CD**: Mandated the use of explicit `working-directory` for all GitHub Actions steps to prevent path divergence during multi-stage deployments.
 - **CI/CD**: Integrated Project 3 (Identity Configuration) into the primary CD workflow, enabling automated Terraform Plan and Apply for Keycloak realms and clients.
 - **CI/CD**: Resolved Project 1 build failure by adding a placeholder `realm-export.json` generation step in GitHub Actions to satisfy Docker build context.
 - **CI/CD**: Automated Keycloak container builds in `cd.yaml` with explicit GCP project targeting using the `GCP_PROJECT_ID` secret for the DEV environment.

@@ -157,6 +157,6 @@ steps:
 -   `run`: Executes a shell command. For multi-line commands, use `|` (literal block scalar).
 -   `with`: Provides inputs to actions (e.g., `node-version` for `setup-node`).
 -   `env`: Sets environment variables for the current step.
--   `working-directory`: Specifies the directory where `run` commands should execute.
+-   `working-directory`: **Critical Best Practice:** Always specify the `working-directory` for steps involving Terraform, Docker builds, or script execution. This prevents errors when workflows navigate between different project sub-directories.
 
 By understanding these YAML and GitHub Actions concepts, you can effectively create and manage your CI/CD workflows.

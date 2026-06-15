@@ -82,9 +82,11 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Set GCP Project'
+        working-directory: BNKprojects/1/container
         run: 'gcloud config set project ${{ secrets.GCP_PROJECT_ID }}'
 
       - name: Create Keycloak Realm Placeholder
+        working-directory: BNKprojects/1/container
         run: |
           # This satisfies the Docker COPY command without baking real config into the image
           echo '{"realm": "AltmtrkBank", "enabled": true}' > BNKprojects/1/container/realm-export.json
@@ -93,7 +95,7 @@ jobs:
       - name: 'Build and Push' 
         working-directory: BNKprojects/1/container
         run: |
-          gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bank-apps-registry/keycloak:v1" ./BNKprojects/1/container
+          gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/bank-apps-registry/keycloak:v1" ./BNKprojects/1/container
 
   deploy-identity:
     name: 'Deploy Identity Service'
