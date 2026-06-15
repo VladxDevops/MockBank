@@ -8,6 +8,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Security**: Granted `roles/secretmanager.viewer` to the GitHub Actions Service Account in Project 0 to allow metadata inspection of secrets during CI/CD.
 - **Security**: Granted `roles/secretmanager.secretAccessor` to the GitHub Actions Service Account in Project 0 to allow CI/CD pipelines to retrieve managed secrets.
 - **CI/CD**: Fixed directory pathing error in `gcloud builds submit` within `cd.yaml` by using the current directory `.` relative to the defined `working-directory`.
 - **Documentation**: Added instructions for triggering GitHub Actions workflows via the terminal using the GitHub CLI (`gh`).

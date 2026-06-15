@@ -510,6 +510,15 @@ resource "google_project_iam_member" "github_actions_sa_network_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+
+###Add role secretmanager.viewer to Github Service Account: 
+resource "google_project_iam_member" "github_actions_sa_secret_viewer" {
+  project = var.compute_project_id
+  role    = "roles/secretmanager.viewer"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+###Add role secretmanager.secretAccessor to Github Service Account: 
 resource "google_project_iam_member" "github_actions_sa_secret_accessor" {
   project = var.compute_project_id
   role    = "roles/secretmanager.secretAccessor"
