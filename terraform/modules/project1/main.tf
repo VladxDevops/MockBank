@@ -32,7 +32,7 @@ resource "random_password" "keycloak_database_password" {
   special = false
 }
 
-resource "random_password" "keycloak_admin_password" {
+resource "random_password" "keycloak_administrator_password" {
   length  = 16
   special = false
 }
@@ -53,16 +53,16 @@ resource "google_secret_manager_secret_version" "keycloak_database_password_val"
   secret_data = random_password.keycloak_database_password.result
 }
 
-resource "google_secret_manager_secret" "keycloak_admin_password" {
+resource "google_secret_manager_secret" "keycloak_administrator_password" {
   secret_id = var.keycloak_admin_password_secret_id
   replication {
     auto {}
   }
 }
 
-resource "google_secret_manager_secret_version" "keycloak_admin_password_val" {
-  secret      = google_secret_manager_secret.keycloak_admin_password.id
-  secret_data = random_password.keycloak_admin_password.result
+resource "google_secret_manager_secret_version" "keycloak_administrator_password_val" {
+  secret      = google_secret_manager_secret.keycloak_administrator_password.id
+  secret_data = random_password.keycloak_administrator_password.result
 }
 
 # ------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ resource "google_cloud_run_service" "keycloak" {
           value = google_sql_user.keycloak_user.name
         }
         env {
-          name = "KC_DB_PASSWORD"
+          name = "KC_DATABASE_PASSWORD"
           value_from {
             secret_key_ref {
               name = google_secret_manager_secret.keycloak_database_password.secret_id
@@ -195,13 +195,13 @@ resource "google_cloud_run_service" "keycloak" {
         }
         env {
           name  = "KEYCLOAK_ADMIN"
-          value = "admin"
+          value = "adminiadminiadmini"
         }
         env {
-          name = "KEYCLOAK_ADMIN_PASSWORD"
+          name = "KEYCLOAK_ADMINISTRATOR_PASSWORD"
           value_from {
             secret_key_ref {
-              name = google_secret_manager_secret.keycloak_admin_password.secret_id
+              name = google_secret_manager_secret.keycloak_administrator_password.secret_id
               key  = "latest"
             }
           }
@@ -262,7 +262,7 @@ resource "google_cloud_run_service" "keycloak" {
   depends_on = [
     google_service_account.keycloak_sa,
     google_secret_manager_secret_version.keycloak_database_password_val,
-    google_secret_manager_secret_version.keycloak_admin_password_val,
+    google_secret_manager_secret_version.keycloak_administrator_password_val,
     google_secret_manager_secret_version.retail_app_session_secret_version,
     google_artifact_registry_repository.project1_repo,
     google_sql_database.keycloak_schema,
