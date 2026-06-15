@@ -13,7 +13,8 @@ resource "google_project_iam_member" "terraform_sa_roles" {
     "roles/cloudbuild.builds.editor",       # Submit builds
     "roles/storage.admin",                  # Manage GCS buckets (Terraform State)
     "roles/logging.logWriter",              # Write logs
-    "roles/clouddeploy.releaser"            # Create Cloud Deploy releases
+    "roles/clouddeploy.releaser",           # Create Cloud Deploy releases
+    "roles/iam.securityAdmin"               # Manage IAM policies (Security Admin)
   ])
 
   project = var.compute_project_id

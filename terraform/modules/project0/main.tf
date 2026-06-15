@@ -525,6 +525,12 @@ resource "google_project_iam_member" "github_actions_sa_artifactregistry_admin" 
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+# iam.securityAdmin
+resource "google_project_iam_member" "github_actions_sa_iam_security_admin" {
+  project = var.compute_project_id
+  role    = "roles/iam.securityAdmin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
 
 
 
