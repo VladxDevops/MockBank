@@ -223,6 +223,17 @@ gh variable set GCP_COMPUTE_REGION --body "replace with region (e.g., us-central
 *   `GCP_PROJECT_ID`: Your Google Cloud Project ID.
 *   `GCP_COMPUTE_REGION`: The region for deployment (e.g., `us-central1`).
 
+### 2. Manual Workflow Execution
+You can trigger the infrastructure deployment manually from your terminal using the GitHub CLI:
+
+```bash
+# Trigger the CD workflow on the DEV branch
+gh workflow run cd.yaml --ref DEV
+
+# Monitor the live logs
+gh run watch
+```
+
 ### 2. The Deployment Manifests
 *   **`skaffold.yaml`**: This file bridges the gap between your source code and the cloud. It tells Cloud Deploy how to build your image (using the Dockerfile in `BNKprojects/2/container/`) and which Kubernetes-style manifests to render.
 *   **`service.yaml`**: A Knative Service definition for Cloud Run. It configures:

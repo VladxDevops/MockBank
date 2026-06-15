@@ -8,6 +8,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **CI/CD**: Fixed directory pathing error in `gcloud builds submit` within `cd.yaml` by using the current directory `.` relative to the defined `working-directory`.
+- **Documentation**: Added instructions for triggering GitHub Actions workflows via the terminal using the GitHub CLI (`gh`).
 - **CI/CD**: Added `workflow_dispatch` to `cd.yaml` to enable manual workflow execution via the GitHub CLI and UI.
 - **Governance**: Standardized GitHub Secret naming convention: `DEV_GCP_PROJECT_ID` for compute and `GCP_BACKEND_PROJECT_ID` for remote state. Deprecated the ambiguous `GCP_PROJECT_ID` secret.
 - **Security**: Granted `roles/viewer` to the GitHub Actions Service Account in Project 0 to enable Cloud Build log streaming.
