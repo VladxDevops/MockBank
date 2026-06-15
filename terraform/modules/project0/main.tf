@@ -510,6 +510,12 @@ resource "google_project_iam_member" "github_actions_sa_network_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "github_actions_sa_secret_accessor" {
+  project = var.compute_project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 #vpcaccess.user
 resource "google_project_iam_member" "github_actions_sa_vpcaccess_user" {
   project = var.compute_project_id
