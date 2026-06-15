@@ -206,6 +206,7 @@ gh secret set WIF_SERVICE_ACCOUNT --env DEV --body "your-sa-email"
 gh secret set KEYCLOAK_ADMIN_PASSWORD --env DEV --body "your-password"
 gh secret set DEV_GCP_PROJECT_ID --env DEV --body "your-compute-project-id"
 gh secret set GCP_BACKEND_PROJECT_ID --env DEV --body "your-remote-state-project-id"
+gh secret set project1_repository --env DEV --body "placeholder-string" #Value should match the value from the terraform variable with the same name.
 
 ```
 
