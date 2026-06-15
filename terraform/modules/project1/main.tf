@@ -23,11 +23,6 @@ resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
-resource "google_project_iam_member" "github_actions_secret_accessor" {
-  project = var.compute_project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${var.github_actions_sa_id}@${var.compute_project_id}.iam.gserviceaccount.com"
-}
 
 # ------------------------------------------------------------------------------
 # 1. Secrets Generation (Database & Admin Passwords)
