@@ -8,6 +8,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Fixed
+- **Governance**: Standardized GitHub Secret naming convention: `DEV_GCP_PROJECT_ID` for compute and `GCP_BACKEND_PROJECT_ID` for remote state. Deprecated the ambiguous `GCP_PROJECT_ID` secret.
 - **Security**: Granted `roles/viewer` to the GitHub Actions Service Account in Project 0 to enable Cloud Build log streaming.
 - **Documentation**: Clarified the distinction between `GCP_PROJECT_ID` (Compute) and `GCP_BACKEND_PROJECT_ID` (Remote State) to prevent incorrect Artifact Registry path construction in CI/CD.
 - **CI/CD**: Mandated the use of explicit `working-directory` for all GitHub Actions steps to prevent path divergence during multi-stage deployments.
