@@ -16,9 +16,9 @@ terraform {
 # authentication protocol, and there is no implementation of legacy SAML support.
 
 resource "keycloak_realm" "mockbank_realm" {
-  realm             = "mockbank"
-  enabled           = true
-  display_name      = "MockBank Digital"
+  realm                = "mockbank"
+  enabled              = true
+  display_name         = "MockBank Digital"
   registration_allowed = true
 }
 
@@ -29,7 +29,7 @@ resource "keycloak_openid_client" "retail_app" {
   enabled               = true
   access_type           = "CONFIDENTIAL"
   standard_flow_enabled = true
-  
+
   valid_redirect_uris = [
     "http://localhost:3000/*",
     "https://retail-app.mockbank.com/*"
