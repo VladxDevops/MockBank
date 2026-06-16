@@ -18,10 +18,20 @@ if not app.config['SECRET_KEY']:
 
 app.config['SAML_PATH'] = os.path.join(os.path.dirname(__file__), 'certs')
 
+# Pre-load certificates to fail fast and improve performance
+try:
+    SP_CERT = open(os.path.join(app.config['SAML_PATH'], 'sp.crt')).read()
+    SP_KEY = open(os.path.join(app.config['SAML_PATH'], 'sp.key')).read()
+except FileNotFoundError as e:
+    # In production, these should be materialized from Secret Manager
+    print(f"[ERROR] SAML certificates missing: {e}")
+    SP_CERT = SP_KEY = None
+
 def init_saml_auth(req):
     """Initializes the SAML settings based on current environment."""
     keycloak_url = os.getenv('KEYCLOAK_URL', 'http://localhost:8080')
     app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000')
+    idp_cert = os.getenv('IDP_X509_CERT', '')
 
     # Settings dictionary for python3-saml
     settings = {
@@ -37,8 +47,8 @@ def init_saml_auth(req):
                 "url": f"{app_base_url}/saml/sls",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
-            "x509cert": open(os.path.join(app.config['SAML_PATH'], 'sp.crt')).read(),
-            "privateKey": open(os.path.join(app.config['SAML_PATH'], 'sp.key')).read()
+            "x509cert": SP_CERT,
+            "privateKey": SP_KEY
         },
         "idp": {
             "entityId": f"{keycloak_url}/realms/Mockbankrealm",
@@ -46,7 +56,7 @@ def init_saml_auth(req):
                 "url": f"{keycloak_url}/realms/Mockbankrealm/protocol/saml",
                 "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
             },
-            "x509cert": os.getenv('IDP_X509_CERT', '') 
+            "x509cert": idp_cert
         }
     }
     return OneLogin_Saml2_Auth(req, settings)
