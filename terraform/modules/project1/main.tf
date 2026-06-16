@@ -23,6 +23,13 @@ resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
+# Grant the Terraform deployer service account permissions to manage Secret Manager secrets
+resource "google_project_iam_member" "terraform_sa_secretmanager_admin" {
+  project = var.compute_project_id
+  role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
 
 # ------------------------------------------------------------------------------
 # 1. Secrets Generation (Database & Admin Passwords)
@@ -145,7 +152,7 @@ resource "google_project_iam_member" "keycloak_sa_user" {
 resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
   secret_id  = "projects/${var.compute_project_id}/secrets/${var.project1_service_name}-session-secret"
   role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+  member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
   depends_on = [google_secret_manager_secret.retail_app_session_secret]
 }
 

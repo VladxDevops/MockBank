@@ -559,16 +559,9 @@ resource "google_project_iam_member" "github_actions_sa_viewer" {
 
 # --- Shared Secret Placeholders ---
 
-resource "google_secret_manager_secret" "retail_app_session_secret" {
-  project   = var.compute_project_id
-  secret_id = "retail-app-session-secret"
-  replication {
-    auto {}
-  }
-  lifecycle {
-    prevent_destroy = true
-  }
-}
+#retail_app_session_secret already declare at secrets.tf
+
+
 
 resource "google_secret_manager_secret" "mock_secret" {
   project   = var.compute_project_id
