@@ -150,7 +150,7 @@ resource "google_project_iam_member" "keycloak_sa_user" {
 # IAM binding to allow the Keycloak/Retail-App service account to access the secret.
 # Following AGENTS.md protocol using var.keycloak_serv_acc_account_id.
 resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
-  secret_id  = "projects/${var.compute_project_id}/secrets/${var.project1_service_name}-session-secret"
+  secret_id  = google_secret_manager_secret.retail_app_session_secret.id
   role       = "roles/secretmanager.secretAccessor"
   member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
   depends_on = [google_secret_manager_secret.retail_app_session_secret]
@@ -200,10 +200,12 @@ resource "google_cloud_run_service" "keycloak" {
             }
           }
         }
+        # Using admin username from variables for consistency across environments
         env {
           name  = "KEYCLOAK_ADMIN"
-          value = "adminiadminiadmini"
+          value = var.keycloak_admin_username
         }
+        # Password is recovered from the imported Secret Manager secret
         env {
           name = "KEYCLOAK_ADMINISTRATOR_PASSWORD"
           value_from {

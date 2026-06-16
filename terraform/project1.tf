@@ -20,4 +20,7 @@ module "project1" {
 
   #Cloud Run Service account: 
   keycloak_serv_acc_account_id = var.keycloak_serv_acc_account_id
+
+  #keycloak URL PLACEHOLDER for deploying first time: 
+  keycloak_url = var.keycloak_url
 }

@@ -50,3 +50,9 @@ variable "project1_service_name" {
   description = "The name of the service for Project 1, used to derive resource IDs (e.g., retail-app)."
   type        = string
 }
+
+#keycloak_url: 
+variable "keycloak_url" {
+  description = "Keycloak url variable"
+  type = string
+}
