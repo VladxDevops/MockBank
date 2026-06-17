@@ -129,7 +129,7 @@ variable "keycloak_url" {
 #keycloak_client_id
 variable "keycloak_client_id" {
   description = "Keycloak Clien ID"
-  type = string
+  type        = string
 }
 
 variable "atlas_public_key" {

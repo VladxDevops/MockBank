@@ -54,17 +54,17 @@ variable "project1_service_name" {
 #keycloak_url: 
 variable "keycloak_url" {
   description = "Keycloak url variable"
-  type = string
+  type        = string
 }
 
 #keycloak_client_id
 variable "keycloak_client_id" {
   description = "Keycloak Clien ID"
-  type = string
+  type        = string
 }
 
 #keycloak_admin_username
 variable "keycloak_admin_username" {
   description = "Variable for the keycloak admin username"
-  type = string
+  type        = string
 }
