@@ -2,12 +2,31 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [Unreleased]
+### Removed
+- **SAML**: Removed the Legacy Teller Portal implementation (`teller_portal.py`) and associated SAML 2.0 configurations to maintain a strictly OIDC-based greenfield architecture.
+- **Infrastructure**: Removed `teller_portal_certificate_id` from Terraform variables.
+### Fixed
+- **Terraform**: Commented out Keycloak identity resources in `modules/project3/identity.tf` to resolve `Missing required argument` errors (`client_id`, `url`) during initial infrastructure provisioning and imports. This aligns with the "Foundation First" strategy where Identity Service (Project 1) must be live before its configuration (Project 3) can be applied.
+- **Terraform**: Pending to Resolve Keycloak provider initialization errors by ensuring `keycloak_url` and `keycloak_client_id` are populated in `dev.tfvars`.
+- **Terraform**: Pending to Fix `403 Permission Denied` errors during `terraform import` of Keycloak secrets by providing necessary Keycloak provider variables.
+- **Terraform**: Corrected IAM member construction for `retail_app_session_secret_access` to use direct resource attributes (`.id`) instead of string interpolation for robustness.
+- **Terraform**: Updated `google_service_account_iam_member.terraform_sa_impersonate_keycloak` to correctly reference `google_service_account.keycloak_sa.id` for the `service_account_id`. This role should be for the github actions Service account...
+### Changed
+- **Terraform**: Removed duplicate `google_artifact_registry_repository` resource from `project1/main.tf` as the Artifact Registry is now managed centrally in Project 0.
+- **Terraform**: Refactored `google_project_iam_member.keycloak_sa_user` to `google_service_account_iam_member.terraform_sa_impersonate_keycloak` to explicitly grant the Terraform deployer service account impersonation rights on the Keycloak service account. This one should also be for the github service account since now we are deploying via github actions...
+- **Terraform**: Updated `google_cloud_run_service.keycloak` environment variable `KEYCLOAK_ADMIN` to use `var.keycloak_admin_username` for consistency and security.
+- **Documentation**: Updated `CHANGELOG.md` to reflect recent Terraform fixes and architectural refinements.
+- **Documentation**: Reviewed `README.md` for consistency with current project state.
+
+
 ## Usage Guide
 1.  **Update Frequency:** Update this file immediately after any significant architectural decision or code merge.
 2.  **Format:** Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
 ## [Unreleased]
 ### Fixed
+- **Terraform**: Fixed reference to `random_id.db_name_suffix` in `project1/main.tf` to `random_id.database_name_suffix`.
 - **Security**: Granted `roles/secretmanager.viewer` to the GitHub Actions Service Account in Project 0 to allow metadata inspection of secrets during CI/CD.
 - **Security**: Granted `roles/secretmanager.secretAccessor` to the GitHub Actions Service Account in Project 0 to allow CI/CD pipelines to retrieve managed secrets.
 - **CI/CD**: Fixed directory pathing error in `gcloud builds submit` within `cd.yaml` by using the current directory `.` relative to the defined `working-directory`.

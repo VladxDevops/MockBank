@@ -57,7 +57,7 @@ variable "keycloak_admin_password" {
 }
 
 #Teller portal: 
-variable "teller_portal_certificate_id" {
-  description = "Teller portal Certificate ID"
-  type        = string
-}
+#variable "teller_portal_certificate_id" {
+#  description = "Teller portal Certificate ID"
+#  type        = string
+#}

@@ -3,19 +3,8 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 0. Artifact Registry Repository for Keycloak Image
-# ------------------------------------------------------------------------------
-resource "google_artifact_registry_repository" "project1_repo" {
-  project       = var.compute_project_id
-  location      = var.compute_region
-  repository_id = var.project1_repository
-  description   = "Docker repository for Project 1 (Keycloak)"
-  format        = "DOCKER"
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
+# 0. Registry reference
+# Registry is managed by Project 0 foundation. Project 1 consumes it via variable.
 
 resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
   project = var.compute_project_id
@@ -141,10 +130,12 @@ resource "google_project_iam_member" "keycloak_run_admin" {
   member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
-resource "google_project_iam_member" "keycloak_sa_user" {
-  project = var.compute_project_id
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${google_service_account.keycloak_sa.email}"
+# Allow the Terraform Deployer to act as the Keycloak Service Account
+# This facilitates the "Identity Impersonation" protocol from AGENTS.md
+resource "google_service_account_iam_member" "terraform_sa_impersonate_keycloak" {
+  service_account_id = google_service_account.keycloak_sa.id
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
 # IAM binding to allow the Keycloak/Retail-App service account to access the secret.
@@ -272,8 +263,7 @@ resource "google_cloud_run_service" "keycloak" {
     google_service_account.keycloak_sa,
     google_secret_manager_secret_version.keycloak_database_password_val,
     google_secret_manager_secret_version.keycloak_administrator_password_val,
-    google_secret_manager_secret_version.retail_app_session_secret_version,
-    google_artifact_registry_repository.project1_repo,
+    # retail_app_session_secret_version is managed in secrets.tf
     google_sql_database.keycloak_schema,
     google_sql_user.keycloak_user
   ]

@@ -23,4 +23,6 @@ module "project1" {
 
   #keycloak URL PLACEHOLDER for deploying first time: 
   keycloak_url = var.keycloak_url
+  keycloak_client_id = var.keycloak_client_id
+  keycloak_admin_username = var.keycloak_admin_username
 }

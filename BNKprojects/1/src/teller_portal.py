@@ -30,8 +30,13 @@ except FileNotFoundError as e:
 def init_saml_auth(req):
     """Initializes the SAML settings based on current environment."""
     keycloak_url = os.getenv('KEYCLOAK_URL', 'http://localhost:8080')
-    app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000')
-    idp_cert = os.getenv('IDP_X509_CERT', '')
+    app_base_url = os.getenv('APP_BASE_URL', 'http://localhost:5000').rstrip('/')
+    
+    # Ensure the certificate is properly formatted for the SAML library
+    idp_cert = os.getenv('IDP_X509_CERT', '').strip()
+    if idp_cert and not idp_cert.startswith("-----BEGIN CERTIFICATE-----"):
+        # Logic to wrap the raw base64 string if necessary
+        idp_cert = f"-----BEGIN CERTIFICATE-----\n{idp_cert}\n-----END CERTIFICATE-----"
 
     # Settings dictionary for python3-saml
     settings = {

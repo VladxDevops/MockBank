@@ -56,3 +56,15 @@ variable "keycloak_url" {
   description = "Keycloak url variable"
   type = string
 }
+
+#keycloak_client_id
+variable "keycloak_client_id" {
+  description = "Keycloak Clien ID"
+  type = string
+}
+
+#keycloak_admin_username
+variable "keycloak_admin_username" {
+  description = "Variable for the keycloak admin username"
+  type = string
+}

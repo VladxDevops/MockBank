@@ -101,12 +101,13 @@ variable "workforce_identity_federation_provider_id" {
   type        = string
 }
 
-variable "teller_portal_certificate_id" {
-  description = "Teller portal Certificate ID"
-  type        = string
-  default     = "teller-portal-saml-cert"
-}
+#variable "teller_portal_certificate_id" {
+#  description = "Teller portal Certificate ID"
+#  type        = string
+#  default     = "teller-portal-saml-cert"
+#}
 
+#Keycloak: 
 variable "keycloak_admin_username" {
   description = "Username for Keycloak Admin API"
   type        = string
@@ -123,6 +124,12 @@ variable "keycloak_url" {
   description = "The URL of the Keycloak instance"
   type        = string
   default     = ""
+}
+
+#keycloak_client_id
+variable "keycloak_client_id" {
+  description = "Keycloak Clien ID"
+  type = string
 }
 
 variable "atlas_public_key" {
