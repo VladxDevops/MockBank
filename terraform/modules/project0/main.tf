@@ -599,21 +599,7 @@ resource "google_secret_manager_secret" "retail_app_session_secret" {
   }
 }
 
-resource "google_secret_manager_secret" "atlas_public_key" {
-  project   = var.compute_project_id
-  secret_id = "atlas-public-key"
-  replication {
-    auto {}
-  }
-}
-
-resource "google_secret_manager_secret" "atlas_private_key" {
-  project   = var.compute_project_id
-  secret_id = "atlas-private-key"
-  replication {
-    auto {}
-  }
-}
+#atlas_public_key_secret and atlas_private_key_secret are located at terraform/mongo_secrets. 
 
 resource "google_secret_manager_secret" "keycloak_admin_username_placeholder" {
   project   = var.compute_project_id
