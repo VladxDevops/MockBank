@@ -555,6 +555,20 @@ resource "google_project_iam_member" "github_actions_sa_viewer" {
 }
 
 
+# --- Keycloak Service Account Impersonation (Least Privilege) ---
+
+resource "google_service_account_iam_member" "terraform_sa_impersonate_keycloak" {
+  service_account_id = "projects/${var.compute_project_id}/serviceAccounts/${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+resource "google_service_account_iam_member" "github_actions_sa_impersonate_keycloak" {
+  service_account_id = "projects/${var.compute_project_id}/serviceAccounts/${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 
 
 # --- Shared Secret Placeholders ---

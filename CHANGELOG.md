@@ -17,6 +17,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Changed
 - **Terraform**: Removed duplicate `google_artifact_registry_repository` resource from `project1/main.tf` as the Artifact Registry is now managed centrally in Project 0.
 - **Terraform**: Refactored `google_project_iam_member.keycloak_sa_user` to `google_service_account_iam_member.terraform_sa_impersonate_keycloak` to explicitly grant the Terraform deployer service account impersonation rights on the Keycloak service account. This one should also be for the github service account since now we are deploying via github actions...
+- **Terraform**: Refactored Keycloak SA impersonation logic. Replaced project-level IAM with specific `google_service_account_iam_member` resources, granting the `roles/iam.serviceAccountUser` role to both the Terraform Deployer and GitHub Actions service accounts on the `keycloak-sa` identity.
 - **Terraform**: Updated `google_cloud_run_service.keycloak` environment variable `KEYCLOAK_ADMIN` to use `var.keycloak_admin_username` for consistency and security.
 - **Documentation**: Updated `CHANGELOG.md` to reflect recent Terraform fixes and architectural refinements.
 - **Documentation**: Reviewed `README.md` for consistency with current project state.
