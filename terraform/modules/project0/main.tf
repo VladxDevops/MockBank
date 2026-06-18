@@ -583,7 +583,7 @@ resource "google_secret_manager_secret" "keycloak_database_password" {
   }
 }
 
-resource "google_secret_manager_secret" "keycloak_admininstrator_password" {
+resource "google_secret_manager_secret" "keycloak_administrator_password" {
   project   = var.compute_project_id
   secret_id = "keycloak-administrator-password"
   replication {

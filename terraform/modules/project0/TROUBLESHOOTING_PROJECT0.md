@@ -94,6 +94,14 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Resolution:** Run `terraform init` to download and install missing provider plugins.
 *   **Outcome:** Successfully re-initialized the workspace, allowing imports to proceed.
 
+### [2024-05-24] Error: Missing required argument (client_id/url) during Import
+*   **Issue:** `terraform import` fails because the Keycloak provider requires initialization even when targeting unrelated resources.
+*   **Symptoms:** `The argument "client_id" is required, but was not set.`
+*   **Reason:** The `keycloak` provider is declared in the root. Terraform initializes all providers before executing any command.
+*   **Resolution:** Add `keycloak_url` and `keycloak_client_id` to `dev.tfvars`. 
+*   **Placeholder Note:** If the Identity Service (Project 1) is not yet live, use a placeholder URL (e.g., `https://placeholder.run.app`) to satisfy the provider.
+*   **Status:** **RESOLVED**.
+
 ### [2026-05-28] Warning: Missing Backend Configuration
 *   **Issue:** `terraform init` ignored `-backend-config` flags, resulting in local state usage in CI/CD and persistent 409 Conflict errors.
 *   **Symptoms:** `Warning: Missing backend configuration` in logs; Terraform attempting to recreate existing resources.
