@@ -1,9 +1,13 @@
 name: CI - Foundation Validation
 on:
-  push:
+  pull_request:
     branches: [ DEV ]
     paths:
       - 'terraform/**'
+
+concurrency:
+  group: terraform-state-lock-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write

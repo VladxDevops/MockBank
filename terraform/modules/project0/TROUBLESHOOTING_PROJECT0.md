@@ -79,10 +79,6 @@ This document tracks the debugging steps, failed experiments, and successful res
 *   **Failure Scenario:** Locks persist if the Terraform process is killed forcefully or loses network during an `apply`.
 *   **Reason:** A previous `apply` or `plan` was interrupted, or a local run is still active while CI/CD triggered.
 *   **Resolution:** Retrieve the Lock ID from the error message. Run `terraform workspace select projectZERO` followed by `terraform force-unlock <LOCK_ID>`.
-**Resolution:** Retrieve the Lock ID from the error message.
-1. Run `terraform workspace select projectZERO` to ensure the command targets the correct state path.
-2. Run `terraform force-unlock <LOCK_ID>`.
-**Note on "storage: object doesn't exist":** If this error occurs during unlock, it means you are likely in the `default` workspace or your backend is not correctly initialized to point at the `projectZERO` path in the GCS bucket.
 *   **Precaution:** Verify no other engineers are currently running an apply before forcing the unlock.
 *   **Status:** **RESOLVED**.
 
