@@ -575,7 +575,7 @@ resource "google_service_account_iam_member" "github_actions_sa_impersonate_keyc
 
 # --- Shared Secret Placeholders ---
 
-resource "google_secret_manager_secret" "keycloak_db_password" {
+resource "google_secret_manager_secret" "keycloak_database_password" {
   project   = var.compute_project_id
   secret_id = "keycloak-database-password"
   replication {
@@ -583,7 +583,7 @@ resource "google_secret_manager_secret" "keycloak_db_password" {
   }
 }
 
-resource "google_secret_manager_secret" "keycloak_admin_password" {
+resource "google_secret_manager_secret" "keycloak_admininstrator_password" {
   project   = var.compute_project_id
   secret_id = "keycloak-administrator-password"
   replication {
