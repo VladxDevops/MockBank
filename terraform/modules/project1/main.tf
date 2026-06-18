@@ -127,9 +127,9 @@ resource "google_service_account_iam_member" "terraform_sa_impersonate_keycloak"
 # IAM binding to allow the Keycloak/Retail-App service account to access the secret.
 # Following AGENTS.md protocol using var.keycloak_serv_acc_account_id.
 resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
-  secret_id  = "retail-app-session-secret"
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
+  secret_id = "retail-app-session-secret"
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
 
 # ------------------------------------------------------------------------------
