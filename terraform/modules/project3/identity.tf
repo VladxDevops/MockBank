@@ -7,6 +7,7 @@ terraform {
   }
 }
 
+
 # --- Workload Identity Federation for GitHub Actions ---
 # These require a running Keycloak instance to be managed via the Keycloak provider.
 

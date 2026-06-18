@@ -35,7 +35,7 @@ variable "keycloak_serv_acc_account_id" {
   type        = string
 }
 
-#Secret manager:
+###Secret manager:
 variable "keycloak_admin_password_secret_id" {
   description = "name of the secret for the keyCloak admin password"
   type        = string
@@ -51,6 +51,8 @@ variable "project1_service_name" {
   type        = string
 }
 
+
+###Keycloak: 
 #keycloak_url: 
 variable "keycloak_url" {
   description = "Keycloak url variable"

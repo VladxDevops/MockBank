@@ -24,6 +24,8 @@ variable "artifact_registry_repository_id" {
   type        = string
 }
 
+
+###Mongodb Atlas: 
 variable "atlas_public_key" {
   description = "MongoDB Atlas Public API Key"
   type        = string
@@ -35,7 +37,8 @@ variable "atlas_private_key" {
   sensitive   = true
 }
 
-#Keycloak: 
+
+###Keycloak: 
 variable "keycloak_admin_username" {
   description = "Username for Keycloak Admin API"
   type        = string
@@ -59,7 +62,7 @@ variable "keycloak_serv_acc_account_id" {
 }
 
 
-#Github: 
+###Github: 
 variable "github_repository" {
   description = "The GitHub repository in 'username/repo' format"
   type        = string

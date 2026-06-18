@@ -571,9 +571,13 @@ resource "google_service_account_iam_member" "github_actions_sa_impersonate_keyc
 
 
 
+
+
 # --- Shared Secret Placeholders ---
 #Secrets were migrated to project0
 #retail_app_session_secret already declare at secrets.tf
+
+
 
 
 
