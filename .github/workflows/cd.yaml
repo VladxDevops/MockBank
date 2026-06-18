@@ -82,6 +82,7 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform plan \
+            -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project0
@@ -136,6 +137,7 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve \
+            -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project0
@@ -237,6 +239,7 @@ jobs:
         run: |
           # Now we deploy the actual Cloud Run service using the v1 image
           terraform apply -auto-approve \
+            -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project1
@@ -274,12 +277,13 @@ jobs:
 
       - name: Terraform Plan (Project 3)
         working-directory: ./terraform
-        run: terraform plan -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
+        run: terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
 
       - name: Terraform Apply (Project 3)
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve \
+            -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project3

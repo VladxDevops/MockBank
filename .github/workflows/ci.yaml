@@ -80,5 +80,6 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform plan \
+            -input=false \
             -var-file="dev.tfvars" \
             -target=module.project0
