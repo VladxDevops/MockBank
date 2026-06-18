@@ -43,3 +43,5 @@ resource "keycloak_openid_client_scope" "risk_scope" {
   description            = "Access to risk assessment services"
   include_in_token_scope = true
 }
+
+#Habia una vez un barco chiquito...

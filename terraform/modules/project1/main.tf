@@ -66,7 +66,7 @@ resource "google_secret_manager_secret_version" "keycloak_administrator_password
 # ------------------------------------------------------------------------------
 # NOTE: The principal (user or service account) running Terraform needs the "Cloud SQL Admin" (roles/cloudsql.admin) role on the project.
 resource "google_sql_database_instance" "keycloak_db" {
-  name             = "keycloak-db-${random_id.database_name_suffix.hex}"
+  name             = "keycloak-database-${random_id.database_name_suffix.hex}"
   database_version = "POSTGRES_15"
   region           = var.compute_region
 
@@ -268,3 +268,5 @@ resource "google_cloud_run_service" "keycloak" {
     google_sql_user.keycloak_user
   ]
 }
+
+#Habia una vez un barco chiquito...

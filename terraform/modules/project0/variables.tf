@@ -93,3 +93,6 @@ variable "remote_terraform_state_gcp_project" {
   description = "GCP proejct where remote terraform states are stored"
   type        = string
 }
+
+
+#Habia una vez un barco chiquito...

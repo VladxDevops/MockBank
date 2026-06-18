@@ -602,6 +602,9 @@ resource "google_artifact_registry_repository" "repository" {
   depends_on    = [google_project_service.artifact_registry]
 }
 
+
+
+
 # ==============================================================================
 # COST OPTIMIZATION: Regional Load Balancer (Standard Tier)
 # NOTE: For non-PROD environments (DEV/TEST), the Load Balancer is DISABLED.
@@ -676,3 +679,7 @@ resource "google_artifact_registry_repository" "repository" {
 #   load_balancing_scheme = "EXTERNAL_MANAGED"
 #   network_tier          = "STANDARD" # Must match the IP tier
 # }
+
+
+
+#Habia una vez un barco chiquito...
