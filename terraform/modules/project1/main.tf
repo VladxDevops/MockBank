@@ -220,6 +220,10 @@ resource "google_cloud_run_service" "keycloak" {
           value = "true"
         }
         env {
+          name  = "KEYCLOAK_CLIENT_ID"
+          value = var.keycloak_client_id
+        }
+        env {
           name  = "KC_DB_POOL_MAX_SIZE"
           value = "20" #Currently set to 20 due to Cloud SQL Machine Type limitations.
         }
