@@ -8,6 +8,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **CI/CD**: Re-enabling Google Cloud Deploy for Project 2 (Transaction Service). With Project 0 (Foundation) now stable, the pipeline will shift from "Infrastructure-only" back to "Infrastructure + Application Orchestration."
 - **Deployment**: Introduced `skaffold.yaml` requirement for Project 2 to facilitate Cloud Deploy rendering.
 - **Governance**: Standardized Secret Manager IDs for Project 1. Replaced ambiguous placeholders with explicit IDs: `keycloak-database-password` and `keycloak-administrator-password`.
+- **Security**: Granted `contents: write` permission to CI/CD workflows to enable the `git-auto-commit-action` for automated formatting fixes.
 
 ### Fixed
 - **Terraform**: Commented out Keycloak identity resources in `modules/project3/identity.tf` to resolve `Missing required argument` errors (`client_id`, `url`) during initial infrastructure provisioning and imports. This aligns with the "Foundation First" strategy where Identity Service (Project 1) must be live before its configuration (Project 3) can be applied.

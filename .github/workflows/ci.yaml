@@ -9,7 +9,7 @@ concurrency:
   group: terraform-state-lock-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
-permissions:
+permissions: # Grant write permissions for auto-commit action
   contents: write
   id-token: write
 

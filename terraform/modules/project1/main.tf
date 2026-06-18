@@ -144,7 +144,10 @@ resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_ac
   secret_id  = "retail-app-session-secret" # Standardized ID from Project 0
   role       = "roles/secretmanager.secretAccessor"
   member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
+  depends_on = [google_secret_manager_secret.retail_app_session_secret]
 }
+
+
 
 # ------------------------------------------------------------------------------
 # 3. Cloud Run Service (Keycloak)
