@@ -7,10 +7,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Added
 - **CI/CD**: Re-enabling Google Cloud Deploy for Project 2 (Transaction Service). With Project 0 (Foundation) now stable, the pipeline will shift from "Infrastructure-only" back to "Infrastructure + Application Orchestration."
 - **Deployment**: Introduced `skaffold.yaml` requirement for Project 2 to facilitate Cloud Deploy rendering.
+- **Governance**: Standardized Secret Manager IDs for Project 1. Replaced ambiguous placeholders with explicit IDs: `keycloak-database-password` and `keycloak-administrator-password`.
 
 ### Fixed
 - **Terraform**: Commented out Keycloak identity resources in `modules/project3/identity.tf` to resolve `Missing required argument` errors (`client_id`, `url`) during initial infrastructure provisioning and imports. This aligns with the "Foundation First" strategy where Identity Service (Project 1) must be live before its configuration (Project 3) can be applied.
 - **Terraform**: Pending to Resolve Keycloak provider initialization errors by ensuring `keycloak_url` and `keycloak_client_id` are populated in `dev.tfvars`.
+- **Terraform**: Standardized Secret Manager naming convention. Fixed 403 errors by aligning `project1` variable values with the standardized IDs: `keycloak-database-password` and `keycloak-administrator-password`.
+- **Terraform**: Fixed broken IAM reference in `project1/main.tf` for the `retail-app-session-secret`.
 - **Terraform**: Pending to Fix `403 Permission Denied` errors during `terraform import` of Keycloak secrets by providing necessary Keycloak provider variables.
 - **Terraform**: Corrected IAM member construction for `retail_app_session_secret_access` to use direct resource attributes (`.id`) instead of string interpolation for robustness.
 - **Terraform**: Updated `google_service_account_iam_member.terraform_sa_impersonate_keycloak` to correctly reference `google_service_account.keycloak_sa.id` for the `service_account_id`. This role should be for the github actions Service account...

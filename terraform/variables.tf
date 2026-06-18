@@ -62,12 +62,12 @@ variable "project1_repository" {
 }
 
 variable "keycloak_admin_password_secret_id" {
-  description = "The Secret Manager ID for the Keycloak admin password."
+  description = "The Resource ID/Name in Secret Manager for the Keycloak admin password. Set to 'keycloak-administrator-password' for DEV."
   type        = string
 }
 
 variable "keycloak_database_password_secret_id" {
-  description = "The Secret Manager ID for the Keycloak database password."
+  description = "The Resource ID/Name in Secret Manager for the Keycloak database password. Set to 'keycloak-database-password' for DEV."
   type        = string
 }
 

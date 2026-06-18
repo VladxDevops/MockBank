@@ -83,7 +83,6 @@ jobs:
         run: |
           terraform plan \
             -input=false \
-            -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project0
 
@@ -199,7 +198,7 @@ jobs:
         run: |
           # We use the full SHA for the image tag to ensure immutability
           IMAGE_URL="us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/bank-apps-registry/transaction-service:${{ github.sha }}"
-          gcloud builds submit --tag "$IMAGE_URL" .
+          gcloud builds submit --tag "$IMAGE_URL" --file container/Dockerfile .
           # Export the image URL for the release job
           echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
 
