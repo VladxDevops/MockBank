@@ -37,27 +37,13 @@ resource "random_id" "database_name_suffix" {
   byte_length = 4
 }
 
-resource "google_secret_manager_secret" "keycloak_database_password" {
-  secret_id = var.keycloak_database_password_secret_id
-  replication {
-    auto {}
-  }
-}
-
 resource "google_secret_manager_secret_version" "keycloak_database_password_val" {
-  secret      = google_secret_manager_secret.keycloak_database_password.id
+  secret      = var.keycloak_database_password_secret_id
   secret_data = random_password.keycloak_database_password.result
 }
 
-resource "google_secret_manager_secret" "keycloak_administrator_password" {
-  secret_id = var.keycloak_admin_password_secret_id
-  replication {
-    auto {}
-  }
-}
-
 resource "google_secret_manager_secret_version" "keycloak_administrator_password_val" {
-  secret      = google_secret_manager_secret.keycloak_administrator_password.id
+  secret      = var.keycloak_admin_password_secret_id
   secret_data = random_password.keycloak_administrator_password.result
 }
 
@@ -141,7 +127,7 @@ resource "google_service_account_iam_member" "terraform_sa_impersonate_keycloak"
 # IAM binding to allow the Keycloak/Retail-App service account to access the secret.
 # Following AGENTS.md protocol using var.keycloak_serv_acc_account_id.
 resource "google_secret_manager_secret_iam_member" "retail_app_session_secret_access" {
-  secret_id  = google_secret_manager_secret.retail_app_session_secret.id
+  secret_id  = "retail-app-session-secret"
   role       = "roles/secretmanager.secretAccessor"
   member     = "serviceAccount:${google_service_account.keycloak_sa.email}"
 }
@@ -185,7 +171,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "KC_DATABASE_PASSWORD"
           value_from {
             secret_key_ref {
-              name = google_secret_manager_secret.keycloak_database_password.secret_id
+              name = var.keycloak_database_password_secret_id
               key  = "latest"
             }
           }
@@ -200,7 +186,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "KEYCLOAK_ADMINISTRATOR_PASSWORD"
           value_from {
             secret_key_ref {
-              name = google_secret_manager_secret.keycloak_administrator_password.secret_id
+              name = var.keycloak_admin_password_secret_id
               key  = "latest"
             }
           }

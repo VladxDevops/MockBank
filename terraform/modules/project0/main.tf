@@ -574,10 +574,62 @@ resource "google_service_account_iam_member" "github_actions_sa_impersonate_keyc
 
 
 # --- Shared Secret Placeholders ---
-#Secrets were migrated to project0
-#retail_app_session_secret already declare at secrets.tf
 
+resource "google_secret_manager_secret" "keycloak_db_password" {
+  project   = var.compute_project_id
+  secret_id = "keycloak-database-password"
+  replication {
+    auto {}
+  }
+}
 
+resource "google_secret_manager_secret" "keycloak_admin_password" {
+  project   = var.compute_project_id
+  secret_id = "keycloak-administrator-password"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "retail_app_session_secret" {
+  project   = var.compute_project_id
+  secret_id = "retail-app-session-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "atlas_public_key" {
+  project   = var.compute_project_id
+  secret_id = "atlas-public-key"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "atlas_private_key" {
+  project   = var.compute_project_id
+  secret_id = "atlas-private-key"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "keycloak_admin_username_placeholder" {
+  project   = var.compute_project_id
+  secret_id = "keycloak-admin-username"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "keycloak_admin_password_placeholder" {
+  project   = var.compute_project_id
+  secret_id = "keycloak-admin-password"
+  replication {
+    auto {}
+  }
+}
 
 
 
