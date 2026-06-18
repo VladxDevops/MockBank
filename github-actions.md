@@ -56,6 +56,7 @@ Triggered after a successful Infrastructure Apply and Container Build.
 | **Invalid backend argument** | Removed `project` from `-backend-config` as it conflicted with GCS backend defaults. |
 | **Quote stripping in secrets** | Switched to `cat <<'EOF'` to preserve special characters in `tfvars`. |
 | **409 Conflict (State Divergence)** | Implemented `-reconfigure` in `init` to force synchronization with the GCS bucket. |
+| **State Lock Contention** | Implemented `concurrency` groups and `-lock-timeout=20m` to prevent CI/CD collisions. |
 
 ---
 *Last Updated: 2024-05-24*

@@ -8,6 +8,11 @@ on:
       - 'BNKprojects/1/container/**'
       - 'BNKprojects/3/**'
 
+# Prevent concurrent runs from locking the same Terraform state
+concurrency:
+  group: terraform-state-lock-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
   id-token: write
@@ -48,7 +53,8 @@ jobs:
           
           # Explicitly provide backend config to ensure remote state alignment
           terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project"
+            -backend-config="bucket=terraform_state_bckup_bnk-project" \
+            -lock-timeout=20m
 
           
           terraform workspace select -or-create projectZERO
@@ -61,6 +67,7 @@ jobs:
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve \
+            -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project0
 
@@ -151,7 +158,8 @@ jobs:
           EOF
           
           terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project"
+            -backend-config="bucket=terraform_state_bckup_bnk-project" \
+            -lock-timeout=20m
           
           terraform workspace select -or-create projectZERO
 
@@ -160,6 +168,7 @@ jobs:
         run: |
           # Now we deploy the actual Cloud Run service using the v1 image
           terraform apply -auto-approve \
+            -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project1
 
@@ -189,18 +198,20 @@ jobs:
           EOF
           
           terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project"
+            -backend-config="bucket=terraform_state_bckup_bnk-project" \
+            -lock-timeout=20m
           
           terraform workspace select -or-create projectZERO
 
       - name: Terraform Plan (Project 3)
         working-directory: ./terraform
-        run: terraform plan -var-file="dev.tfvars" -target=module.project3
+        run: terraform plan -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
 
       - name: Terraform Apply (Project 3)
         working-directory: ./terraform
         run: |
           terraform apply -auto-approve \
+            -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -target=module.project3
 
