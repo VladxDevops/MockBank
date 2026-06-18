@@ -98,6 +98,33 @@ jobs:
         run: |
           gcloud builds submit --tag "us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ secrets.PROJECT1_REPOSITORY }}/keycloak:v1" .
 
+  build-transaction-service:
+    name: 'Build Transaction Service'
+    runs-on: ubuntu-latest
+    environment: DEV
+    needs: terraform-apply
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Build and Push Image
+        working-directory: BNKprojects/2
+        run: |
+          # We use the full SHA for the image tag to ensure immutability
+          IMAGE_URL="us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/bank-apps-registry/transaction-service:${{ github.sha }}"
+          gcloud builds submit --tag "$IMAGE_URL" .
+          # Export the image URL for the release job
+          echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+
   deploy-identity:
     name: 'Deploy Identity Service'
     runs-on: ubuntu-latest
@@ -122,9 +149,6 @@ jobs:
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
-          
-          # Sanitize Project ID for backend consistency
-          CLEAN_PROJECT=$(echo "${{ secrets.GCP_BACKEND_PROJECT_ID }}" | tr -d '[:space:]' | tr -d '"' | tr -d "'")
           
           terraform init -input=false -reconfigure \
             -backend-config="bucket=terraform_state_bckup_bnk-project"
@@ -179,3 +203,33 @@ jobs:
           terraform apply -auto-approve \
             -var-file="dev.tfvars" \
             -target=module.project3
+
+  release-transaction-service:
+    name: 'Release Transaction Service'
+    runs-on: ubuntu-latest
+    environment: DEV
+    needs: [configure-identity, build-transaction-service]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Create Cloud Deploy Release
+        working-directory: BNKprojects/2
+        run: |
+          # Use the short SHA for the release name and map the image to the skaffold placeholder
+          RELEASE_ID="rel-${GITHUB_SHA:0:7}"
+          IMAGE_URL="us-south1-docker.pkg.dev/${{ secrets.DEV_GCP_PROJECT_ID }}/bank-apps-registry/transaction-service:${{ github.sha }}"
+          
+          gcloud deploy releases create "$RELEASE_ID" \
+            --delivery-pipeline="transaction-service-pipeline" \
+            --region="${{ vars.GCP_COMPUTE_REGION }}" \
+            --images="transaction-service=$IMAGE_URL"

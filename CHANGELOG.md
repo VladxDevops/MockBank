@@ -4,8 +4,10 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Removed
-- **SAML**: Removed the Legacy Teller Portal implementation (`teller_portal.py`) and associated SAML 2.0 configurations to maintain a strictly OIDC-based greenfield architecture.
-- **Infrastructure**: Removed `teller_portal_certificate_id` from Terraform variables.
+### Added
+- **CI/CD**: Re-enabling Google Cloud Deploy for Project 2 (Transaction Service). With Project 0 (Foundation) now stable, the pipeline will shift from "Infrastructure-only" back to "Infrastructure + Application Orchestration."
+- **Deployment**: Introduced `skaffold.yaml` requirement for Project 2 to facilitate Cloud Deploy rendering.
+
 ### Fixed
 - **Terraform**: Commented out Keycloak identity resources in `modules/project3/identity.tf` to resolve `Missing required argument` errors (`client_id`, `url`) during initial infrastructure provisioning and imports. This aligns with the "Foundation First" strategy where Identity Service (Project 1) must be live before its configuration (Project 3) can be applied.
 - **Terraform**: Pending to Resolve Keycloak provider initialization errors by ensuring `keycloak_url` and `keycloak_client_id` are populated in `dev.tfvars`.
@@ -63,7 +65,6 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Security**: Identified missing `roles/iam.workloadIdentityPoolAdmin` and `roles/clouddeploy.admin` for the Deployer Service Account in the bootstrap script, resolving 403 errors during foundation provisioning.
 - **Security**: Granted `roles/iam.serviceAccountCreator` to the shared GitHub Actions service account in Project 0 and updated the `project0firstsrun.sh` bootstrap scripts to support automated service account management.
 - **Infrastructure**: Added a new empty placeholder secret `mock-secret` to the Project 0 foundation module.
-- **CI/CD**: Removed the automated Cloud Deploy release step from `cd.yaml` to focus exclusively on foundational infrastructure (Project 0) stability.
 - **Migration**: Resolved `terraform state push` argument error by explicitly providing the local state path to synchronize the `projectZERO` workspace with the remote GCS backend.
 - **Migration**: Resolved 403 Permission Denied errors in CI/CD by documenting the "Identity Bootstrapping" requirement; foundational Service Accounts require manual `roles/owner` or `roles/editor` on target projects to manage lifecycle resources.
 - **Migration**: Fixed State Divergence by synchronizing local infrastructure state with the `projectZERO` workspace in the remote GCS backend.

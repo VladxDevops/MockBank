@@ -38,10 +38,15 @@ This was a primary source of "Module not installed" and "Backend configuration" 
 - **Validate:** Checks the HCL for internal consistency and syntax.
 - **Plan:** Generates an execution plan. We use `-target=module.project0` to restrict the scope to foundational resources, preventing the runner from trying to plan application-layer resources (like Keycloak or MongoDB Atlas) before the foundation is ready.
 
-### G. Application (`apply`)
+### G. Infrastructure Application (`apply`)
 Located in `cd.yaml`.
 - **Logic:** Runs `terraform apply -auto-approve`.
 - **Constraint:** Like the plan step, it targets the `project0` module to ensure a "Foundation First" deployment strategy.
+
+### H. Release Orchestration (Cloud Deploy)
+Triggered after a successful Infrastructure Apply and Container Build.
+- **Logic:** Runs `gcloud deploy releases create`.
+- **Role:** This separates infrastructure state from application versioning, allowing for safe rollbacks and promotion from DEV to PROD without touching Terraform code.
 
 ## 3. Resolved Issues Recap
 
