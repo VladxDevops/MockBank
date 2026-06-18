@@ -21,5 +21,6 @@ module "project0" {
   workforce_identity_federation_provider_id = var.workforce_identity_federation_provider_id
   terraform_deployer_service_account        = var.terraform_deployer_service_account
   remote_terraform_state_gcp_project        = var.remote_terraform_state_gcp_project
+  keycloak_serv_acc_account_id              = var.keycloak_serv_acc_account_id
 }
 
