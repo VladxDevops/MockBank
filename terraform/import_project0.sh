@@ -84,18 +84,24 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
   module.project0.google_compute_global_forwarding_rule.forwarding_rule \
   projects/${PROJECT_ID}/global/forwardingRules/bank-frontend-rule
 
-# 16. Project 1 Secrets
+
+
+# 16. Project 1 Secrets (Managed by Project 0) import the following 3 secrets: 
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project1.google_secret_manager_secret.keycloak_db_password \
+  module.project0.google_secret_manager_secret.keycloak_database_password \
   projects/${PROJECT_ID}/secrets/keycloak-database-password
 
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project1.google_secret_manager_secret.keycloak_admin_password \
+  module.project0.google_secret_manager_secret.keycloak_administrator_password \
   projects/${PROJECT_ID}/secrets/keycloak-administrator-password
 
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project1.google_secret_manager_secret.retail_app_session_secret \
+  module.project0.google_secret_manager_secret.retail_app_session_secret \
   projects/${PROJECT_ID}/secrets/retail-app-session-secret
+
+
+
+
 
 # 17. Project 1 Service Account
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \

@@ -155,7 +155,9 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [0.8.1] - 2026-06-18
 ### Fixed
-- **IAM Permissions**: Granted cross-project `roles/secretmanager.viewer` and `roles/secretmanager.secretAccessor` to the GitHub Actions and Terraform Deployer service accounts. This resolves 403 Forbidden errors when Terraform attempts to refresh secret states residing in the remote foundation project (`bankproject-486308`).
+- **IAM Permissions**: Granted cross-project `roles/secretmanager.viewer` and `roles/secretmanager.secretAccessor` to the GitHub Actions and Terraform Deployer service accounts.
+- **IAM Permissions**: Granted `roles/cloudsql.admin` to the GitHub Actions and Terraform Deployer service accounts to resolve 403 authorization errors during Cloud SQL instance creation.
+- **State Management**: Updated `import_project0.sh` to fix module addressing errors and established a state cleanup protocol (`terraform state rm`) to resolve 404 (Secret Not Found) and 409 (Resource Already Exists) errors.
 
 ## [0.8.0] - 2026-05-28
 ### Added

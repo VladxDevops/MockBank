@@ -374,6 +374,12 @@ resource "google_project_iam_member" "terraform_sa_storage_admin" {
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
+resource "google_project_iam_member" "terraform_sa_cloudsql_admin" {
+  project = var.compute_project_id
+  role    = "roles/cloudsql.admin"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
 resource "google_project_iam_member" "terraform_sa_remote_project_iam_admin" {
   project = var.remote_terraform_state_gcp_project
   role    = "roles/resourcemanager.projectIamAdmin"
@@ -524,6 +530,12 @@ resource "google_project_iam_member" "github_actions_iam_devops" {
 resource "google_project_iam_member" "github_actions_sa_secret_manager_admin" {
   project = var.compute_project_id
   role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_sa_cloudsql_admin" {
+  project = var.compute_project_id
+  role    = "roles/cloudsql.admin"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
