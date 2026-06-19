@@ -171,7 +171,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "KC_DATABASE_PASSWORD"
           value_from {
             secret_key_ref {
-              name = var.keycloak_database_password_secret_id
+              name = "keycloak-database-password"
               key  = "latest"
             }
           }
@@ -186,7 +186,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "KEYCLOAK_ADMINISTRATOR_PASSWORD"
           value_from {
             secret_key_ref {
-              name = var.keycloak_admin_password_secret_id
+              name = "keycloak-administrator-password"
               key  = "latest"
             }
           }
@@ -216,7 +216,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "SESSION_SECRET"
           value_from {
             secret_key_ref {
-              name = var.retail_app_session_secret_id
+              name = "retail-app-session-secret"
               key  = "latest"
             }
           }
