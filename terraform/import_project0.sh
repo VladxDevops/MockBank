@@ -2,7 +2,7 @@
 # Script to import existing Project 0 / Foundation resources into the current Terraform state.
 # This prevents "already exists" errors during apply.
 
-set -e
+# set -e (Disabled to allow passing already-managed resources)
 
 PROJECT_ID="dev-mockbank"
 REGION="us-south1"
@@ -39,10 +39,10 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
   module.project0.google_compute_router_nat.nat_gateway \
   ${PROJECT_ID}/${REGION}/main-router/main-nat-gateway
 
-# 7. Global Load Balancer IP
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_global_address.bank_lb_ip \
-  projects/${PROJECT_ID}/global/addresses/bank-platform-lb-ip
+# 7. Global Load Balancer IP (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_global_address.bank_lb_ip \
+#   projects/${PROJECT_ID}/global/addresses/bank-platform-lb-ip
 
 # 8. Private Service Access Peering Range
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
@@ -59,30 +59,30 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
   module.project0.google_compute_firewall.allow_egress \
   projects/${PROJECT_ID}/global/firewalls/main-vpc-allow-egress
 
-# 11. Cloud Run Serverless NEG
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_region_network_endpoint_group.transaction_svc_neg \
-  projects/${PROJECT_ID}/regions/${REGION}/networkEndpointGroups/transaction-svc-neg
+# 11. Cloud Run Serverless NEG (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_region_network_endpoint_group.transaction_svc_neg \
+#   projects/${PROJECT_ID}/regions/${REGION}/networkEndpointGroups/transaction-svc-neg
 
-# 12. Backend Service
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_backend_service.transaction_backend \
-  projects/${PROJECT_ID}/global/backendServices/transaction-backend
+# 12. Backend Service (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_backend_service.transaction_backend \
+#   projects/${PROJECT_ID}/global/backendServices/transaction-backend
 
-# 13. URL Map
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_url_map.bank_url_map \
-  projects/${PROJECT_ID}/global/urlMaps/bank-platform-url-map
+# 13. URL Map (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_url_map.bank_url_map \
+#   projects/${PROJECT_ID}/global/urlMaps/bank-platform-url-map
 
-# 14. Target HTTP Proxy
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_target_http_proxy.http_proxy \
-  projects/${PROJECT_ID}/global/targetHttpProxies/bank-http-proxy
+# 14. Target HTTP Proxy (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_target_http_proxy.http_proxy \
+#   projects/${PROJECT_ID}/global/targetHttpProxies/bank-http-proxy
 
-# 15. Global Forwarding Rule
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project0.google_compute_global_forwarding_rule.forwarding_rule \
-  projects/${PROJECT_ID}/global/forwardingRules/bank-frontend-rule
+# 15. Global Forwarding Rule (Disabled for non-PROD)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project0.google_compute_global_forwarding_rule.forwarding_rule \
+#   projects/${PROJECT_ID}/global/forwardingRules/bank-frontend-rule
 
 
 
@@ -103,19 +103,19 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
 
 
 
-# 17. Project 1 Service Account
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project1.google_service_account.keycloak_sa \
-  projects/${PROJECT_ID}/serviceAccounts/keycloak-service-account@${PROJECT_ID}.iam.gserviceaccount.com
+# 17. Project 1 Service Account (Commented out in root)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project1.google_service_account.keycloak_sa \
+#   projects/${PROJECT_ID}/serviceAccounts/keycloak-service-account@${PROJECT_ID}.iam.gserviceaccount.com
 
-# 18. Project 3 Workload Identity Pool
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project3.google_iam_workload_identity_pool.github_pool \
-  projects/${PROJECT_ID}/locations/global/workloadIdentityPools/github-pool
+# 18. Project 3 Workload Identity Pool (Commented out in root)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project3.google_iam_workload_identity_pool.github_pool \
+#   projects/${PROJECT_ID}/locations/global/workloadIdentityPools/github-pool
 
-# 19. Project 3 Service Account
-terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-  module.project3.google_service_account.github_actions_sa \
-  projects/${PROJECT_ID}/serviceAccounts/sa-github-actions@${PROJECT_ID}.iam.gserviceaccount.com
+# 19. Project 3 Service Account (Commented out in root)
+# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+#   module.project3.google_service_account.github_actions_sa \
+#   projects/${PROJECT_ID}/serviceAccounts/sa-github-actions@${PROJECT_ID}.iam.gserviceaccount.com
 
 echo "Import complete!"
