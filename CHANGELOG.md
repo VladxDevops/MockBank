@@ -153,7 +153,11 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Security
 - **IAM**: Enforced Least Privilege by mapping specific roles (Cloud Build Editor, Cloud Deploy Releaser) to the ephemeral WIF principal. 
 
-## [2.4.0] - 2024-05-24
+## [0.8.1] - 2026-06-18
+### Fixed
+- **IAM Permissions**: Granted cross-project `roles/secretmanager.viewer` and `roles/secretmanager.secretAccessor` to the GitHub Actions and Terraform Deployer service accounts. This resolves 403 Forbidden errors when Terraform attempts to refresh secret states residing in the remote foundation project (`bankproject-486308`).
+
+## [0.8.0] - 2026-05-28
 ### Added
 - **GitOps**: Initialized Keycloak Terraform provider and migrated the `AltmtrkBank` realm to HCL.
 - **GitOps**: Implemented SAML 2.0 integration for `teller-portal` with automated self-signed certificate generation and Secret Manager storage.
