@@ -161,7 +161,7 @@ resource "google_cloud_run_service" "keycloak" {
         }
         env {
           name  = "KC_DB_URL"
-          value = "jdbc:postgresql://${google_sql_database_instance.keycloak_db.private_ip_address}:5432/${google_sql_database.keycloak_schema.name}"
+          value = "jdbc:postgresql://${google_sql_database_instance.keycloak_db.private_ip_address}:5432/${google_sql_database.keycloak_schema.name}?sslmode=disable"
         }
         env {
           name  = "KC_DB_USERNAME"
@@ -230,10 +230,10 @@ resource "google_cloud_run_service" "keycloak" {
         }
 
         startup_probe {
-          initial_delay_seconds = 60
-          timeout_seconds       = 5
+          initial_delay_seconds = 120
+          timeout_seconds       = 10
           period_seconds        = 10
-          failure_threshold     = 20
+          failure_threshold     = 30
           http_get {
             path = "/health/live"
             port = 8080
