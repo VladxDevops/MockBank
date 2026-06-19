@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.0"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = ">= 3.0.0"
+    }
 #    keycloak = {
 #      source  = "mrparkers/keycloak"
 #      version = ">= 4.4.0"
