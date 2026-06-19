@@ -108,14 +108,24 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
 #   module.project1.google_service_account.keycloak_sa \
 #   projects/${PROJECT_ID}/serviceAccounts/keycloak-service-account@${PROJECT_ID}.iam.gserviceaccount.com
 
-# 18. Project 3 Workload Identity Pool (Commented out in root)
-# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-#   module.project3.google_iam_workload_identity_pool.github_pool \
-#   projects/${PROJECT_ID}/locations/global/workloadIdentityPools/github-pool
+# 18. Workload Identity Pool (Now in module.project0)
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_iam_workload_identity_pool.github_pool \
+  projects/${PROJECT_ID}/locations/global/workloadIdentityPools/mockbank-deadpool-id
 
-# 19. Project 3 Service Account (Commented out in root)
-# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-#   module.project3.google_service_account.github_actions_sa \
-#   projects/${PROJECT_ID}/serviceAccounts/sa-github-actions@${PROJECT_ID}.iam.gserviceaccount.com
+# 18b. Workload Identity Provider (Now in module.project0)
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_iam_workload_identity_pool_provider.github_provider \
+  projects/${PROJECT_ID}/locations/global/workloadIdentityPools/mockbank-deadpool-id/providers/mockbank-provider-id
+
+# 19. GitHub Actions Service Account (Now in module.project0)
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_service_account.github_actions_sa \
+  projects/${PROJECT_ID}/serviceAccounts/sa-github-actions@${PROJECT_ID}.iam.gserviceaccount.com
+
+# 20. Artifact Registry (Now in module.project0)
+terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
+  module.project0.google_artifact_registry_repository.repository \
+  projects/${PROJECT_ID}/locations/${REGION}/repositories/dev-mongodb-atlas-container
 
 echo "Import complete!"
