@@ -216,7 +216,7 @@ resource "google_cloud_run_service" "keycloak" {
           name = "SESSION_SECRET"
           value_from {
             secret_key_ref {
-              name = "retail-app-session-secret"
+              name = var.retail_app_session_secret_id
               key  = "latest"
             }
           }

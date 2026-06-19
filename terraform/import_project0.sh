@@ -103,10 +103,10 @@ terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
 
 
 
-# 17. Project 1 Service Account (Commented out in root)
-# terraform import -var-file="dev.tfvars" -var="bootstrap=true" \
-#   module.project1.google_service_account.keycloak_sa \
-#   projects/${PROJECT_ID}/serviceAccounts/keycloak-service-account@${PROJECT_ID}.iam.gserviceaccount.com
+# 17. Keycloak Service Account (Now in module.project1)
+terraform import -var-file="dev.tfvars" \
+  module.project1.google_service_account.keycloak_sa \
+  projects/${PROJECT_ID}/serviceAccounts/keycloak-service-account@${PROJECT_ID}.iam.gserviceaccount.com
 
 # 18. Workload Identity Pool (Now in module.project0)
 terraform import -var-file="dev.tfvars" -var="bootstrap=true" \

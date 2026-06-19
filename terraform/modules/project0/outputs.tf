@@ -21,3 +21,15 @@ output "private_vpc_connection" {
 output "github_actions_sa_email" {
   value = google_service_account.github_actions_sa.email
 }
+
+output "keycloak_database_password_secret_id" {
+  value = google_secret_manager_secret.keycloak_database_password.id
+}
+
+output "keycloak_admin_password_secret_id" {
+  value = google_secret_manager_secret.keycloak_administrator_password.id
+}
+
+output "retail_app_session_secret_id" {
+  value = google_secret_manager_secret.retail_app_session_secret.id
+}

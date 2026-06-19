@@ -6,9 +6,10 @@ module "project1" {
   terraform_deployer_service_account   = var.terraform_deployer_service_account
   compute_project_id                   = var.compute_project_id
   project1_repository                  = var.project1_repository
-  keycloak_admin_password_secret_id    = var.keycloak_admin_password_secret_id
-  keycloak_database_password_secret_id = var.keycloak_database_password_secret_id
+  keycloak_admin_password_secret_id    = module.project0.keycloak_admin_password_secret_id
+  keycloak_database_password_secret_id = module.project0.keycloak_database_password_secret_id
   project1_service_name                = var.project1_service_name
+  retail_app_session_secret_id         = module.project0.retail_app_session_secret_id
 
 
   # Pass network details to the module using foundation outputs
