@@ -47,7 +47,11 @@ Run the script to see the menu, or use arguments for direct execution:
 - **Validates:** Cloud Run ingress permissions and IAM policy bindings.
 
 ## Troubleshooting
-If tests fail, the script will automatically output the last 100 lines of container logs filtered for errors.
+If tests fail, the script will automatically output the last 100 lines of container logs filtered for errors. Refer to [TROUBLESHOOTING_SCRIPTS.md](../TROUBLESHOOTING_SCRIPTS.md) for detailed workarounds:
 - **403 Forbidden**: Check if the caller has `roles/run.invoker` permission.
 - **JDBC Timeout**: Often occurs on `db-f1-micro` instances during startup.
 - **Proxy Port**: Ensure no other process is using port `8888`.
+- **LOGIN_ERROR / user_not_found**: Mismatch in administrative credentials. Refer to Section 9 of the troubleshooting guide.
+- **Mockbankrealm not found (ERROR_NOT_FOUND)**: Upgraded database is empty. Refer to Section 10 of the troubleshooting guide to re-import the realm.
+- **Password policy not met (400 Bad Request)**: Seed users have passwords violating realm policies. Refer to Section 11 of the troubleshooting guide.
+- **Proxy connection timeouts**: Keycloak container is cold starting. Refer to Section 12 of the troubleshooting guide.

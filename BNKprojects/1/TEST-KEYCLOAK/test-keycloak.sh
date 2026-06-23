@@ -91,8 +91,8 @@ setup_method_a() {
     
     echo "Waiting for proxy to initialize (PID: $PROXY_PID)..."
 
-    # Robust check: Wait up to 30 seconds for health endpoint
-    for i in {1..30}; do
+    # Robust check: Wait up to 90 seconds for health endpoint
+    for i in {1..90}; do
         if curl -s --max-time 2 "http://localhost:$PROXY_PORT/health/live" | grep -q "UP"; then
             echo -e "\e[32mSUCCESS: Proxy is active and Keycloak is healthy.\e[0m"
             return 0

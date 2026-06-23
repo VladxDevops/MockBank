@@ -93,3 +93,46 @@ bash -x ./test-keycloak.sh validate
         2. Update your `.env` to use the local proxy:
            `KEYCLOAK_URL=http://localhost:8888`
         3. The proxy will automatically inject the OIDC token from your `gcloud` session.
+
+## 9. Admin Username Mismatches ("user_not_found" or "LOGIN_ERROR")
+*   **Symptom:** Keycloak container logs report `type="LOGIN_ERROR", error="user_not_found"` when running the verification script (Option 1).
+*   **Cause:** The admin username variable `ADMIN_USERNAME` in `test-env.sh` (usually defaulting to `"admin"`) does not match the actual administrative username configured during deployment (`KEYCLOAK_ADMIN` environment variable on Cloud Run).
+*   **Fix:** Do not hardcode credentials. Instead, retrieve the active admin username from the deployed service via the following command, and update `ADMIN_USERNAME` in `test-env.sh` to match it:
+    ```bash
+    gcloud run services describe keycloak-service --region us-south1 --format="value(spec.template.spec.containers[0].env.KEYCLOAK_ADMIN)"
+    ```
+
+## 10. Missing Realm ("Mockbankrealm not found")
+*   **Symptom:** Verification script output reports `ERROR: Realm 'Mockbankrealm' not found. Status: ERROR_NOT_FOUND`.
+*   **Cause:** Following database maintenance, upgrades, or state cleanups (such as running `fix_sql_state.sh`), the database instance is recreated and starts completely empty. Keycloak initializes a fresh schema but does not import the custom realm because the CI/CD pipeline (`.github/workflows/cd.yaml`) replaces `realm-export.json` with a placeholder realm (`AltmtrkBank`) to prevent baking configuration or credentials into the container image.
+*   **Fix:** Manually re-import the realm configuration using the Admin API via proxy:
+    1. Update default user passwords in `realm-export.json` to be policy-compliant (see Scenario 11).
+    2. Start the proxy and retrieve an administrative token (using the active admin username and password from Secret Manager).
+    3. Import the realm using `curl`:
+       ```bash
+       # Extract the JSON object from the single-element array in realm-export.json
+       jq '.[0]' realm-export.json > realm_import.json
+       
+       # POST the configuration to the Keycloak Admin API
+       curl -X POST \
+         -H "Authorization: Bearer $TKN" \
+         -H "Content-Type: application/json" \
+         -d @realm_import.json \
+         "http://localhost:8888/admin/realms"
+       ```
+
+## 11. Realm Import Rejected ("Password policy not met")
+*   **Symptom:** Importing the realm returns `HTTP/1.1 400 Bad Request` with `{"errorMessage":"Password policy not met. See logs for details"}`.
+*   **Cause:** The `Mockbankrealm` definition contains a strict password policy: `length(8) and notUsername(true) and notEmail(true) and specialChars(1) and digits(1) and upperCase(1) and lowerCase(1)`. However, default test users (`adminadminadmin`, `teller`, `customer`) listed in `realm-export.json` are configured with simple passwords like `"password"`, causing the schema import validation to fail.
+*   **Fix:** Update the passwords of the mock users in `realm-export.json` to a secure, compliant password string (e.g., `"P@ssword123"` which satisfies the minimum length, casing, digit, and special character checks) before performing the import. Do not use plain text default passwords that violate policies.
+
+## 12. Proxy Connection Timeout (Cold Starts)
+*   **Symptom:** Verification script fails with `ERROR: Proxy or Keycloak health check failed via proxy`.
+*   **Cause:** Cloud Run is configured with a minimum instance count of `0`. When idle, the service scales down. Waking the container (cold start) and setting up database pools can take longer than the default 30-second wait loop in `test-keycloak.sh`.
+*   **Fix:** Increase the connection timeout wait loop range in `test-keycloak.sh` (e.g., to `{1..90}` seconds) to allow the container sufficient time to perform a cold start and report health `UP`.
+
+## 13. Prevention Protocols (Operational Standards)
+To prevent these authentication and configuration issues in future database migrations:
+1. **Dynamic Environment Files:** Never commit or hardcode credentials. Generate the local testing `test-env.sh` dynamically using metadata from GCP (such as querying Cloud Run configuration and retrieving secrets from Secret Manager).
+2. **Post-Recreation Checklist:** Whenever `terraform apply` or `fix_sql_state.sh` is executed to recreate the SQL instance, immediately execute the Keycloak realm import flow. Treat database recreation as a destructive task requiring active configuration seeding.
+3. **Keep Passwords Policy-Compliant:** Always ensure default user records in the version-controlled `realm-export.json` contain credentials that meet the password complexity rules defined in the same realm.
