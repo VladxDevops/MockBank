@@ -57,7 +57,7 @@ resource "google_sql_database_instance" "keycloak_db" {
   region           = var.compute_region
 
   settings {
-    tier = "db-f1-micro" # Use micro for dev/cost savings
+    tier = "db-g1-small" # Upgraded for stability and to prevent JDBC acquisition timeouts
 
     ip_configuration {
       ipv4_enabled    = false # Disable public IP for security.
