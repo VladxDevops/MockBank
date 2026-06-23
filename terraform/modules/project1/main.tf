@@ -170,7 +170,7 @@ resource "google_cloud_run_service" "keycloak" {
           value = google_sql_user.keycloak_user.name
         }
         env {
-          name = "KC_DATABASE_PASSWORD"
+          name = "KC_DB_PASSWORD"
           value_from {
             secret_key_ref {
               name = "keycloak-database-password"
@@ -185,7 +185,7 @@ resource "google_cloud_run_service" "keycloak" {
         }
         # Password is recovered from the imported Secret Manager secret
         env {
-          name = "KEYCLOAK_ADMINISTRATOR_PASSWORD"
+          name = "KEYCLOAK_ADMIN_PASSWORD"
           value_from {
             secret_key_ref {
               name = "keycloak-administrator-password"
