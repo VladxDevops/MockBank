@@ -160,3 +160,27 @@ If the deployment still fails after applying the dependencies:
        ```
        Then navigate to `http://localhost:8080`.
     3. **Transition to OIDC (Public Access):** When the `retail-app` needs to redirect users for login, the service will eventually require public access, but this should be gated by Cloud Armor in a production-ready environment.
+
+### Scenario J: State Conflict / "Resource Already Exists" (409 Conflict)
+*   **Symptom**: `terraform apply` fails with `Error 409: Service account xxx already exists` or `Workload Identity Pool xxx already exists`.
+*   **Cause**: Terraform state divergence. The resource exists in GCP but is missing from the local/GCS state file (common after manual console actions or failed imports).
+*   **Fix**: Use the `import_project0.sh` script (or manual `terraform import`) to force-align the state with the live GCP ID.
+    ```bash
+    terraform import module.project0.google_service_account.xxx projects/PROJECT_ID/serviceAccounts/xxx@...
+    ```
+
+### Scenario K: Secret Manager 404 / "Not Found" on Version Creation
+*   **Symptom**: `Error creating SecretVersion: got HTTP response code 404... /v1/secret-name:addVersion?alt=json was not found`.
+*   **Cause**: The Terraform provider is defaulting to the wrong project context or cannot find the parent secret because only the short-name ID was provided.
+*   **Fix**: Reference the **full resource ID** (passed via module outputs) in the `secret` attribute of the version resource to ensure absolute anchoring.
+    ```hcl
+    secret = module.project0.secret_id # Resolves to projects/P/secrets/S
+    ```
+
+### Scenario L: Startup Probe Failure (Ready:False) after Networking Success
+*   **Symptom**: Cloud Run shows `Ready:False` with `HealthCheckContainerError` despite VPC and DB connection variables being correct.
+*   **Cause**: Application-layer initialization failure (e.g., database password mismatch after random_password regeneration) or SSL handshake hangs.
+*   **Fix**: 
+    1. Temporarily append `?sslmode=disable` to the `KC_DB_URL` to rule out SSL handshake issues.
+    2. Increase `initial_delay_seconds` (120+) and `failure_threshold` (30+) in the `startup_probe` configuration.
+    3. Check stdout/stderr logs in Cloud Console for `Access denied` errors or database connection timeouts.

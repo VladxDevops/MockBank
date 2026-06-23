@@ -153,11 +153,21 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Security
 - **IAM**: Enforced Least Privilege by mapping specific roles (Cloud Build Editor, Cloud Deploy Releaser) to the ephemeral WIF principal. 
 
-## [0.8.1] - 2026-06-18
+## [0.8.2] - 2026-06-19 (In Progress)
 ### Fixed
-- **IAM Permissions**: Granted cross-project `roles/secretmanager.viewer` and `roles/secretmanager.secretAccessor` to the GitHub Actions and Terraform Deployer service accounts.
-- **IAM Permissions**: Granted `roles/cloudsql.admin` to the GitHub Actions and Terraform Deployer service accounts to resolve 403 authorization errors during Cloud SQL instance creation.
-- **State Management**: Updated `import_project0.sh` to fix module addressing errors and established a state cleanup protocol (`terraform state rm`) to resolve 404 (Secret Not Found) and 409 (Resource Already Exists) errors.
+- **Infrastructure**: Resolved `409 Already Exists` errors by correctly importing the Workload Identity Pool (`mockbank-deadpool-id`) and Provider (`mockbank-provider-id`) into the `projectZERO` workspace.
+- **State Mgmt**: Performed a major state purge of redundant root-level resources and legacy Project 2/MongoDB entries that were blocking `terraform apply` via `prevent_destroy` policies.
+- **Secrets**: Resolved `404 Not Found` errors for secret versions by refactoring `module.project1` to use absolute resource IDs for parent secrets.
+- **Cloud Run**: Resolved `400 Bad Request` errors by reverting `secret_key_ref` names to alphanumeric-only IDs, while maintaining absolute targeting for the underlying Terraform resources.
+
+### Changed
+- **Workspace**: Synchronized the `projectZERO` workspace with the remote GCS state to reconcile lineage and history mismatches between the runner and local development.
+- **Service Tuning**: (Attempted) Increased Keycloak startup probe delay (120s) and failure threshold (30) to accommodate database initialization.
+- **Connectivity**: (Attempted) Appended `sslmode=disable` to the Keycloak database URL as a temporary diagnostic measure for VPC connectivity.
+
+### Pending
+- **Application Startup**: Keycloak continues to fail its startup probe (`Ready:False`). Initial logs indicate a potential internal configuration or credential handshake issue despite established networking and IAM.
+- **Security**: Permanent resolution for SSL/TLS requirements in the Identity Service VPC connection.
 
 ## [0.8.0] - 2026-05-28
 ### Added
