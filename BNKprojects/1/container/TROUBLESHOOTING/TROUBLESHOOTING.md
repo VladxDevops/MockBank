@@ -184,3 +184,27 @@ If the deployment still fails after applying the dependencies:
     1. Temporarily append `?sslmode=disable` to the `KC_DB_URL` to rule out SSL handshake issues.
     2. Increase `initial_delay_seconds` (120+) and `failure_threshold` (30+) in the `startup_probe` configuration.
     3. Check stdout/stderr logs in Cloud Console for `Access denied` errors or database connection timeouts.
+
+### Scenario M: 403 Forbidden after Manual SQL Instance Deletion
+*   **Symptom:** `terraform plan` or GitHub Actions fails with `Error 403: Forbidden` when refreshing the state of Cloud SQL databases or users.
+*   **Cause:** The parent SQL instance was manually deleted from the GCP Console. Terraform's state still tracks child resources (database, user) and fails when trying to read them from a non-existent parent.
+*   **Fix:** 
+    1. Select the correct workspace (e.g., `projectZERO`).
+    2. Manually remove the ghost resources from the state:
+       ```bash
+       terraform state rm module.project1.google_sql_database.keycloak_schema
+       terraform state rm module.project1.google_sql_user.keycloak_user
+       terraform state rm module.project1.google_sql_database_instance.keycloak_db
+       ```
+    3. Taint the random suffix to force a new instance name (avoids the name reuse cooldown):
+       ```bash
+       terraform taint module.project1.random_id.database_name_suffix
+       ```
+    4. Re-run `terraform apply`.
+
+### Scenario N: JDBC Connection Failure (SCRAM Auth Error)
+*   **Symptom:** Logs show `Failed to obtain JDBC connection` and `The server requested SCRAM-based authentication, but no password was provided`.
+*   **Cause:** Incorrect environment variable names for the database password in the Cloud Run configuration. Keycloak Quarkus (v24+) requires `KC_DB_PASSWORD`.
+*   **Fix:** Ensure the following environment variable names are correctly set in `main.tf`:
+    - **Database Password:** `KC_DB_PASSWORD` (NOT `KC_DATABASE_PASSWORD`).
+    - **Admin Password:** `KEYCLOAK_ADMIN_PASSWORD` (NOT `KEYCLOAK_ADMINISTRATOR_PASSWORD`).

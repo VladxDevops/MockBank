@@ -2,6 +2,14 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [0.8.3] - 2026-06-23
+### Fixed
+- **Infrastructure**: Resolved persistent `403 Forbidden` errors in Project 1 by cleaning up ghost SQL resources from the Terraform state after manual deletion of the parent instance.
+- **State Mgmt**: Tainted `random_id.database_name_suffix` to force creation of a new Cloud SQL instance name, bypassing the GCP name reuse cooldown.
+- **Identity Service**: Fixed "Failed to obtain JDBC connection" error in Keycloak Cloud Run by correcting environment variable names to match Quarkus standards:
+    - Renamed `KC_DATABASE_PASSWORD` to `KC_DB_PASSWORD`.
+    - Renamed `KEYCLOAK_ADMINISTRATOR_PASSWORD` to `KEYCLOAK_ADMIN_PASSWORD`.
+
 ## [Unreleased]
 ### Removed
 ### Added
