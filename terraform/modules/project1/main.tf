@@ -160,7 +160,7 @@ resource "google_cloud_run_service" "keycloak" {
           value = "postgres"
         }
         env {
-          name  = "KC_DB_URL"
+          name = "KC_DB_URL"
           # NOTE: sslmode=disable is a TEMPORARY diagnostic measure for VPC connectivity debugging.
           # In PROD, this must be switched to sslmode=verify-full or Cloud SQL Auth Proxy.
           value = "jdbc:postgresql://${google_sql_database_instance.keycloak_db.private_ip_address}:5432/${google_sql_database.keycloak_schema.name}?sslmode=disable"
