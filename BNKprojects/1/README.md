@@ -33,7 +33,7 @@ terraform apply -target=module.project1
 
 ### 2. Accessing Keycloak
 Once deployed, Terraform will output the `keycloak_url`.
-1.  **Get URL:** `gcloud run services describe keycloak-service --region us-south1 --format 'value(status.url)'`
+1.  **Get URL:** `gcloud run services describe keycloak-service --region us-south1 --format 'value(status.url)'` Paste the Key cloak url to the DEV or environment TFvars file as the value for the keycloak_url variable. Then update the TFvars file in the github actions secrets with the new value and run the github actions workflow or terraform apply again to update the keycloak_url in the environment. 
 2.  **Get Password:** `gcloud secrets versions access latest --secret="keycloak-admin-password"`
 3.  **Login:** Navigate to the URL, click **Administration Console**, and use `admin` with the retrieved password.
 4.  **Switch Realm:** Select **Mockbankrealm** from the dropdown menu in the top-left corner.

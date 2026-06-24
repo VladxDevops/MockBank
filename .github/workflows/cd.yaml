@@ -167,7 +167,7 @@ jobs:
         working-directory: BNKprojects/1/container
         run: |
           # This satisfies the Docker COPY command without baking real config into the image
-          echo '{"realm": "AltmtrkBank", "enabled": true}' > realm-export.json
+          echo '{"realm": "Mockbankrealm", "enabled": true}' > realm-export.json
 
 
       - name: 'Build and Push' 
