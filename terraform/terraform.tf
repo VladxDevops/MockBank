@@ -16,10 +16,10 @@ terraform {
       source  = "hashicorp/http"
       version = ">= 3.0.0"
     }
-    #    keycloak = {
-    #      source  = "mrparkers/keycloak"
-    #      version = ">= 4.4.0"
-    #    }
+    keycloak = {
+      source  = "mrparkers/keycloak"
+      version = ">= 4.4.0"
+    }
   }
 }
 
@@ -30,14 +30,14 @@ provider "google" {
   #user_project_override = true #Disabled to remediate error failing to deploy keycloak instance. 
 }
 
-# provider "keycloak" {
-#   client_id = "admin-cli"
-#   username  = var.keycloak_admin_username
-#   password  = var.keycloak_admin_password
-#   # During initial bootstrap, the URL is a placeholder. 
-#   # If it contains 'placeholder.com', we use a dummy URL to prevent 405/connection errors during GCP imports.
-#   url       = length(regexall("placeholder.com", var.keycloak_url)) > 0 ? "http://localhost:8080" : (var.keycloak_url != "" ? var.keycloak_url : "http://localhost:8080")
-# }
+provider "keycloak" {
+  client_id = "admin-cli"
+  username  = var.keycloak_admin_username
+  password  = var.keycloak_admin_password
+  # During initial bootstrap, the URL is a placeholder. 
+  # If it contains 'placeholder.com', we use a dummy URL to prevent 405/connection errors during GCP imports.
+  url = length(regexall("placeholder.com", var.keycloak_url)) > 0 ? "http://localhost:8080" : (var.keycloak_url != "" ? var.keycloak_url : "http://localhost:8080")
+}
 
 provider "mongodbatlas" {
   public_key  = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data

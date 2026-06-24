@@ -204,47 +204,54 @@ run_comprehensive_validation() {
         echo -e "\n\e[35mMethod B Passed. Proceeding to Method A (Application Layer)...\e[0m"
         # Step 2: Run Method A + Internal Validation
         if setup_method_a; then
-            run_internal_validation
+            if run_internal_validation; then
+                return 0
+            fi
         fi
     else
         echo -e "\e[31mCOMPREHENSIVE VALIDATION FAILED: Method B (External IAM) returned an error.\e[0m"
-        return 1
     fi
+    return 1
 }
 
 main_menu() {
-    echo "--- Keycloak Deployment Verification ---"
-    echo "1. Full Validation via GCloud Proxy (Internal Keycloak Checks)"
-    echo "2. External Health Check via IAM Token (Cloud Run Layer Check)"
-    echo "3. Comprehensive Validation (Run both methods)"
-    echo "4. Exit"
-    echo "----------------------------------------"
-    read -p "Choose an option: " choice
+    while true; do
+        echo -e "\n--- Keycloak Deployment Verification ---"
+        echo "1. Full Validation via GCloud Proxy (Internal Keycloak Checks)"
+        echo "2. External Health Check via IAM Token (Cloud Run Layer Check)"
+        echo "3. Comprehensive Validation (Run both methods)"
+        echo "4. Auto-Run All (Exit on success, Stay on error)"
+        echo "5. Exit"
+        echo "----------------------------------------"
+        read -p "Choose an option: " choice
 
-    case "$choice" in
-        1)
-            if check_infrastructure_health && setup_method_a; then
-                run_internal_validation
-            fi
-            ;;
-        2)
-            if check_infrastructure_health; then
-                setup_method_b
-            fi
-            ;;
-        3)
-            if check_infrastructure_health; then
-                run_comprehensive_validation
-            fi
-            ;;
-        4)
-            echo "Exiting."
-            exit 0
-            ;;
-        *)
-            echo "Invalid option. Please try again."
-            ;;
-    esac
+        case "$choice" in
+            1)
+                check_infrastructure_health && setup_method_a && run_internal_validation
+                ;;
+            2)
+                check_infrastructure_health && setup_method_b
+                ;;
+            3)
+                check_infrastructure_health && run_comprehensive_validation
+                ;;
+            4)
+                if check_infrastructure_health && run_comprehensive_validation; then
+                    echo -e "\e[32mALL TESTS PASSED. AUTO-EXITING...\e[0m"
+                    exit 0
+                else
+                    echo -e "\e[31mVALIDATION FAILED. Staying in script for debugging...\e[0m"
+                fi
+                ;;
+            5)
+                echo "Exiting."
+                exit 0
+                ;;
+            *)
+                echo "Invalid option. Please try again."
+                ;;
+        esac
+    done
 }
 
 # Global trap to ensure proxy cleanup regardless of how script was called
@@ -260,6 +267,13 @@ else
         method-b) setup_method_b ;;
         validate) run_internal_validation ;;
         all) run_comprehensive_validation ;;
-        *) echo "Usage: $0 {method-a|method-b|validate|all}" ;;
+        auto) 
+            if check_infrastructure_health && run_comprehensive_validation; then
+                exit 0
+            else
+                main_menu
+            fi
+            ;;
+        *) echo "Usage: $0 {method-a|method-b|validate|all|auto}" ;;
     esac
 fi

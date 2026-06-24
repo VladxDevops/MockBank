@@ -17,7 +17,7 @@ terraform {
 # authentication protocol, and there is no implementation of legacy SAML support.
 
 resource "keycloak_realm" "mockbank_realm" {
-  realm                = "mockbank"
+  realm                = "Mockbankrealm"
   enabled              = true
   display_name         = "MockBank Digital"
   registration_allowed = true
