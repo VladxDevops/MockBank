@@ -263,8 +263,11 @@ jobs:
 
       - name: 'Start GCloud Proxy'
         run: |
-          # Use the discovery PID approach for cleanup later
-          gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+          # Pre-install the proxy components non-interactively
+          gcloud components install cloud-run-proxy --quiet
+          
+          # Start the proxy
+          gcloud run services proxy keycloak-service --region us-south1 --port 8080 --quiet &
           echo "PROXY_PID=$!" >> $GITHUB_ENV
           
           # Wait for the proxy to be ready (up to 60s)
