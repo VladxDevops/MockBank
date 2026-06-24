@@ -261,24 +261,25 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
 
+      - name: 'Install Cloud Run Proxy Component'
+        run: gcloud components install cloud-run-proxy --quiet
+
       - name: 'Start GCloud Proxy'
         run: |
-          # Pre-install the proxy components non-interactively
-          gcloud components install cloud-run-proxy --quiet
-          
-          # Start the proxy
+          # Start the proxy in the background
           gcloud run services proxy keycloak-service --region us-south1 --port 8080 --quiet &
-          echo "PROXY_PID=$!" >> $GITHUB_ENV
           
-          # Wait for the proxy to be ready (up to 60s)
+          # Wait for the proxy to be ready (up to 120s)
+          echo "Waiting for proxy to respond on localhost:8080..."
           for i in {1..60}; do
-            if curl -s http://localhost:8080/health/live | grep -q "UP"; then
-              echo "Proxy is successfully tunnelled."
+            if curl -s --max-time 2 http://localhost:8080/health/live | grep -q "UP"; then
+              echo "Proxy is successfully tunnelled and Keycloak is healthy."
               exit 0
             fi
+            echo -n "."
             sleep 2
           done
-          echo "Proxy timed out."
+          echo -e "\nERROR: Proxy or Keycloak health check timed out."
           exit 1
 
       - name: Setup Terraform
