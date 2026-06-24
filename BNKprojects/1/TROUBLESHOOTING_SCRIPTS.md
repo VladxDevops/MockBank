@@ -105,7 +105,8 @@ bash -x ./test-keycloak.sh validate
 ## 10. Missing Realm ("Mockbankrealm not found")
 *   **Symptom:** Verification script output reports `ERROR: Realm 'Mockbankrealm' not found. Status: ERROR_NOT_FOUND`.
 *   **Cause:** Following database maintenance, upgrades, or state cleanups (such as running `fix_sql_state.sh`), the database instance is recreated and starts completely empty. Keycloak initializes a fresh schema but does not import the custom realm because the CI/CD pipeline (`.github/workflows/cd.yaml`) replaces `realm-export.json` with a placeholder realm (`AltmtrkBank`) to prevent baking configuration or credentials into the container image.
-*   **Fix:** Manually re-import the realm configuration using the Admin API via proxy:
+*   **Fix:** Renamed reaml from AltmtrkBank to Mockbankrealm in cd.yaml. 
+    Alternatively: Manually re-import the realm configuration using the Admin API via proxy:
     1. Update default user passwords in `realm-export.json` to be policy-compliant (see Scenario 11).
     2. Start the proxy and retrieve an administrative token (using the active admin username and password from Secret Manager).
     3. Import the realm using `curl`:
