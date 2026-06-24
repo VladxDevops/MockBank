@@ -258,6 +258,26 @@ jobs:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Start GCloud Proxy'
+        run: |
+          # Use the discovery PID approach for cleanup later
+          gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+          echo "PROXY_PID=$!" >> $GITHUB_ENV
+          
+          # Wait for the proxy to be ready (up to 60s)
+          for i in {1..60}; do
+            if curl -s http://localhost:8080/health/live | grep -q "UP"; then
+              echo "Proxy is successfully tunnelled."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Proxy timed out."
+          exit 1
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
@@ -276,10 +296,14 @@ jobs:
 
       - name: Terraform Plan (Project 3)
         working-directory: ./terraform
+        env:
+          TF_VAR_keycloak_url: "http://localhost:8080"
         run: terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
 
       - name: Terraform Apply (Project 3)
         working-directory: ./terraform
+        env:
+          TF_VAR_keycloak_url: "http://localhost:8080"
         run: |
           terraform apply -auto-approve \
             -input=false \
