@@ -308,18 +308,20 @@ jobs:
           EOF
           
           # Run Terraform commands to configure Keycloak via the active proxy
+          # We explicitly pass -var="keycloak_url=..." to override the value defined in dev.tfvars
           terraform init -input=false -reconfigure \
             -backend-config="bucket=terraform_state_bckup_bnk-project" \
             -lock-timeout=20m
           
           terraform workspace select -or-create projectZERO
           
-          terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
+          terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -var="keycloak_url=http://127.0.0.1:8080" -target=module.project3
           
           terraform apply -auto-approve \
             -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
+            -var="keycloak_url=http://127.0.0.1:8080" \
             -target=module.project3
 
   release-transaction-service:

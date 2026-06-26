@@ -302,6 +302,12 @@ resource "google_project_iam_member" "terraform_sa_cloud_run_admin" {
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
 
+resource "google_project_iam_member" "terraform_sa_cloud_run_invoker" {
+  project = var.compute_project_id
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
 resource "google_project_iam_member" "terraform_sa_cloud_sql_admin" {
   project = var.compute_project_id
   role    = "roles/cloudsql.admin"
@@ -474,6 +480,12 @@ resource "google_project_iam_member" "github_actions_sa_remote_secret_accessor" 
 resource "google_project_iam_member" "github_actions_cloud_run_admin" {
   project = var.compute_project_id
   role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_sa_cloud_run_invoker" {
+  project = var.compute_project_id
+  role    = "roles/run.invoker"
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
