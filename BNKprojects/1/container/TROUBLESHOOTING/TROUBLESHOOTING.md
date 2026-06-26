@@ -210,12 +210,14 @@ If the deployment still fails after applying the dependencies:
     - **Admin Password:** `KEYCLOAK_ADMIN_PASSWORD` (NOT `KEYCLOAK_ADMINISTRATOR_PASSWORD`).
 
 ### Scenario O: CI/CD Proxy Health Check Timeout
-*   **Symptom:** The `configure-identity` job in GitHub Actions hangs or exits with `ERROR: Proxy or Keycloak health check timed out. Error: Process completed with exit code 1.`
+*   **Symptom:** The `configure-identity` job in GitHub Actions hangs or exits with `ERROR: Proxy or Keycloak health check timed out. Error: Process completed with exit code 1.` or a proxy token impersonation error: `[PROXY ERROR] failed to get token: impersonate: status code 403: Permission 'iam.serviceAccounts.getOpenIdToken' denied on resource`.
 *   **Cause:** This error is caused by a combination of:
-    1. **Missing Invoker IAM Roles**: The private Keycloak Cloud Run service does not have IAM invoker permissions configured for the WIF or deployer service accounts, leading to a `403 Forbidden` response.
-    2. **Multi-line JSON Parsing**: The curl check previously used `head -n 1` to extract the body. Keycloak health check responses are multi-line JSON, so `head -n 1` gets `{` instead of the status line containing `"UP"`.
-    3. **Runner Process Cleanup**: The GitHub Actions runner terminates background processes spawned in a step when that step finishes, killing the proxy tunnel.
+    1. **Missing Invoker IAM Roles**: The private Keycloak Cloud Run service does not have IAM invoker permissions configured for the WIF or deployer service accounts, leading to a `403 Forbidden` response. Additionally, if the IAM member resource definition lacks the explicit `project` argument, it may fail to bind to the correct project.
+    2. **Missing Token Creator Roles**: The active service account executing the proxy (`sa-github-actions`) lacks the `roles/iam.serviceAccountOpenIdTokenCreator` and `roles/iam.serviceAccountTokenCreator` roles at the project level, preventing it from generating identity tokens to authenticate with the private Cloud Run service.
+    3. **Multi-line JSON Parsing**: The curl check previously used `head -n 1` to extract the body. Keycloak health check responses are multi-line JSON, so `head -n 1` gets `{` instead of the status line containing `"UP"`.
+    4. **Runner Process Cleanup**: The GitHub Actions runner terminates background processes spawned in a step when that step finishes, killing the proxy tunnel.
 *   **Fix:**
-    1. Define the `google_cloud_run_service_iam_member` resource in Terraform to grant the `roles/run.invoker` role to both the WIF/CI/CD service account and the Terraform deployer service account.
-    2. Update the curl health check validation in `cd.yaml` to search for `"UP"` across the entire response (`grep -q "UP"`) instead of just `head -n 1`.
-    3. Add `RUNNER_TRACKING_ID: ""` to the environment variables of the proxy startup step in `cd.yaml` to allow the background process to persist across steps.
+    1. Define the `google_cloud_run_service_iam_member` resource in Terraform to grant the `roles/run.invoker` role to both the WIF/CI/CD service account and the Terraform deployer service account, making sure to explicitly specify `project = var.compute_project_id`.
+    2. Grant `roles/iam.serviceAccountOpenIdTokenCreator` and `roles/iam.serviceAccountTokenCreator` to the GitHub Actions service account in `project0/main.tf` at the project level.
+    3. Update the curl health check validation in `cd.yaml` to search for `"UP"` across the entire response (`grep -q "UP"`) instead of just `head -n 1`.
+    4. Add `RUNNER_TRACKING_ID: ""` to the environment variables of the proxy startup step in `cd.yaml` to allow the background process to persist across steps.

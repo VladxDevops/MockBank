@@ -477,6 +477,18 @@ resource "google_project_iam_member" "github_actions_cloud_run_admin" {
   member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
+resource "google_project_iam_member" "github_actions_sa_openid_token_creator" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountOpenIdTokenCreator"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
+resource "google_project_iam_member" "github_actions_sa_token_creator" {
+  project = var.compute_project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
+}
+
 resource "google_project_iam_member" "github_actions_artifact_registry_writer" {
   project = var.compute_project_id
   role    = "roles/artifactregistry.writer"
