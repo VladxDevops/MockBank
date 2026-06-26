@@ -26,6 +26,9 @@ module "project1" {
   keycloak_url            = var.keycloak_url
   keycloak_client_id      = var.keycloak_client_id
   keycloak_admin_username = var.keycloak_admin_username
+
+  # Pass the GitHub Actions service account email to grant invoker access
+  github_actions_sa_email = module.project0.github_actions_sa_email
 }
 
 ###Habia una vez un barco chiquito...

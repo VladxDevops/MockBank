@@ -208,3 +208,14 @@ If the deployment still fails after applying the dependencies:
 *   **Fix:** Ensure the following environment variable names are correctly set in `main.tf`:
     - **Database Password:** `KC_DB_PASSWORD` (NOT `KC_DATABASE_PASSWORD`).
     - **Admin Password:** `KEYCLOAK_ADMIN_PASSWORD` (NOT `KEYCLOAK_ADMINISTRATOR_PASSWORD`).
+
+### Scenario O: CI/CD Proxy Health Check Timeout
+*   **Symptom:** The `configure-identity` job in GitHub Actions hangs or exits with `ERROR: Proxy or Keycloak health check timed out. Error: Process completed with exit code 1.`
+*   **Cause:** This error is caused by a combination of:
+    1. **Missing Invoker IAM Roles**: The private Keycloak Cloud Run service does not have IAM invoker permissions configured for the WIF or deployer service accounts, leading to a `403 Forbidden` response.
+    2. **Multi-line JSON Parsing**: The curl check previously used `head -n 1` to extract the body. Keycloak health check responses are multi-line JSON, so `head -n 1` gets `{` instead of the status line containing `"UP"`.
+    3. **Runner Process Cleanup**: The GitHub Actions runner terminates background processes spawned in a step when that step finishes, killing the proxy tunnel.
+*   **Fix:**
+    1. Define the `google_cloud_run_service_iam_member` resource in Terraform to grant the `roles/run.invoker` role to both the WIF/CI/CD service account and the Terraform deployer service account.
+    2. Update the curl health check validation in `cd.yaml` to search for `"UP"` across the entire response (`grep -q "UP"`) instead of just `head -n 1`.
+    3. Add `RUNNER_TRACKING_ID: ""` to the environment variables of the proxy startup step in `cd.yaml` to allow the background process to persist across steps.

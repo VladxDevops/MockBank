@@ -260,4 +260,20 @@ resource "google_cloud_run_service" "keycloak" {
   ]
 }
 
+# --- Cloud Run Invoker Permissions for CI/CD and Terraform Deployer ---
+# These are required to establish the local gcloud run proxy connection during the pipeline run.
+resource "google_cloud_run_service_iam_member" "keycloak_invoker_deployer" {
+  service  = google_cloud_run_service.keycloak.name
+  location = google_cloud_run_service.keycloak.location
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.terraform_deployer_service_account}"
+}
+
+resource "google_cloud_run_service_iam_member" "keycloak_invoker_github" {
+  service  = google_cloud_run_service.keycloak.name
+  location = google_cloud_run_service.keycloak.location
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.github_actions_sa_email}"
+}
+
 #Habia una vez un barco chiquito...

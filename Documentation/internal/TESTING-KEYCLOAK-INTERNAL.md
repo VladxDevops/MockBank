@@ -40,6 +40,20 @@ The script is designed for CI/CD compatibility. Use the following exit codes for
 | PKCE Enforcement | Verified (Admin API Query) |
 | Least Privilege | Verified (IAM Token Validation) |
 
+## CI/CD Proxy Troubleshooting & Fix Details (June 2026)
+
+### 1. Root Cause Analysis
+During CI/CD execution in the `configure-identity` job (`cd.yaml`), the step trying to establish the proxy tunnel to Keycloak (`gcloud run services proxy`) timed out. This occurred due to two separate but combined issues:
+* **Missing IAM Invoker Bindings**: The Keycloak Cloud Run service is deployed as private (`--no-allow-unauthenticated`). No explicit `google_cloud_run_service_iam_member` resource was defined in Terraform. As a result, the GitHub Actions WIF service account and the Terraform deployer service account lacked `roles/run.invoker` permissions. Tunnel connection attempts returned `403 Forbidden`, causing the health check to loop and time out.
+* **Multi-Line JSON Parsing Bug in curl Wait Loop**: The wait-loop logic in `cd.yaml` extracted the response body via `BODY=$(echo "$RESPONSE" | head -n 1)`. Quarkus/Keycloak returns multi-line formatted JSON. `head -n 1` extracted only the opening brace `{`, making `grep -q "UP"` fail even if the proxy and container were fully operational.
+* **Process Cleanup Orphan Kill**: Leaving proxy startup and Terraform apply in separate workflow steps causes the runner to terminate the background proxy process at the end of the first step.
+
+### 2. Actions Taken & Remediation
+* **IAM Privileges Added**: Declared the `github_actions_sa_email` variable and added explicit `google_cloud_run_service_iam_member` bindings to `terraform/modules/project1/main.tf` for both the Terraform deployer and the GitHub Actions WIF service accounts.
+* **Multi-Line JSON Parsing Fix**: Updated the curl check in `cd.yaml` to search for `"UP"` across the entire response (`echo "$RESPONSE" | grep -q "UP"`) instead of slicing the first line.
+* **Runner Process Preservation**: Added `RUNNER_TRACKING_ID: ""` to the environment variables of the `Start GCloud Proxy` step. This instructs the GitHub Actions runner to bypass process tracking for the background proxy tunnel, ensuring it is not killed when the step ends and remains available for the subsequent `Configure Identity` step.
+* **Redundancy Cleanup**: Removed duplicate Terraform setup and apply blocks in `cd.yaml`.
+
 ---
 *Refer to `Documentation/internal/SECURITY.md` for global policy alignment.*
 ---

@@ -264,7 +264,12 @@ jobs:
       - name: 'Install Cloud Run Proxy Component'
         run: gcloud components install cloud-run-proxy --quiet
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: 'Start GCloud Proxy'
+        env:
+          RUNNER_TRACKING_ID: ""
         run: |
           # Start the proxy in the background
           # We use 127.0.0.1 explicitly to avoid localhost resolution issues in some environments
@@ -274,10 +279,10 @@ jobs:
           echo "Waiting for proxy to respond on http://127.0.0.1:8080/health/live..."
           for i in {1..60}; do
             RESPONSE=$(curl -s -w "\n%{http_code}" --max-time 5 http://127.0.0.1:8080/health/live || echo "CONN_FAILED 000")
-            BODY=$(echo "$RESPONSE" | head -n 1)
             CODE=$(echo "$RESPONSE" | tail -n 1)
             
-            if [[ "$CODE" == "200" ]] && echo "$BODY" | grep -q "UP"; then
+            # Match "UP" within the entire response to handle multi-line JSON output correctly
+            if [[ "$CODE" == "200" ]] && echo "$RESPONSE" | grep -q "UP"; then
               echo "Proxy is successfully tunnelled and Keycloak is healthy (HTTP $CODE)."
               exit 0
             fi
@@ -292,66 +297,25 @@ jobs:
           curl -v http://127.0.0.1:8080/health/live || true
           exit 1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
+      - name: 'Configure Identity (Terraform Apply)'
         working-directory: ./terraform
+        env:
+          TF_VAR_keycloak_url: "http://127.0.0.1:8080"
         run: |
+          # Materialize secrets to dev.tfvars
           cat <<'EOF' > dev.tfvars
           ${{ secrets.TFVARS_DEV }}
           EOF
           
+          # Run Terraform commands to configure Keycloak via the active proxy
           terraform init -input=false -reconfigure \
             -backend-config="bucket=terraform_state_bckup_bnk-project" \
             -lock-timeout=20m
           
           terraform workspace select -or-create projectZERO
-
-      - name: Terraform Plan (Project 3)
-        working-directory: ./terraform
-        env:
-          TF_VAR_keycloak_url: "http://127.0.0.1:8080"
-        run: terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
-
-      - name: Terraform Apply (Project 3)
-        working-directory: ./terraform
-        env:
-          TF_VAR_keycloak_url: "http://127.0.0.1:8080"
-        run: |
-          terraform apply -auto-approve \
-            -input=false \
-            -lock-timeout=20m \
-            -var-file="dev.tfvars" \
-            -target=module.project3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        working-directory: ./terraform
-        run: |
-          cat <<'EOF' > dev.tfvars
-          ${{ secrets.TFVARS_DEV }}
-          EOF
           
-          terraform init -input=false -reconfigure \
-            -backend-config="bucket=terraform_state_bckup_bnk-project" \
-            -lock-timeout=20m
+          terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
           
-          terraform workspace select -or-create projectZERO
-
-      - name: Terraform Plan (Project 3)
-        working-directory: ./terraform
-        env:
-          TF_VAR_keycloak_url: "http://localhost:8080"
-        run: terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -target=module.project3
-
-      - name: Terraform Apply (Project 3)
-        working-directory: ./terraform
-        env:
-          TF_VAR_keycloak_url: "http://localhost:8080"
-        run: |
           terraform apply -auto-approve \
             -input=false \
             -lock-timeout=20m \

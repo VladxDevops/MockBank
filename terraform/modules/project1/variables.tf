@@ -77,4 +77,9 @@ variable "retail_app_session_secret_id" {
 }
 
 
+variable "github_actions_sa_email" {
+  description = "The email address of the GitHub Actions CI/CD service account."
+  type        = string
+}
+
 #Habia una vez un barco chiquito...
