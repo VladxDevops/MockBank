@@ -36,8 +36,8 @@ variable "keycloak_serv_acc_account_id" {
 }
 
 ###Secret manager:
-variable "keycloak_admin_password_secret_id" {
-  description = "name of the secret for the keyCloak admin password"
+variable "keycloak_administrator_password_secret_id" {
+  description = "name of the secret for the keyCloak administrator password"
   type        = string
 }
 
@@ -65,9 +65,9 @@ variable "keycloak_client_id" {
   type        = string
 }
 
-#keycloak_admin_username
-variable "keycloak_admin_username" {
-  description = "Variable for the keycloak admin username"
+#keycloak_administrator_username
+variable "keycloak_administrator_username" {
+  description = "Variable for the keycloak administrator username"
   type        = string
 }
 

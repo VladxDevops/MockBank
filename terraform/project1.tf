@@ -6,7 +6,7 @@ module "project1" {
   terraform_deployer_service_account   = var.terraform_deployer_service_account
   compute_project_id                   = var.compute_project_id
   project1_repository                  = var.project1_repository
-  keycloak_admin_password_secret_id    = module.project0.keycloak_admin_password_secret_id
+  keycloak_administrator_password_secret_id = module.project0.keycloak_administrator_password_secret_id
   keycloak_database_password_secret_id = module.project0.keycloak_database_password_secret_id
   project1_service_name                = var.project1_service_name
   retail_app_session_secret_id         = module.project0.retail_app_session_secret_id
@@ -25,7 +25,7 @@ module "project1" {
   #keycloak URL PLACEHOLDER for deploying first time: 
   keycloak_url            = var.keycloak_url
   keycloak_client_id      = var.keycloak_client_id
-  keycloak_admin_username = var.keycloak_admin_username
+  keycloak_administrator_username = var.keycloak_administrator_username
 }
 
 ###Habia una vez un barco chiquito...

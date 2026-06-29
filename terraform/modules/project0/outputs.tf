@@ -26,7 +26,7 @@ output "keycloak_database_password_secret_id" {
   value = google_secret_manager_secret.keycloak_database_password.id
 }
 
-output "keycloak_admin_password_secret_id" {
+output "keycloak_administrator_password_secret_id" {
   value = google_secret_manager_secret.keycloak_administrator_password.id
 }
 

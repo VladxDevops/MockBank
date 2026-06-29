@@ -10,8 +10,8 @@ module "project3" {
   github_repository                         = var.github_repository
   terraform_deployer_service_account        = var.terraform_deployer_service_account
   keycloak_url                              = var.keycloak_url
-  keycloak_admin_username                   = var.keycloak_admin_username
-  keycloak_admin_password                   = var.keycloak_admin_password
+  keycloak_administrator_username            = var.keycloak_administrator_username
+  keycloak_administrator_password            = var.keycloak_administrator_password
   #teller_portal_certificate_id              = var.teller_portal_certificate_id
 }
 

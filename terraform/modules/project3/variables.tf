@@ -44,13 +44,13 @@ variable "keycloak_url" {
   type        = string
 }
 
-variable "keycloak_admin_username" {
-  description = "The username for the Keycloak admin account."
+variable "keycloak_administrator_username" {
+  description = "The username for the Keycloak administrator account."
   type        = string
 }
 
-variable "keycloak_admin_password" {
-  description = "The password for the Keycloak admin account, typically sourced from Secret Manager."
+variable "keycloak_administrator_password" {
+  description = "The password for the Keycloak administrator account, typically sourced from Secret Manager."
   type        = string
 }
 

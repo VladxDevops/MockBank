@@ -39,12 +39,12 @@ variable "atlas_private_key" {
 
 
 ###Keycloak: 
-variable "keycloak_admin_username" {
+variable "keycloak_administrator_username" {
   description = "Username for Keycloak Admin API"
   type        = string
 }
 
-variable "keycloak_admin_password" {
+variable "keycloak_administrator_password" {
   description = "Password for Keycloak Admin API"
   type        = string
   sensitive   = true

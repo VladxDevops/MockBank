@@ -43,7 +43,7 @@ resource "google_secret_manager_secret_version" "keycloak_database_password_val"
 }
 
 resource "google_secret_manager_secret_version" "keycloak_administrator_password_val" {
-  secret      = var.keycloak_admin_password_secret_id
+  secret      = var.keycloak_administrator_password_secret_id
   secret_data = random_password.keycloak_administrator_password.result
 }
 
@@ -181,7 +181,7 @@ resource "google_cloud_run_service" "keycloak" {
         # Using admin username from variables for consistency across environments
         env {
           name  = "KEYCLOAK_ADMIN"
-          value = var.keycloak_admin_username
+          value = var.keycloak_administrator_username
         }
         # Password is recovered from the imported Secret Manager secret
         env {

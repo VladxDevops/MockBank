@@ -32,8 +32,8 @@ provider "google" {
 
 provider "keycloak" {
   client_id = "admin-cli"
-  username  = var.keycloak_admin_username
-  password  = var.keycloak_admin_password
+  username  = var.keycloak_administrator_username
+  password  = var.keycloak_administrator_password
   # During initial bootstrap, the URL is a placeholder. 
   # If it contains 'placeholder.com', we use a dummy URL to prevent 405/connection errors during GCP imports.
   url = length(regexall("placeholder.com", var.keycloak_url)) > 0 ? "http://localhost:8080" : (var.keycloak_url != "" ? var.keycloak_url : "http://localhost:8080")

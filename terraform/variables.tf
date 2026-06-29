@@ -61,8 +61,8 @@ variable "project1_repository" {
   type        = string
 }
 
-variable "keycloak_admin_password_secret_id" {
-  description = "The Resource ID/Name in Secret Manager for the Keycloak admin password. Set to 'keycloak-administrator-password' for DEV."
+variable "keycloak_administrator_password_secret_id" {
+  description = "The Resource ID/Name in Secret Manager for the Keycloak administrator password. Set to 'keycloak-administrator-password' for DEV."
   type        = string
 }
 
@@ -108,13 +108,13 @@ variable "workforce_identity_federation_provider_id" {
 #}
 
 #Keycloak: 
-variable "keycloak_admin_username" {
+variable "keycloak_administrator_username" {
   description = "Username for Keycloak Admin API"
   type        = string
   default     = ""
 }
 
-variable "keycloak_admin_password" {
+variable "keycloak_administrator_password" {
   description = "Password for the Keycloak administrator."
   type        = string
   sensitive   = true

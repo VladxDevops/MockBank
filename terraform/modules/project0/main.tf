@@ -661,17 +661,17 @@ resource "google_secret_manager_secret" "retail_app_session_secret" {
 
 #atlas_public_key_secret and atlas_private_key_secret are located at terraform/mongo_secrets. 
 
-resource "google_secret_manager_secret" "keycloak_admin_username_placeholder" {
+resource "google_secret_manager_secret" "keycloak_administrator_username_placeholder" {
   project   = var.compute_project_id
-  secret_id = "keycloak-admin-username"
+  secret_id = "keycloak-administrator-username"
   replication {
     auto {}
   }
 }
 
-resource "google_secret_manager_secret" "keycloak_admin_password_placeholder" {
+resource "google_secret_manager_secret" "keycloak_administrator_password_placeholder" {
   project   = var.compute_project_id
-  secret_id = "keycloak-admin-password"
+  secret_id = "keycloak-administrator-password-placeholder"
   replication {
     auto {}
   }

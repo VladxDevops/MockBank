@@ -12,8 +12,8 @@ module "project0" {
   artifact_registry_repository_id           = var.artifact_registry_repository_id
   atlas_public_key                          = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_public_key[0].secret_data
   atlas_private_key                         = var.bootstrap ? "bootstrap" : data.google_secret_manager_secret_version.atlas_private_key[0].secret_data
-  keycloak_admin_username                   = var.keycloak_admin_username
-  keycloak_admin_password                   = var.keycloak_admin_password
+  keycloak_administrator_username            = var.keycloak_administrator_username
+  keycloak_administrator_password            = var.keycloak_administrator_password
   keycloak_url                              = var.keycloak_url
   github_repository                         = var.github_repository
   github_actions_sa_id                      = var.github_actions_sa_id
