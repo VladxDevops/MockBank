@@ -32,7 +32,7 @@ resource "google_clouddeploy_target" "dev_target" {
     service_account = var.github_actions_sa_email
   }
   require_approval = false
-  depends_on = [ google_clouddeploy_delivery_pipeline.transaction_pipeline ]
+  #depends_on = [ google_clouddeploy_delivery_pipeline.transaction_pipeline ]
 }
 
 resource "google_clouddeploy_target" "test_target" {
