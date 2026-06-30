@@ -669,12 +669,22 @@ resource "google_secret_manager_secret" "keycloak_administrator_username_placeho
   }
 }
 
+resource "google_secret_manager_secret_version" "keycloak_administrator_username_val" {
+  secret      = google_secret_manager_secret.keycloak_administrator_username_placeholder.id
+  secret_data = var.keycloak_administrator_username
+}
+
 resource "google_secret_manager_secret" "keycloak_administrator_password_placeholder" {
   project   = var.compute_project_id
   secret_id = "keycloak-administrator-password-placeholder"
   replication {
     auto {}
   }
+}
+
+resource "google_secret_manager_secret_version" "keycloak_administrator_password_val" {
+  secret      = google_secret_manager_secret.keycloak_administrator_password.id
+  secret_data = var.keycloak_administrator_password
 }
 
 
