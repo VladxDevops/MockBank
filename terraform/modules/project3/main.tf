@@ -19,7 +19,7 @@ resource "google_clouddeploy_delivery_pipeline" "transaction_pipeline" {
     stages { target_id = google_clouddeploy_target.prod_target.name }
   }
 
-  depends_on = [provider.keycloak, google_project_service.cloud_deploy]
+  #depends_on = [google_project_service.cloud_deploy]
 }
 
 resource "google_clouddeploy_target" "dev_target" {
