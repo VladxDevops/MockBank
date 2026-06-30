@@ -3,19 +3,24 @@
  * This module creates the Workload Identity Federateion binding and Cloud Deploy pipeline for any service.
  */
 
-resource "google_service_account" "service_actions_sa" {
-  account_id   = "sa-${var.service_name}-cicd"
-  display_name = "GitHub Actions SA for ${var.service_name}"
-  project      = var.compute_project_id
-}
+###Module Deprecated/not in use. 
+#Service account not in use. Using the GitHub Actions service account instead? 
+#Will this service account be needed in the future for Cloud Deploy to work? Does it need a deddicated service account? 
+#If yes please migrate service account to project0 including IAM roles. 
+#resource "google_service_account" "service_actions_sa" {
+#  account_id   = "sa-${var.service_name}-cicd"
+#  display_name = "GitHub Actions SA for ${var.service_name}"
+#  project      = var.compute_project_id
+#}
 
-resource "google_service_account_iam_member" "wif_binding" {
-  service_account_id = google_service_account.service_actions_sa.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${var.workforce_identity_federation_pool_name}/attribute.repository/${var.github_repo}"
-}
+#resource "google_service_account_iam_member" "wif_binding" {
+#  service_account_id = google_service_account.service_actions_sa.name
+#  role               = "roles/iam.workloadIdentityUser"
+#  member             = "principalSet://iam.googleapis.com/${var.workforce_identity_federation_pool_name}/attribute.repository/${var.github_repo}"
+#  depends_on = [google_service_account.service_actions_sa]
+#}
 
-# --- Standardized IAM Roles for the Service ---
+# --- Standardized IAM Roles for the service_actions_sa Service Account ---
 #
 # Note: For clarity and individual management, IAM roles are declared as
 # separate `google_project_iam_member` resources rather than using `for_each`.
@@ -53,18 +58,6 @@ resource "google_project_iam_member" "iam_service_account_user" {
 }
 
 # --- End of IAM Role Declarations ---
-
-resource "google_clouddeploy_delivery_pipeline" "pipeline" {
-  location = var.compute_region
-  name     = "${var.service_name}-pipeline"
-  project  = var.compute_project_id
-
-  serial_pipeline {
-    stages { target_id = var.dev_target_id }
-    stages { target_id = var.test_target_id }
-    stages { target_id = var.prod_target_id }
-  }
-}
 
 output "service_account_email" {
   value = google_service_account.service_actions_sa.email
