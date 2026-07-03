@@ -249,3 +249,13 @@ resource "google_cloud_run_service" "keycloak" {
     google_sql_user.keycloak_user
   ]
 }
+
+resource "google_cloud_run_service_iam_member" "keycloak_invoker" {
+  project  = var.compute_project_id
+  location = google_cloud_run_service.keycloak.location
+  service  = google_cloud_run_service.keycloak.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.terraform_deployer_service_account}"
+
+  depends_on = [google_cloud_run_service.keycloak]
+}

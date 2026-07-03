@@ -37,7 +37,7 @@ provider "keycloak" {
   # real `keycloak_url` and real admin credentials.
   username = var.bootstrap ? "bootstrap" : var.keycloak_administrator_username
   password = var.bootstrap ? "bootstrap" : var.keycloak_administrator_password
-  url = var.bootstrap ? "http://localhost:8080" : (var.keycloak_url != "" ? var.keycloak_url : "http://localhost:8080")
+  url      = var.bootstrap ? "http://localhost:8080" : var.keycloak_url
 }
 
 provider "mongodbatlas" {
