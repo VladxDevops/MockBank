@@ -248,7 +248,7 @@ resource "google_cloud_run_service" "keycloak" {
 
   depends_on = [
     google_service_account.keycloak_sa,
-    google_secret_manager_secret_version.keycloak_database_password_val,
+    google_secret_manager_secret_version.keycloak_database_password_value,
     # retail_app_session_secret_version is managed in secrets.tf
     google_sql_database.keycloak_schema,
     google_sql_user.keycloak_user
