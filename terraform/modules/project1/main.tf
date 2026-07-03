@@ -23,11 +23,6 @@ resource "google_project_iam_member" "terraform_sa_secretmanager_admin" {
 # ------------------------------------------------------------------------------
 # 1. Secrets Generation (Database & Admin Passwords)
 # ------------------------------------------------------------------------------
-resource "random_password" "keycloak_database_password" {
-  length  = 16
-  special = false
-}
-
 resource "random_id" "database_name_suffix" {
   byte_length = 4
 }
@@ -68,7 +63,7 @@ resource "google_sql_database" "keycloak_schema" {
 resource "google_sql_user" "keycloak_user" {
   name     = "keycloak"
   instance = google_sql_database_instance.keycloak_db.name
-  password = random_password.keycloak_database_password.result
+  password = var.keycloak_database_password_value
 }
 
 # ------------------------------------------------------------------------------
@@ -254,5 +249,3 @@ resource "google_cloud_run_service" "keycloak" {
     google_sql_user.keycloak_user
   ]
 }
-
-#Habia una vez un barco chiquito...
