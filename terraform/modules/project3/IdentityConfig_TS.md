@@ -24,6 +24,34 @@ Common symptoms and probable causes
 
 - Symptom: Terraform apply (Identity) fails with Keycloak API errors (401/403/invalid redirect_uri/realm import failures).
 	- Likely causes: wrong `TF_VAR_keycloak_url`, missing explicit `bootstrap=false`, health endpoint not ready, or Keycloak admin credentials mismatched (`KEYCLOAK_ADMIN_PASSWORD` secret incorrect).
+	- **Special Case: 403 Forbidden from the Public Cloud Run URL (e.g., `https://keycloak-service-*.us-south1.run.app`):** 
+		- This occurs when `terraform plan -target=module.project3` runs against the public Keycloak Cloud Run URL instead of the local proxy.
+		- The Keycloak Cloud Run service is intentionally **private** (no public ingress).
+		- The error `failed to perform initial login to Keycloak: error sending POST request to https://keycloak-service-*.us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden` means the caller (Terraform identity) lacks `roles/run.invoker` permission on the Cloud Run service.
+		- **Root Cause:** In CI/CD (GitHub Actions), the `configure-identity` job must use `TF_VAR_keycloak_url=http://127.0.0.1:8080` (the local Cloud Run proxy) instead of the public URL. For local development runs, either (a) use `gcloud run services proxy` to create a local proxy and pass the local URL, or (b) grant `roles/run.invoker` on the Keycloak Cloud Run service to your authenticated identity.
+		- **Terraform IAM Fix:** Ensure `terraform/modules/project1/main.tf` contains a `google_cloud_run_service_iam_member` resource that grants `roles/run.invoker` only to authenticated principals (e.g., `serviceAccount:${var.terraform_deployer_service_account}`), NOT `allUsers`. Example:
+			```hcl
+			resource "google_cloud_run_service_iam_member" "keycloak_invoker" {
+			  project  = var.compute_project_id
+			  location = google_cloud_run_service.keycloak.location
+			  service  = google_cloud_run_service.keycloak.name
+			  role     = "roles/run.invoker"
+			  member   = "serviceAccount:${var.terraform_deployer_service_account}"
+			}
+			```
+		- **CI/CD Verification:** After `terraform apply -target=module.project1` succeeds, verify the IAM binding was created:
+			```bash
+			gcloud run services get-iam-policy keycloak-service --region us-south1 --format=json | grep roles/run.invoker
+			```
+		- **Local Development:** To reproduce locally, run:
+			```bash
+			gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+			terraform plan -var-file="dev.tfvars" \
+			  -var="keycloak_url=http://127.0.0.1:8080" \
+			  -var="bootstrap=false" \
+			  -target=module.project3
+			```
+		- **Workflow Sequence:** The GitHub Actions workflow must enforce that `configure-identity` (which tests Keycloak provider connectivity) only runs **after** `deploy-identity` (which applies the Cloud Run service and IAM bindings) completes successfully. The current job dependency chain in `.github/workflows/cd.yaml` should reflect: `terraform-apply` → `deploy-identity` → `configure-identity`.
 
 -- Symptom: Cloud Run proxy or service errors (connection refused, 404 on `/health/live`, or logs showing startup failures).
 	- Likely causes: Cloud Run service not deployed or in wrong project/region, deployed image missing health extension (`KC_HEALTH_ENABLED=false`), incorrect `TF_VAR_keycloak_url`, service ingress/permissions preventing proxy access, or Keycloak startup errors (DB connectivity, realm import failures).

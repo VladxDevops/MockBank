@@ -631,9 +631,13 @@ resource "google_service_account_iam_member" "github_actions_sa_impersonate_keyc
   member             = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
 
-
-
-
+# Allow the Keycloak service account to invoke Cloud Run services
+# Required if Keycloak needs to call other Cloud Run services
+resource "google_project_iam_member" "keycloak_run_invoker" {
+  project = var.compute_project_id
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
+}
 
 # --- Shared Secret Placeholders ---
 

@@ -209,7 +209,76 @@ If the deployment still fails after applying the dependencies:
     - **Database Password:** `KC_DB_PASSWORD` (NOT `KC_DATABASE_PASSWORD`).
     - **Admin Password:** `KEYCLOAK_ADMIN_PASSWORD` (NOT `KEYCLOAK_ADMINISTRATOR_PASSWORD`).
 
-### Scenario O: CI/CD Proxy Health Check Timeout
+### Scenario P: 403 Forbidden from Terraform Keycloak Provider (Public Cloud Run URL)
+
+*   **Symptom:** `terraform plan -target=module.project3` or GitHub Actions `configure-identity` job fails with:
+    ```
+    Error: error initializing keycloak provider
+    
+    failed to perform initial login to Keycloak: error sending POST request to
+    https://keycloak-service-799346288567.us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden
+    ```
+
+*   **Root Cause:** The Keycloak Cloud Run service is intentionally **private** (no public ingress, no `allUsers` invoker). When the mrparkers/keycloak Terraform provider attempts an unauthenticated login to the public Cloud Run URL, Cloud Run returns `403 Forbidden` because:
+    1. The caller's identity is unauthenticated or lacks the `roles/run.invoker` role.
+    2. The service ingress policy rejects unauthenticated requests by design (Zero Trust security).
+
+*   **Why This Happens:**
+    - During `terraform plan` or GitHub Actions runs, if `TF_VAR_keycloak_url` is set to the public HTTPS URL (e.g., from `dev.tfvars`), the Keycloak provider tries to POST credentials to that endpoint.
+    - Cloud Run validates the request and checks if the caller has `roles/run.invoker`.
+    - If not granted, it returns `403 Forbidden`.
+    - This is the **correct secure behavior**; the service should not be publicly accessible.
+
+*   **Fix:**
+
+    **For CI/CD (GitHub Actions):**
+    1. The `configure-identity` job **must** use a local proxy to the Keycloak service.
+    2. In `.github/workflows/cd.yaml`, the `Start GCloud Proxy` step creates a tunnel: `gcloud run services proxy keycloak-service --region us-south1 --port 8080`.
+    3. The `Configure Identity (Terraform Apply)` step then uses:
+       ```bash
+       -var="keycloak_url=http://127.0.0.1:8080" \
+       -var="bootstrap=false"
+       ```
+       This overrides any `keycloak_url` from `dev.tfvars` and routes the Keycloak provider through the authenticated local proxy instead of the public URL.
+    4. Ensure the job dependency chain in the workflow is: `build-keycloak` → `deploy-identity` → `configure-identity`. This guarantees the Cloud Run service and IAM bindings are in place before the Keycloak provider attempts login.
+
+    **For Local Development:**
+    1. Create a local proxy tunnel:
+       ```bash
+       gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+       ```
+    2. Run Terraform with the local proxy URL and explicit `bootstrap=false`:
+       ```bash
+       terraform plan -var-file="dev.tfvars" \
+         -var="keycloak_url=http://127.0.0.1:8080" \
+         -var="bootstrap=false" \
+         -target=module.project3
+       ```
+    3. **Do not** use the public HTTPS URL from `dev.tfvars` for local Terraform runs against the Keycloak provider. The public URL is only used by external clients (browsers, OIDC applications) that need public ingress to a **different, future-state** Keycloak service (e.g., behind Cloud Armor or an API Gateway for public users).
+
+    **Verify IAM Binding Is Correct:**
+    1. Ensure `terraform/modules/project1/main.tf` contains the secure invoker binding:
+       ```hcl
+       resource "google_cloud_run_service_iam_member" "keycloak_invoker" {
+         project  = var.compute_project_id
+         location = google_cloud_run_service.keycloak.location
+         service  = google_cloud_run_service.keycloak.name
+         role     = "roles/run.invoker"
+         member   = "serviceAccount:${var.terraform_deployer_service_account}"
+       }
+       ```
+    2. After `terraform apply -target=module.project1` completes, verify the binding exists:
+       ```bash
+       gcloud run services get-iam-policy keycloak-service --region us-south1 --format=json
+       ```
+       Look for an entry with `roles/run.invoker` and the deployer service account email.
+    3. **Confirm:** There should be NO `"members": ["allUsers"]` in the policy document. If you see `allUsers`, the insecure binding is still in place; run `terraform destroy` or manually remove it via the Console.
+
+*   **Prevention:**
+    - Always use the local proxy URL (`http://127.0.0.1:8080`) when initializing the Keycloak Terraform provider during identity configuration.
+    - Never use the public Cloud Run URL for Terraform provider init. The provider should only use the public URL when the service is intentionally made public (e.g., for end-user browser login flows, not Terraform admin operations).
+    - In GitHub Actions, enforce the job dependency chain so `configure-identity` runs after `deploy-identity`, ensuring IAM bindings are in place before provider login is attempted.
+
 *   **Symptom:** The `configure-identity` job in GitHub Actions hangs or exits with `ERROR: Proxy or Keycloak health check timed out. Error: Process completed with exit code 1.` or a proxy token impersonation error: `[PROXY ERROR] failed to get token: impersonate: status code 403: Permission 'iam.serviceAccounts.getOpenIdToken' denied on resource`.
 *   **Cause:** This error is caused by a combination of:
     1. **Missing Invoker IAM Roles**: The private Keycloak Cloud Run service does not have IAM invoker permissions configured for the WIF or deployer service accounts, leading to a `403 Forbidden` response. Additionally, if the IAM member resource definition lacks the explicit `project` argument, it may fail to bind to the correct project.
