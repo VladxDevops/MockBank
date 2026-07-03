@@ -218,6 +218,17 @@ If the deployment still fails after applying the dependencies:
     4. **Runner Process Cleanup**: The GitHub Actions runner terminates background processes spawned in a step when that step finishes, killing the proxy tunnel.
 *   **Fix:**
     1. Define the `google_cloud_run_service_iam_member` resource in Terraform to grant the `roles/run.invoker` role to both the WIF/CI/CD service account and the Terraform deployer service account, making sure to explicitly specify `project = var.compute_project_id`.
+       *   Do not use `member = "allUsers"` for the Keycloak Cloud Run service. The service is intentionally private and should only be invokable by the authorized deployment or CI/CD identity.
+       *   Example:
+           ```hcl
+           resource "google_cloud_run_service_iam_member" "keycloak_invoker" {
+             project  = var.compute_project_id
+             location = google_cloud_run_service.keycloak.location
+             service  = google_cloud_run_service.keycloak.name
+             role     = "roles/run.invoker"
+             member   = "serviceAccount:${var.terraform_deployer_service_account}"
+           }
+           ```
     2. Grant `roles/iam.serviceAccountOpenIdTokenCreator` and `roles/iam.serviceAccountTokenCreator` to the GitHub Actions service account in `project0/main.tf` at the project level.
     3. Update the curl health check validation in `cd.yaml` to search for `"UP"` across the entire response (`grep -q "UP"`) instead of just `head -n 1`.
     4. Add `RUNNER_TRACKING_ID: ""` to the environment variables of the proxy startup step in `cd.yaml` to allow the background process to persist across steps.

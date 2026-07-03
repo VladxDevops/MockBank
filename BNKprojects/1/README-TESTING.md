@@ -8,6 +8,8 @@ Before running the script, ensure your local environment is configured:
 1.  **GCP Authenticated:** Run `gcloud auth login` and `gcloud auth application-default login`.
 2.  **Required Tools:** Ensure `curl`, `jq`, and `gcloud` (v450.0.0+) are installed.
 3.  **Permissions:** You must have the `roles/run.invoker` and `roles/secretmanager.secretAccessor` roles on the target project.
+    *   The Keycloak Cloud Run service is deployed as a private service, so it should not be bound to `allUsers` or unauthenticated access.
+    *   In Terraform, the secure invoker binding is defined using the deployer/CI-CD service account, for example: `serviceAccount:${var.terraform_deployer_service_account}`.
 
 ## Getting Started
 

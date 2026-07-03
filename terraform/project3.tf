@@ -12,6 +12,7 @@ module "project3" {
   keycloak_url                              = var.keycloak_url
   keycloak_administrator_username           = var.keycloak_administrator_username
   keycloak_administrator_password           = var.keycloak_administrator_password
+  enable_keycloak_identity_config           = var.enable_keycloak_identity_config
   #teller_portal_certificate_id              = var.teller_portal_certificate_id
 }
 

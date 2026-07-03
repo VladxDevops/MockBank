@@ -126,6 +126,12 @@ variable "keycloak_url" {
   default     = ""
 }
 
+variable "enable_keycloak_identity_config" {
+  description = "Set to true only when a Keycloak admin endpoint is reachable, typically through the Cloud Run proxy in the Project 3 identity configuration job."
+  type        = bool
+  default     = false
+}
+
 #keycloak_client_id
 variable "keycloak_client_id" {
   description = "Keycloak Clien ID"

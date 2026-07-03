@@ -54,6 +54,12 @@ variable "keycloak_administrator_password" {
   type        = string
 }
 
+variable "enable_keycloak_identity_config" {
+  description = "Set to true only when the Keycloak admin API is reachable, for example through gcloud run services proxy."
+  type        = bool
+  default     = false
+}
+
 #Teller portal: 
 #variable "teller_portal_certificate_id" {
 #  description = "Teller portal Certificate ID"

@@ -17,6 +17,8 @@ terraform {
 # authentication protocol, and there is no implementation of legacy SAML support.
 
 resource "keycloak_realm" "mockbank_realm" {
+  count = var.enable_keycloak_identity_config ? 1 : 0
+
   realm                = "Mockbankrealm"
   enabled              = true
   display_name         = "MockBank Digital"
@@ -24,7 +26,9 @@ resource "keycloak_realm" "mockbank_realm" {
 }
 
 resource "keycloak_openid_client" "retail_app" {
-  realm_id              = keycloak_realm.mockbank_realm.id
+  count = var.enable_keycloak_identity_config ? 1 : 0
+
+  realm_id              = keycloak_realm.mockbank_realm[0].id
   client_id             = "retail-app"
   name                  = "Retail Banking Application"
   enabled               = true
@@ -38,7 +42,9 @@ resource "keycloak_openid_client" "retail_app" {
 }
 
 resource "keycloak_openid_client_scope" "risk_scope" {
-  realm_id               = keycloak_realm.mockbank_realm.id
+  count = var.enable_keycloak_identity_config ? 1 : 0
+
+  realm_id               = keycloak_realm.mockbank_realm[0].id
   name                   = "risk_assessment"
   description            = "Access to risk assessment services"
   include_in_token_scope = true

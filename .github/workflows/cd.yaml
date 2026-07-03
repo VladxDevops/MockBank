@@ -301,6 +301,7 @@ jobs:
         working-directory: ./terraform
         env:
           TF_VAR_keycloak_url: "http://127.0.0.1:8080"
+          TF_VAR_bootstrap: "false"
         run: |
           # Materialize secrets to dev.tfvars
           cat <<'EOF' > dev.tfvars
@@ -309,6 +310,7 @@ jobs:
           
           # Run Terraform commands to configure Keycloak via the active proxy
           # We explicitly pass -var="keycloak_url=..." to override the value defined in dev.tfvars
+          # and -var="bootstrap=false" to ensure the Keycloak provider uses the real admin credentials.
           terraform init -input=false -reconfigure \
             -backend-config="bucket=terraform_state_bckup_bnk-project" \
             -lock-timeout=20m
@@ -320,6 +322,8 @@ jobs:
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -var="keycloak_url=http://127.0.0.1:8080" \
+            -var="enable_keycloak_identity_config=true" \
+            -var="bootstrap=false" \
             -target=module.project3
           
           terraform apply -auto-approve \
@@ -327,6 +331,8 @@ jobs:
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
             -var="keycloak_url=http://127.0.0.1:8080" \
+            -var="enable_keycloak_identity_config=true" \
+            -var="bootstrap=false" \
             -target=module.project3
 
   release-transaction-service:

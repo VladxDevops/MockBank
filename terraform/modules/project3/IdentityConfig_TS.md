@@ -23,7 +23,7 @@ Common symptoms and probable causes
 	- Likely causes: Keycloak image was built without health extension (`KC_HEALTH_ENABLED=false`), proxy command failed due to Cloud SDK missing components, port conflict in the runner, or Keycloak taking longer than expected to initialize.
 
 - Symptom: Terraform apply (Identity) fails with Keycloak API errors (401/403/invalid redirect_uri/realm import failures).
-	- Likely causes: wrong `TF_VAR_keycloak_url`, health endpoint not ready, or Keycloak admin credentials mismatched (KEYCLOAK_ADMIN_PASSWORD secret incorrect).
+	- Likely causes: wrong `TF_VAR_keycloak_url`, missing explicit `bootstrap=false`, health endpoint not ready, or Keycloak admin credentials mismatched (`KEYCLOAK_ADMIN_PASSWORD` secret incorrect).
 
 -- Symptom: Cloud Run proxy or service errors (connection refused, 404 on `/health/live`, or logs showing startup failures).
 	- Likely causes: Cloud Run service not deployed or in wrong project/region, deployed image missing health extension (`KC_HEALTH_ENABLED=false`), incorrect `TF_VAR_keycloak_url`, service ingress/permissions preventing proxy access, or Keycloak startup errors (DB connectivity, realm import failures).
