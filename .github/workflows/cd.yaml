@@ -315,7 +315,12 @@ jobs:
           
           terraform workspace select -or-create projectZERO
           
-          terraform plan -input=false -lock-timeout=20m -var-file="dev.tfvars" -var="keycloak_url=http://127.0.0.1:8080" -target=module.project3
+          terraform plan \
+            -input=false \
+            -lock-timeout=20m \
+            -var-file="dev.tfvars" \
+            -var="keycloak_url=http://127.0.0.1:8080" \
+            -target=module.project3
           
           terraform apply -auto-approve \
             -input=false \

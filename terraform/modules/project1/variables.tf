@@ -71,10 +71,18 @@ variable "keycloak_administrator_username" {
   type        = string
 }
 
+variable "keycloak_database_password_value" {
+  description = "The value of the Keycloak database password."
+  type        = string
+  sensitive   = true
+}
+
+
 variable "retail_app_session_secret_id" {
   description = "The full ID of the session secret managed in Project 0"
   type        = string
 }
+
 
 
 #Habia una vez un barco chiquito...

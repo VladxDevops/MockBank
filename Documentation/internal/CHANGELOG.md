@@ -14,6 +14,18 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.8.5] - 2026-07-02
+### Added
+- **Documentation**: Expanded `Documentation/internal/transcripts.md` into the sanitized AI session transcript ledger with usage rules, security constraints, entry template, and the first session entry.
+- **Agent Protocols**: Added transcript ledger usage instructions to `Documentation/internal/AGENTS.md`, `Documentation/internal/GEMINI.md`, and `terraform/AGENTS.md`.
+
+## [0.8.4] - 2026-06-30
+### Fixed
+- **Identity Service**: Resolved `401 Unauthorized` initialization errors in the Keycloak provider during GitHub Actions CD deployment.
+    - Moved the Keycloak administrator password secret version creation from `module.project1` to `module.project0` (Foundation), and changed it to use the static `var.keycloak_administrator_password` rather than a randomly generated password. This aligns the container credentials with the credentials used by the Terraform root Keycloak provider and local testing suite.
+    - Declared and populated the `google_secret_manager_secret_version` resource for `keycloak-administrator-username` using `var.keycloak_administrator_username` within `module.project0`.
+    - Updated the Keycloak Cloud Run service container in `module.project1` to retrieve the `KEYCLOAK_ADMIN` username from Secret Manager rather than exposing the variable directly.
+
 ## [0.8.0] - 2026-05-28
 ### Added
 - **Terraform Foundation**: Successfully consolidated core infrastructure into the `project0` module, establishing a "Single Pane of Glass" for foundational services.

@@ -38,6 +38,12 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/GEMINI.md`**: AI usage rules and data sanitization.
 *   **`Documentation/internal/TESTING.md`**: Testing strategies (Mocking, Journeys).
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
+*   **`Documentation/internal/trasnscripts.md`**: Sanitized AI session summaries, troubleshooting outcomes, and durable follow-ups.
+
+### Transcript Ledger Protocol
+*   For Terraform or CI/CD troubleshooting sessions, add a sanitized summary to `Documentation/internal/trasnscripts.md` when the result changes process, state-management knowledge, IAM guidance, or deployment behavior.
+*   Never store `.tfvars` contents, service account keys, private credentials, raw tokens, or unmasked project/customer data in transcript entries.
+*   If the session produces an infrastructure change or documentation rule, update the relevant `CHANGELOG.md` and source document in the same change.
 
 ### Recent Architectural Shifts
 *   **CI/CD Consolidation (Migration):** Foundational security resources (Workload Identity Federation, GitHub Actions Service Accounts, and Project-wide IAM) are now centralized in `modules/project0`. Service-specific modules (e.g., `project3`) must consume these via variables to maintain a single source of truth for identity.

@@ -189,6 +189,8 @@ resource "google_service_networking_connection" "private_vpc_connection" {
   depends_on = [google_project_service.service_networking]
 }
 
+
+
 # --- IAM Foundation ---
 
 resource "google_project_iam_member" "cloudrun_vpc_access" {

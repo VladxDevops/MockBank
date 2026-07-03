@@ -40,6 +40,7 @@ Internal policy documents have been consolidated into the `Documentation/interna
 *   **`Documentation/internal/GEMINI.md`**: AI usage rules and data sanitization.
 *   **`Documentation/internal/TESTING.md`**: Testing strategies (Mocking, Journeys).
 *   **`Documentation/internal/CONTRIBUTING.md`**: PR process and coding standards.
+*   **`Documentation/internal/trasnscripts.md`**: Sanitized AI session summaries and durable chat outcomes.
 
 
 Terraform imports should include the .tfvars file to prevent the terminal for asking already existing inputs.
@@ -53,6 +54,13 @@ Terraform imports should include the .tfvars file to prevent the terminal for as
 *   **Path Absolute Accuracy:** All file references and diffs must use absolute paths to ensure context continuity across multi-directory projects.
 *   **Diff Mode Requirement:** Each response providing code changes must include a "preview in diff mode" (unified diff format) with absolute paths to ensure the user knows exactly where and how to insert the code.
 *   **Context Verification:** Before proposing a fix for a "crashed" service, Agents must request the last 50 lines of logs to avoid guessing the failure mode (e.g., distinguishing between OOM and Connection Refused).
+
+### Transcript Ledger Protocol
+*   **Session Memory:** Agents must use `Documentation/internal/trasnscripts.md` to record sanitized summaries of important AI-assisted sessions, including requests, decisions, outcomes, and follow-up actions.
+*   **No Sensitive Data:** Transcript entries must never contain secrets, private keys, access tokens, unmasked PII, real customer data, or full sensitive logs.
+*   **When to Update:** Add an entry when a session changes project process, architecture, security posture, troubleshooting knowledge, or documentation behavior.
+*   **Source-of-Truth Rule:** If a transcript entry creates a durable rule, copy that rule into the relevant source document; do not leave policy only in the transcript ledger.
+*   **Changelog Coupling:** If the session results in a code, architecture, or documentation change, update the relevant `CHANGELOG.md` in the same change.
 
 ### 5. Declarative Configuration Directive
 *   **Source of Truth:** All infrastructure and application state (Clients, Realms, Policies) must reside in version-controlled files (HCL, JSON, YAML).

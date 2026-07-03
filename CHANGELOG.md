@@ -2,6 +2,18 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [0.8.5] - 2026-07-02
+### Added
+- **Documentation**: Established `Documentation/internal/transcripts.md` as the sanitized AI session transcript ledger and added first-entry usage guidance.
+- **Agent Protocols**: Cross-linked transcript ledger requirements from internal AI/agent documentation.
+
+## [0.8.4] - 2026-06-30
+### Fixed
+- **Identity Service**: Resolved `401 Unauthorized` initialization errors in the Keycloak provider during GitHub Actions CD deployment.
+    - Moved the Keycloak administrator password secret version creation from `module.project1` to `module.project0` (Foundation), and changed it to use the static `var.keycloak_administrator_password` rather than a randomly generated password. This aligns the container credentials with the credentials used by the Terraform root Keycloak provider and local testing suite.
+    - Declared and populated the `google_secret_manager_secret_version` resource for `keycloak-administrator-username` using `var.keycloak_administrator_username` within `module.project0`.
+    - Updated the Keycloak Cloud Run service container in `module.project1` to retrieve the `KEYCLOAK_ADMIN` username from Secret Manager rather than exposing the variable directly.
+
 ## [0.8.3] - 2026-06-23
 ### Fixed
 - **Infrastructure**: Resolved persistent `403 Forbidden` errors in Project 1 by cleaning up ghost SQL resources from the Terraform state after manual deletion of the parent instance.

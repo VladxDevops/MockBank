@@ -13,6 +13,7 @@ Gemini Code Assist is utilized to accelerate development, refactor code, and gen
 *   **Persistent Memory (MemPalace/LTM):** If using agents with long-term memory capabilities:
     *   **Memory Palace Standard:** We use a documentation-based LTM approach via `KNOWLEDGE_MAP.md`. 
     *   **Notation:** Use AAAK (As Always, All Knowledge) headers and TOON (Token Oriented Object Notation) for relationship definitions to maximize token efficiency.
+    *   **Transcript Ledger:** Use `Documentation/internal/trasnscripts.md` for sanitized summaries of important AI-assisted sessions. Store decisions, outcomes, and follow-ups, not verbatim chats.
     *   No PII or production secrets may be "memorized."
     *   Context files must be updated immediately in `CHANGELOG.md` when architectural bounds shift.
 

@@ -32,9 +32,10 @@ resource "random_id" "database_name_suffix" {
   byte_length = 4
 }
 
-resource "google_secret_manager_secret_version" "keycloak_database_password_val" {
+#This saves the keycloak database password in secret manager value. 
+resource "google_secret_manager_secret_version" "keycloak_database_password_value" {
   secret      = var.keycloak_database_password_secret_id
-  secret_data = random_password.keycloak_database_password.result
+  secret_data = var.keycloak_database_password_value #Previously: random_password.keycloak_database_password.result
 }
 
 # ------------------------------------------------------------------------------

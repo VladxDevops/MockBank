@@ -151,6 +151,10 @@ variable "bootstrap" {
   default     = false
 }
 
+variable "keycloak_database_password_value" {
+  description = "The value of the Keycloak database password."
+  type        = string
+  sensitive   = true
+}
 
-
-###Habia una vez un barco chiquito...
+#Habia una vez un barco chiquito...
