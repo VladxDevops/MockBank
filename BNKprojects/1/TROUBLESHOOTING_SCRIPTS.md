@@ -132,7 +132,60 @@ bash -x ./test-keycloak.sh validate
 *   **Cause:** Cloud Run is configured with a minimum instance count of `0`. When idle, the service scales down. Waking the container (cold start) and setting up database pools can take longer than the default 30-second wait loop in `test-keycloak.sh`.
 *   **Fix:** Increase the connection timeout wait loop range in `test-keycloak.sh` (e.g., to `{1..90}` seconds) to allow the container sufficient time to perform a cold start and report health `UP`.
 
-## 13. Prevention Protocols (Operational Standards)
+## 13. Terraform Provider 403 Forbidden Error (Keycloak Service Unreachable)
+
+*   **Symptom:** Running `terraform plan -target=module.project3` (or `terraform apply` targeting Keycloak provider resources) fails with:
+    ```
+    Error: error initializing keycloak provider
+    failed to perform initial login to Keycloak: error sending POST request to
+    https://keycloak-service-[PROJECT_ID].us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden
+    ```
+
+*   **Root Cause:** The Keycloak Cloud Run service is intentionally **private** (secure-by-default):
+    - No public ingress allowed (no `--allow-unauthenticated` flag).
+    - Requires caller to have `roles/run.invoker` IAM permission.
+    - The Terraform keycloak provider (mrparkers/keycloak) immediately tries to authenticate when initializing.
+    - If the provider is configured with the public Cloud Run URL and the caller lacks `roles/run.invoker`, Cloud Run returns `403 Forbidden`.
+
+*   **Why This Is Not a Bug:** This is **architectural and cannot be eliminated**. The Keycloak service must remain private for security; exposing it publicly would compromise the Zero Trust platform design. The 403 error is the **correct, intended behavior**.
+
+*   **Workaround (Required Every Time):**
+    1. **Step 1:** In one terminal, create a local authenticated proxy tunnel:
+       ```bash
+       gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+       ```
+       Wait for the message: `Proxy is successfully tunnelled to keycloak-service on http://127.0.0.1:8080`
+
+    2. **Step 2:** In another terminal, run Terraform with the local proxy URL override:
+       ```bash
+       terraform plan \
+         -var-file="dev.tfvars" \
+         -var="keycloak_url=http://127.0.0.1:8080" \
+         -var="bootstrap=false" \
+         -target=module.project3
+       
+       terraform apply -auto-approve \
+         -var-file="dev.tfvars" \
+         -var="keycloak_url=http://127.0.0.1:8080" \
+         -var="bootstrap=false" \
+         -target=module.project3
+       ```
+
+*   **Key Parameters:**
+    - `-var="keycloak_url=http://127.0.0.1:8080"` - Overrides the public HTTPS URL from `dev.tfvars` to use the local proxy.
+    - `-var="bootstrap=false"` - Disables bootstrap mode (use real credentials instead of bootstrap placeholders).
+
+*   **Why GitHub Actions Doesn't Need the Workaround:**
+    - The CI/CD workflow (`.github/workflows/cd.yaml`) automatically starts the proxy in the `configure-identity` job.
+    - The job passes `-var="keycloak_url=http://127.0.0.1:8080"` to Terraform.
+    - Local developers must provide the same setup manually.
+
+*   **Debugging:**
+    - Verify IAM binding exists: `gcloud run services get-iam-policy keycloak-service --region us-south1 --format=json`
+    - Check proxy is running: `curl http://127.0.0.1:8080/health/live` (should return `200 UP`)
+    - See [ERROR_403_EXPLANATION.md](../../../ERROR_403_EXPLANATION.md) for comprehensive documentation.
+
+## 14. Prevention Protocols (Operational Standards)
 To prevent these authentication and configuration issues in future database migrations:
 1. **Dynamic Environment Files:** Never commit or hardcode credentials. Generate the local testing `test-env.sh` dynamically using metadata from GCP (such as querying Cloud Run configuration and retrieving secrets from Secret Manager).
 2. **Post-Recreation Checklist:** Whenever `terraform apply` or `fix_sql_state.sh` is executed to recreate the SQL instance, immediately execute the Keycloak realm import flow. Treat database recreation as a destructive task requiring active configuration seeding.

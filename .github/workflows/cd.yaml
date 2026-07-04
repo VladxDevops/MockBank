@@ -84,6 +84,7 @@ jobs:
           terraform plan \
             -input=false \
             -var-file="dev.tfvars" \
+            -var="bootstrap=true" \
             -target=module.project0
 
   terraform-apply:
@@ -139,6 +140,7 @@ jobs:
             -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
+            -var="bootstrap=true" \
             -target=module.project0
 
   build-keycloak:
@@ -241,6 +243,7 @@ jobs:
             -input=false \
             -lock-timeout=20m \
             -var-file="dev.tfvars" \
+            -var="bootstrap=false" \
             -target=module.project1
 
   configure-identity:

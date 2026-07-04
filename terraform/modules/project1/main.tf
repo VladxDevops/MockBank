@@ -165,6 +165,9 @@ resource "google_cloud_run_service" "keycloak" {
           }
         }
         # Using admin username from Secret Manager for consistency and security
+        # The Keycloak admin user is created at runtime by Cloud Run when these
+        # environment variables are supplied. This satisfies the 'container creation'
+        # requirement without hardcoding credentials into the image.
         env {
           name = "KEYCLOAK_ADMIN"
           value_from {

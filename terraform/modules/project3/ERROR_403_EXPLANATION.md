@@ -144,9 +144,67 @@ This should return **nothing**. If it returns results, the insecure binding is s
    - Terraform developers should document that `keycloak_url` in `dev.tfvars` is for **informational/external reference only**, not for direct Terraform provider use during identity configuration.
    - The Terraform provider always expects a local proxy URL in CI/CD and local development.
 
+## Known Unsolved Issue: Persistent 403 Forbidden in Local Development
+
+**Status:** `UNRESOLVED` - This is an architectural constraint, not a bug.
+
+**Problem Definition**: 
+When executing `terraform plan -target=module.project3` (or any Keycloak provider operation) **locally without the proxy**, the command fails with:
+```
+Error: error initializing keycloak provider
+failed to perform initial login to Keycloak: error sending POST request to
+https://keycloak-service-[PROJECT_ID].us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden
+```
+
+**Why It Cannot Be "Fixed"**:
+- The Keycloak Cloud Run service is intentionally **private** (secure-by-default, zero-trust architecture).
+- No unauthenticated caller (including Terraform itself) can POST to `/realms/master/protocol/openid-connect/token` on a private Cloud Run service.
+- This is **the correct security behavior**; attempting to make the service publicly invokable would weaken the platform's security posture.
+
+**Workaround Required Every Time**:
+Users must follow the proxy pattern **every single time** they run `terraform plan/apply` targeting Keycloak provider resources:
+
+1. **Terminal 1 (Background)**: Start the authenticated proxy tunnel:
+   ```bash
+   gcloud run services proxy keycloak-service --region us-south1 --port 8080 &
+   ```
+
+2. **Terminal 2 (Foreground)**: Run Terraform with local proxy URL override:
+   ```bash
+   cd terraform
+   terraform plan \
+     -var-file="dev.tfvars" \
+     -var="keycloak_url=http://127.0.0.1:8080" \
+     -var="bootstrap=false" \
+     -target=module.project3
+   ```
+
+**Why This Workaround Is Necessary**:
+- The proxy tunnel authenticates on behalf of the local caller using the active `gcloud` credentials.
+- Cloud Run validates the request against the IAM policy and grants access because the identity has `roles/run.invoker`.
+- The Keycloak provider can then successfully POST credentials to the localhost endpoint (which is not subject to Cloud Run's public ingress policies).
+
+**CI/CD Behavior**:
+GitHub Actions workflows (`cd.yaml`) handle this automatically because:
+1. The GitHub Actions runner authenticates as the configured service account (e.g., `sa-github-actions`).
+2. The workflow's `Start GCloud Proxy` step (in `configure-identity` job) creates the tunnel.
+3. The `Configure Identity (Terraform Apply)` step uses `-var="keycloak_url=http://127.0.0.1:8080"`.
+4. CI/CD users do **not** need to manually start a proxy.
+
+**Do NOT Attempt These "Fixes"**:
+- ❌ Make the Keycloak Cloud Run service publicly accessible (`--allow-unauthenticated` flag). This would expose the admin API to the internet.
+- ❌ Add `allUsers` to the `roles/run.invoker` IAM binding. This violates the Zero Trust security model.
+- ❌ Disable IAM-based access control on Cloud Run. Cloud Run's ingress policy is a core security boundary.
+- ❌ Modify the Terraform provider configuration to avoid authentication checks. The mrparkers/keycloak provider always needs credentials; there is no "skip auth" mode for admin operations.
+
+**Documentation & Tracking**:
+- This constraint is documented in [Keycloak Troubleshooting Guide](./BNKprojects/1/container/TROUBLESHOOTING/TROUBLESHOOTING.md) (Scenario P).
+- Local development setup instructions (with proxy examples) are in [internalREADME.md](./internalREADME.md).
+- GitHub Actions setup is in [.github/workflows/cd.yaml](./.github/workflows/cd.yaml).
+
 ## Debugging Checklist
 
-- [ ] Is `terraform/modules/project1/main.tf` is the correct IAM binding (not `allUsers`)?
+- [ ] Is `terraform/modules/project1/main.tf` containing the correct IAM binding (not `allUsers`)?
 - [ ] Has `terraform apply -target=module.project1` been run successfully?
 - [ ] Is the `configure-identity` job running **after** `deploy-identity` in the workflow?
 - [ ] Is the GitHub Actions `Start GCloud Proxy` step outputting `Proxy is successfully tunnelled`?
