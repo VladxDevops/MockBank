@@ -45,7 +45,7 @@ This keeps the Keycloak service private while still allowing automated bootstrap
 Avoid making Keycloak public just to satisfy Terraform. Instead:
 
 - Retain private Cloud Run ingress.
-- Grant only the CI/CD service account `roles/run.invoker` on the Keycloak service.
+- Grant only the CI/CD and Cloud Build (in this case it is using the compute service account) service accounts `roles/run.invoker` on the Keycloak service.
 - Do not use `allUsers` or broad public ingress.
 - Use local proxying in CI/CD for Keycloak provider initialization.
 
@@ -60,13 +60,13 @@ If `configure-identity` runs first, the provider will attempt the public URL and
 
 ## Recommended Implementation Steps
 
-1. Add a dedicated Cloud Build job / GitHub Actions job for identity configuration.
-2. Ensure the identity configuration job receives the runtime service URL only from the proxy, not the public URL.
-3. Confirm the Keycloak Cloud Run service account has:
+1. Add a dedicated Cloud Build job / GitHub Actions job for identity configuration. Status: Pending. 
+2. Ensure the identity configuration job receives the runtime service URL only from the proxy, not the public URL. Status: Pending. 
+3. Confirm the Keycloak Cloud Run service account has: 
    - `roles/secretmanager.secretAccessor`
    - `roles/cloudsql.client`
    - `roles/artifactregistry.reader`
-4. Confirm the CI/CD user/service account is granted `roles/run.invoker` on the Keycloak Cloud Run service.
+4. Confirm the CI/CD user/service account is granted `roles/run.invoker` on the Keycloak Cloud Run service. Status: Done. 
 5. Add a workflow-level health check to block configuration until `/health/live` responds 200.
 6. Document the exact local dev workflow and CI/CD sequence.
 
@@ -100,9 +100,7 @@ This migration should be reflected clearly in the repo documentation. At minimum
 - `terraform/modules/project3/IdentityConfig_TS.md`
   - Add troubleshooting guidance showing that the 403 is expected for public runtime URLs and that proxy/local access is required.
 - `BNKprojects/1/TROUBLESHOOTING_SCRIPTS.md`
-  - Add Section on `terraform plan`/`terraform apply` 403 from Keycloak provider and the Cloud Build proxy workaround.
-- `internalREADME.md`
-  - Add a dedicated subsection describing the required local dev proxy and CI/CD job ordering.
+  - Add Section on `terraform plan`/`terraform apply` 403 from Keycloak provider and the Cloud Build proxy workaround. 
 - `README.md`
   - Add a brief callout in the setup section that this error is an architecture constraint and the correct bootstrap path is via proxy/Cloud Build.
 - `CHANGELOG.md`
