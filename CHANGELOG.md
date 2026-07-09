@@ -2,6 +2,19 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [0.8.6] - 2026-07-09
+### Added
+- **CI/CD / Identity**: Created a new Cloud Build configuration [cloudbuild-keycloak.yaml](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/container/cloudbuild-keycloak.yaml) in `BNKprojects/1/container/`.
+    - Automatically installs the required `unzip`, `curl`, `jq`, and `terraform` CLI within the Cloud Build step container.
+    - Resolves and installs the `cloud-run-proxy` component if missing.
+    - Establishes a background authenticated tunnel to the private Keycloak Cloud Run service using `gcloud run services proxy`.
+    - Waits for the Keycloak health endpoint `/health/live` to return a `200` HTTP status with `"UP"` before triggering configuration.
+    - Runs `terraform apply` targeting `module.project3` (using the local proxy url `http://127.0.0.1:8080`) to apply Keycloak identity configurations securely.
+    - Explicitly skips building and pushing the Keycloak Docker container, performing configuration bootstrapping only.
+- **IAM / Security**: Declared `roles/run.invoker` (Cloud Run Invoker) role for the default Compute Engine Service Account (`[PROJECT_NUMBER]-compute@developer.gserviceaccount.com`) in `terraform/modules/project0/main.tf` to authorize the default Compute Engine SA to invoke private Cloud Run services. Added a code comment noting that this Compute Engine SA is also utilized by Cloud Build for deployment/configuration.
+
+
+
 ## [0.8.5] - 2026-07-02
 ### Added
 - **Documentation**: Established `Documentation/internal/transcripts.md` as the sanitized AI session transcript ledger and added first-entry usage guidance.

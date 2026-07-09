@@ -639,6 +639,15 @@ resource "google_project_iam_member" "keycloak_run_invoker" {
   member  = "serviceAccount:${var.keycloak_serv_acc_account_id}@${var.compute_project_id}.iam.gserviceaccount.com"
 }
 
+# Allow the default Compute Engine service account to invoke Cloud Run services.
+# Note: This default Compute Service Account is also utilized by Cloud Build to perform deployment and configuration tasks.
+resource "google_project_iam_member" "compute_engine_default_sa_cloud_run_invoker" {
+  project = var.compute_project_id
+  role    = "roles/run.invoker"
+  member  = "serviceAccount:${var.compute_project_number}-compute@developer.gserviceaccount.com"
+}
+
+
 # --- Shared Secret Placeholders ---
 
 resource "google_secret_manager_secret" "keycloak_database_password" {

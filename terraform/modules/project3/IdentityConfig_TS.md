@@ -206,6 +206,25 @@ Example quick fixes (commands)
 
 	gh secret set TFVARS_DEV --env DEV --body "$(cat terraform/dev.tfvars.example)"
 
+### Keycloak Identity Configuration via Cloud Build
+
+If local execution encounters authentication or networking errors, you can run the bootstrap process securely within the GCP environment using Cloud Build. This runs `terraform apply -target=module.project3` through an authenticated proxy and does not build any container.
+
+**Execution Command:**
+```bash
+gcloud builds submit --config=BNKprojects/1/container/cloudbuild-keycloak.yaml \
+  --substitutions=_SERVICE_NAME="keycloak-service",_REGION="us-south1",_STATE_BUCKET="terraform_state_bckup_bnk-project",_TERRAFORM_VERSION="1.5.7" \
+  .
+```
+
+**What it does:**
+1. Spins up a temporary Google Cloud SDK container.
+2. Installs system dependencies and the specified Terraform CLI version.
+3. Authenticates to Cloud Run, spawning `gcloud run services proxy`.
+4. Polls `/health/live` on port `8080` until HTTP 200 containing `"UP"` is returned.
+5. Performs `terraform init` and applies `module.project3` targeting the local proxy URL.
+6. Terminates and cleans up the proxy process upon completion/error.
+
 Next steps (recommended)
 - I will populate this file in the repo (done). If you'd like, I can also:
 	- Add a short shell script `scripts/validate-wif.sh` to run the WIF & SA checks, or
@@ -213,4 +232,6 @@ Next steps (recommended)
 
 
 Created: 2026-07-02 — Consolidated from repository README, workflow definitions, and Keycloak troubleshooting notes.
+Updated: 2026-07-09 — Appended Google Cloud Build method.
+
 

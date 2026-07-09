@@ -110,8 +110,21 @@ terraform plan -var-file="dev.tfvars" -target=module.project3
 
 Error: error initializing keycloak provider
 failed to perform initial login to Keycloak: error sending POST request to
-https://keycloak-service-799346288567.us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden
+https://keycloak-service-REMOVED-GCP-PROJECT-NUMBER.us-south1.run.app/realms/master/protocol/openid-connect/token: 403 Forbidden
 ```
 
 **Status:** Error is persistent and expected. Workaround is required and working in CI/CD.
+
+---
+
+## Documenting Cloud Build keycloak configuration (July 9, 2026)
+
+We have updated the [cloudbuild-keycloak.yaml](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/container/cloudbuild-keycloak.yaml) file to handle the authentication and wait sequence without building any Docker container. It initiates an authenticated proxy to private Cloud Run, loops until healthy (UP), and then triggers Terraform configuration for `module.project3`.
+
+Related documentation files updated:
+- [CHANGELOG.md](file: /Bank/CHANGELOG.md) — Added entry for `0.8.6` mapping the new Cloud Build setup.
+- [internalREADME.md](file: /Bank/internalREADME.md) — Added instructions and execution command.
+- [TROUBLESHOOTING_SCRIPTS.md](file: /Bank/BNKprojects/1/TROUBLESHOOTING_SCRIPTS.md) — Appended Section 15 detailing the workflow behavior.
+- [IdentityConfig_TS.md](file: /Bank/terraform/modules/project3/IdentityConfig_TS.md) — Appended the Cloud Build method and behavior.
+
 

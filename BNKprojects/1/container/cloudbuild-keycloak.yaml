@@ -1,0 +1,93 @@
+# This file configures Keycloak Identity (Project 3) in Cloud Build.
+# It does NOT build the Keycloak container.
+# It starts the authenticated proxy to Cloud Run, waits for Keycloak to be ready,
+# and runs Terraform apply for the identity configuration.
+
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        set -euo pipefail
+
+        echo "=========================================================="
+        echo "Installing system tools and Terraform CLI..."
+        echo "=========================================================="
+        apt-get update -qq
+        apt-get install -y -qq curl unzip jq
+
+        TERRAFORM_VERSION="${_TERRAFORM_VERSION}"
+        echo "Downloading Terraform v${TERRAFORM_VERSION}..."
+        curl -fsSL "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip
+        unzip -o terraform.zip -d /usr/local/bin/
+        rm terraform.zip
+        terraform --version
+
+        echo "=========================================================="
+        echo "Configuring Cloud Run Proxy component..."
+        echo "=========================================================="
+        if ! gcloud components list --quiet | grep -q 'cloud-run-proxy'; then
+          gcloud components install cloud-run-proxy --quiet
+        fi
+
+        echo "=========================================================="
+        echo "Starting Cloud Run proxy for service ${_SERVICE_NAME} in ${_REGION}..."
+        echo "=========================================================="
+        gcloud run services proxy "${_SERVICE_NAME}" --region "${_REGION}" --port 8080 --quiet &
+        PROXY_PID=$!
+        trap 'kill ${PROXY_PID} || true' EXIT
+
+        echo "Waiting for Keycloak health endpoint at http://127.0.0.1:8080/health/live..."
+        READY=false
+        for i in $(seq 1 60); do
+          RESPONSE=$(curl -s -w "\n%{http_code}" --max-time 5 http://127.0.0.1:8080/health/live || echo "CONN_FAILED 000")
+          CODE=$(echo "${RESPONSE}" | tail -n 1)
+          if [[ "${CODE}" == "200" ]] && echo "${RESPONSE}" | grep -q "UP"; then
+            echo "Keycloak health check returned HTTP 200 and UP."
+            READY=true
+            break
+          fi
+          echo "Attempt ${i}: HTTP ${CODE}"
+          sleep 2
+        done
+
+        if [ "$READY" != "true" ]; then
+          echo "ERROR: Keycloak health check failed. Dumping latest response:"
+          curl -v http://127.0.0.1:8080/health/live || true
+          exit 1
+        fi
+
+        echo "=========================================================="
+        echo "Initializing and running Terraform Apply (Project 3)..."
+        echo "=========================================================="
+        cd /workspace/terraform
+
+        terraform init -input=false -reconfigure \
+          -backend-config="bucket=${_STATE_BUCKET}" \
+          -lock-timeout=20m
+
+        terraform workspace select -or-create projectZERO
+
+        terraform apply -auto-approve \
+          -input=false \
+          -lock-timeout=20m \
+          -var-file="dev.tfvars" \
+          -var="keycloak_url=http://127.0.0.1:8080" \
+          -var="enable_keycloak_identity_config=true" \
+          -var="bootstrap=false" \
+          -target=module.project3
+
+        echo "=========================================================="
+        echo "SUCCESS: Keycloak identity configuration successfully applied."
+        echo "=========================================================="
+
+substitutions:
+  _REGION: us-south1
+  _REPOSITORY: project1-repo
+  _SERVICE_NAME: keycloak-service
+  _STATE_BUCKET: terraform_state_bckup_bnk-project
+  _TERRAFORM_VERSION: 1.5.7
+
+options:
+  logging: CLOUD_LOGGING_ONLY

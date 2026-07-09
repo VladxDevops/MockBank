@@ -190,3 +190,21 @@ To prevent these authentication and configuration issues in future database migr
 1. **Dynamic Environment Files:** Never commit or hardcode credentials. Generate the local testing `test-env.sh` dynamically using metadata from GCP (such as querying Cloud Run configuration and retrieving secrets from Secret Manager).
 2. **Post-Recreation Checklist:** Whenever `terraform apply` or `fix_sql_state.sh` is executed to recreate the SQL instance, immediately execute the Keycloak realm import flow. Treat database recreation as a destructive task requiring active configuration seeding.
 3. **Keep Passwords Policy-Compliant:** Always ensure default user records in the version-controlled `realm-export.json` contain credentials that meet the password complexity rules defined in the same realm.
+
+## 15. Keycloak Identity Configuration via Cloud Build
+
+If local Terraform configuration encounters `403 Forbidden` issues or network restrictions, you can utilize the secure [cloudbuild-keycloak.yaml](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/container/cloudbuild-keycloak.yaml) configuration to perform the bootstrapping process directly inside the GCP boundary.
+
+*   **Command:**
+    ```bash
+    gcloud builds submit --config=BNKprojects/1/container/cloudbuild-keycloak.yaml \
+      --substitutions=_SERVICE_NAME="keycloak-service",_REGION="us-south1",_STATE_BUCKET="terraform_state_bckup_bnk-project",_TERRAFORM_VERSION="1.5.7" \
+      .
+    ```
+*   **Workflow Behavior:**
+    1. Installs tools (`unzip`, `curl`, `jq`, `terraform` CLI) dynamically in the builder step container.
+    2. Installs the `cloud-run-proxy` gcloud component.
+    3. Spawns an authenticated proxy to route through the secure VPC/IAM perimeter.
+    4. Health checks the Keycloak instance on localhost:8080 until it yields `200` with `"UP"`.
+    5. Initializes and applies the `project3` Terraform module targeting the proxy endpoint.
+
