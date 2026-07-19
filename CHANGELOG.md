@@ -2,6 +2,12 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [0.8.7] - 2026-07-18
+### Added
+- **Documentation / AI Knowledge**: Created [repository_memory.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/GEMMA/memory.md/repository_memory.md) to serve as local long-term memory for Gemma, defining platform topology, network egress/ingress rules, Terraform variables rules, IAM standards, OIDC/SAML specifications, and diagnostic SOPs.
+- **Documentation / Governance**: Created [DOCUMENTATION_HIERARCHY.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/DOCUMENTATION_HIERARCHY.md) to define precedence levels (Level 1: Global Policies, Level 2: Architecture/Operations, Level 3: Localized Guidelines), conflict resolution rules, and the AI context ingestion loading order.
+- **AI Agent Protocols**: Updated [skill.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/GEMMA/skill.md) (v2.1) and [GEMMA.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/GEMMA/GEMMA.md) to integrate the new repository memory file for long-term memory lookup, aligning local AI engineering assistants with current project standards.
+
 ## [0.8.6] - 2026-07-09
 ### Added
 - **CI/CD / Identity**: Created a new Cloud Build configuration [cloudbuild-keycloak.yaml](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/container/cloudbuild-keycloak.yaml) in `BNKprojects/1/container/`.

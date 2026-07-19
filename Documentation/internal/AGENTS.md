@@ -27,6 +27,10 @@ The highest priority for all automated agents (CI/CD runners, Monitoring Bots, A
 *   **Role:** Assist in code generation and architectural review.
 *   **Constraint:** See `Documentation/internal/GEMINI.md` for strict data handling protocols.
 
+### D. AI Assistants (Gemma)
+*   **Role:** Repository Domain Expert & local AI engineering assistant.
+*   **Constraint:** See `Documentation/internal/GEMMA/GEMMA.md` for operating protocol and `Documentation/internal/GEMMA/skill.md` for capabilities.
+
 ## 3. Access Control
 All agents operate under the principle of **Least Privilege**. An agent authorized to read logs must not have permissions to modify infrastructure.
 
