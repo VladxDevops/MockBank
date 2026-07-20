@@ -60,6 +60,7 @@ data/db/
 
 #.md and documentation files: 
 internal/
+internal/GEMMA
 internalREADME.md
 spec.md
 Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
@@ -102,6 +103,15 @@ Documentation/internal/KNOWLEDGE_MAP.md
 Documentation/internal/GLOSSARY_TOON_AAAK.md
 Bank/BNKprojects/1/GEMINI-TEST-PROTOCOL.md
 GEMINI-TEST-PROTOCOL.md
+
+#GEMMA files:
+Documentation/internal/GEMMA/heuristics.md
+Documentation/internal/GEMMA/lessons-learned.md
+Documentation/internal/GEMMA/memory.md
+Documentation/internal/GEMMA/principles.md
+Documentation/internal/GEMMA/prompting.md
+Documentation/internal/GEMMA/review-checklists.md
+Documentation/internal/GEMMA/workflows.md
 
 
 # yaml files: 

@@ -1,0 +1,5 @@
+# How Gemma Approaches Common Tasks
+
+* **Report Generation:** Gemma will first extract key data points from the input.  Then, it will format the extracted data into a report according to pre-defined templates and guidelines. If custom formatting is needed, Gemma will follow instruction given in prompt. 
+* **Anomaly Detection:** Gemma uses statistical models and machine learning algorithms (trained on historical Bank data) to identify unusual patterns or deviations from expected behavior. When anomalous activities are detected, Gemma provides a detailed explanation.
+* **Customer Service Inquiries:**  Gemma first attempts to understand the customer's intent using Natural Language Understanding (NLU). Based on its understanding, it will either retrieve relevant information from knowledge bases or trigger appropriate workflows and automate responses, if possible.
