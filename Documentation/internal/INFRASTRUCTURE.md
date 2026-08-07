@@ -1,3 +1,33 @@
++++
+title = "Common Infrastructure & Shared GCP Resources"
+domain = "infrastructure"
+topics = ["gcp", "terraform-state", "networking", "vpc", "artifact-registry", "cloud-nat"]
+difficulty = "intermediate"
+parent = "README.md"
+children = []
+related = ["Architecture.md", "TERRAFORM_VS_CLOUD_DEPLOY.md", "../../terraform/README.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **System Architecture**: [`Architecture.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md)  
+> **Terraform IaC**: [`terraform/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Details shared GCP infrastructure including centralized GCS Terraform state buckets, VPC layout, NAT, and Artifact Registry.
+- Questions Answered:
+  1. How is Terraform state structured and initialized across GCP projects?
+  2. What is the GCS state bucket path naming convention?
+  3. How are shared networking and Artifact Registry resources managed?
+- When to Retrieve: Querying GCP shared infrastructure, Terraform state management, or network topologies.
+- When NOT to Retrieve: Querying specific microservice application code or local container setup.
+- Prerequisites: [Architecture.md]
+- Follow-up Reading: [../../terraform/README.md]
+-->
+
+---
+
 # Common Infrastructure (Shared)
 
 We will be working in one single GCP project. Please keep in mind that this is a brand new GCP project, thus GCP services may need to be enabled. Most infrastructure will need to be build/deployed. 

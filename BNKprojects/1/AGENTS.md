@@ -1,3 +1,21 @@
++++
+title = "Project 1 (Identity Service) Agent Protocols"
+domain = "identity"
+topics = ["identity", "keycloak", "agents", "project1", "oidc"]
+difficulty = "intermediate"
+parent = "README.md"
+children = []
+related = ["../../Documentation/internal/AGENTS.md", "../../Documentation/internal/SECURITY.md", "ARCHITECTURE.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/README.md)  
+> **Master Agent Protocols**: [`Documentation/internal/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md)  
+> **Security Prime Directive**: [`Documentation/internal/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)
+
+---
+
 # AGENTS.md - Project 1 Protocols
 
 Please: 

@@ -1,3 +1,33 @@
++++
+title = "Keycloak & Identity Protocols Overview"
+domain = "identity"
+topics = ["keycloak", "oidc", "saml", "realms", "jwt", "auth-code-flow"]
+difficulty = "intermediate"
+parent = "README.md"
+children = []
+related = ["../../BNKprojects/1/README.md", "../../BNKprojects/1/PROJECT1_DETAILS.md", "../../BNKprojects/3/SAML_INTERVIEW_QA.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Keycloak Service**: [`BNKprojects/1/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/README.md)  
+> **SAML Architecture**: [`BNKprojects/3/SAML_INTERVIEW_QA.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/3/SAML_INTERVIEW_QA.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Provides technical overview of Keycloak IAM, Realm structures, OIDC vs SAML flows, and JWT tokens.
+- Questions Answered:
+  1. What is Keycloak and how does token issuance work in this platform?
+  2. What is the distinction between master realm and Mockbankrealm?
+  3. How does Authorization Code Flow with PKCE function?
+- When to Retrieve: Querying Keycloak terminology, realm concepts, or OIDC/SAML token issuance mechanisms.
+- When NOT to Retrieve: Diagnosing local container start scripts or Cloud Run Terraform definitions.
+- Prerequisites: [README.md]
+- Follow-up Reading: [../../BNKprojects/1/PROJECT1_DETAILS.md]
+-->
+
+---
+
 # Keycloak & Identity Protocols (Technical Overview)
 
 **NOTICE: This file is for informational purposes only (FYI).**

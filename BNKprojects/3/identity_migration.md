@@ -60,15 +60,23 @@ If `configure-identity` runs first, the provider will attempt the public URL and
 
 ## Recommended Implementation Steps
 
-1. Add a dedicated Cloud Build job / GitHub Actions job for identity configuration. Status: Pending. 
-2. Ensure the identity configuration job receives the runtime service URL only from the proxy, not the public URL. Status: Pending. 
-3. Confirm the Keycloak Cloud Run service account has: 
-   - `roles/secretmanager.secretAccessor`
-   - `roles/cloudsql.client`
-   - `roles/artifactregistry.reader`
-4. Confirm the CI/CD user/service account is granted `roles/run.invoker` on the Keycloak Cloud Run service. Status: Done. 
-5. Add a workflow-level health check to block configuration until `/health/live` responds 200.
-6. Document the exact local dev workflow and CI/CD sequence.
+1. Add a dedicated Cloud Build job / GitHub Actions job for identity configuration. Status: **Done** (`configure-identity` in `.github/workflows/cd.yaml` and `cloudbuild-keycloak.yaml`).
+2. Ensure the identity configuration job receives the runtime service URL only from the proxy, not the public URL. Status: **Done** (`TF_VAR_keycloak_url=http://127.0.0.1:8080`).
+3. Confirm the Keycloak Cloud Run service account has:
+   - `roles/secretmanager.secretAccessor` (Status: **Done**)
+   - `roles/cloudsql.client` (Status: **Done**)
+   - `roles/artifactregistry.reader` (Status: **Done**)
+4. Confirm the CI/CD user/service account is granted `roles/run.invoker` on the Keycloak Cloud Run service. Status: **Done** (`terraform_sa_cloudrun_invoker` & default Compute Engine SA).
+5. Add a workflow-level health check to block configuration until `/health/live` responds 200. Status: **Done** (120s poll loop implemented in GHA & Cloud Build).
+6. Document the exact local dev workflow and CI/CD sequence. Status: **Done** (`IdentityConfig_TS.md`, `TROUBLESHOOTING_SCRIPTS.md`, `identity_migration.md`).
+
+## Next Actions / Remaining Tasks
+
+1. **Live Pipeline Execution & Verification**: Trigger `.github/workflows/cd.yaml` or `cloudbuild-keycloak.yaml` against DEV GCP environment to verify `terraform apply -target=module.project3` succeeds via the proxy tunnel.
+2. **Automated Identity Smoke Testing (`smoke-test-identity`)**: Add an automated post-apply OIDC token fetch step in the workflow to validate live `retail-app` auth.
+3. **Automated Drift Detection**: Configure a scheduled GitHub Actions workflow (cron) to run `terraform plan` for `module.project3` over proxy to detect uncommitted manual Keycloak UI changes.
+4. **Breaking Change & Rollback Simulation**: Document and test `git revert` flow for HCL identity configurations and test workflow failure handling on broken inputs.
+5. **Phased Environment Promotion**: Validate identity configuration rollout across `DEV`, `TEST`, and `PROD` environments using parameter-driven `.tfvars`.
 
 ## Local Developer Workflow
 

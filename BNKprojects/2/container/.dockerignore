@@ -1,0 +1,33 @@
+# Docker Ignore File for Project 1
+
+# Exclude virtual environments
+*.venv
+env/
+
+# Python specific exclusions (adjust as needed)
+__pycache__/
+*.pyc
+*.swp
+.DS_Store
+
+# Exclusion of IDE specific files and folders
+.idea/
+.vscode/
+.git/
+.hg/
+*~
+
+# Exclude build artifacts
+target/
+build/
+dist/
+
+# Exclude logs
+logs/
+
+# Exclude temporary files (adjust based on project needs)
+tmp/
+*.tmp
+
+#Exclude Node.js Dependencies:
+node_modules/

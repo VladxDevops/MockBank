@@ -1,3 +1,24 @@
++++
+title = "Global AI Agent Protocols & Automated Systems Guidelines"
+domain = "agents"
+topics = ["ai-agents", "protocols", "bot-guidelines", "gemma", "gemini", "antigravity"]
+difficulty = "intermediate"
+parent = "README.md"
+children = [
+    "Agents/skills/agents.md",
+    "Agents/GEMMA/GEMMA.md"
+]
+related = ["SECURITY.md", "GEMINI.md", "../../terraform/AGENTS.md", "../../BNKprojects/1/AGENTS.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Security Prime Directive**: [`SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)  
+> **Sub-Agent Protocols**: [`terraform/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/AGENTS.md) | [`BNKprojects/1/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/AGENTS.md)
+
+---
+
 # AGENTS.md - Automated Systems & Bot Protocols
 
 Please: 

@@ -19,38 +19,21 @@
 - [x] **Security Gate:** Implemented SAST scanning in the pipeline.
 
 ## 4. Release Safety & Validation - PENDING
-- [ ] **Phased Deployment:** Verify changes in the `DEV` realm before promoting to `PROD`.
-- [ ] **Automated Smoke Test:** Implemented `smoke-test-identity` job in GHA.
-- [ ] **Rollback Procedure:** Document and test the `git revert` flow to restore identity configuration in case of failure.
+- [ ] **Live Pipeline Execution & Verification:** Execute CD workflow or Cloud Build submit to verify identity apply against live Cloud Run.
+- [ ] **Automated Smoke Test:** Implement `smoke-test-identity` step in GHA to fetch OIDC token via `retail-app` client.
 - [ ] **Drift Detection:** Configure a scheduled job to detect manual changes made in the Keycloak UI that aren't in Git.
+- [ ] **Rollback & Breaking Change Procedure:** Document and test the `git revert` flow and simulate a breaking change.
+- [ ] **Phased Environment Promotion:** Promote and verify changes across `DEV`, `TEST`, and `PROD` realms.
 
 ## 5. Development Plan Status
-Based on `BNKprojects/3/PROJECT_DETAILS.md`, the following steps track the final release:
+Based on `BNKprojects/3/PROJECT3_DETAILS.md`, the following steps track the final release:
 
-1. [ ] **Export Keycloak Realm config to Terraform.** (Pending application after Project 1 deployment)
-2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**
-3. [ ] **Simulate a "breaking change" and fix it via pipeline.** (Dependent on Project 1 configuration)
-
----
-**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
-**Classification: INTERNAL**
-2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**
-3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
+1. [x] **Separate Identity Deployment from Configuration:** Implemented two-stage pipeline with local authenticated proxy.
+2. [x] **Create GitHub Actions workflow (`.github/workflows/cd.yaml`) & Cloud Build config (`cloudbuild-keycloak.yaml`).**
+3. [ ] **Verify live execution via proxy in DEV environment.**
+4. [ ] **Simulate a "breaking change" and fix it via pipeline.**
 
 ---
 **Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
 **Classification: INTERNAL**
-2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**
-3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
 
----
-**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
-**Classification: INTERNAL**
-**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
-**Classification: INTERNAL**
-2. [x] **Create GitHub Actions workflow `.github/workflows/deploy.yml`.**
-3. [ ] **Simulate a "breaking change" and fix it via pipeline.**
-
----
-**Note:** This checklist is maintained by AI and Human review. Project 3 is currently in the IMPLEMENTATION phase.
-**Classification: INTERNAL**

@@ -1,4 +1,22 @@
-# AGENTS.md - Automated Systems & Bot Protocols
++++
+title = "Terraform Infrastructure Agent Protocols"
+domain = "terraform"
+topics = ["terraform", "agents", "iac", "rules", "gcp"]
+difficulty = "intermediate"
+parent = "README.md"
+children = []
+related = ["../Documentation/internal/AGENTS.md", "../Documentation/internal/SECURITY.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md)  
+> **Master Agent Directives**: [`Documentation/internal/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md)  
+> **Security Prime Directive**: [`Documentation/internal/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)
+
+---
+
+# AGENTS.md - Automated Systems & Bot Protocols (Terraform Domain)
 
 Please: 
 Read the internal .md files they are a guidlines for multiple aspect like architechture, instructions, how tos, security, etc. 

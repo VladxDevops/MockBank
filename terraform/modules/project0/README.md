@@ -1,3 +1,33 @@
++++
+title = "Project 0: Foundation Infrastructure Module"
+domain = "terraform"
+topics = ["project0", "wif", "iam", "vpc", "artifact-registry", "cloud-nat", "apis"]
+difficulty = "advanced"
+parent = "../../README.md"
+children = ["PROJECT0DETAILS.md", "TROUBLESHOOTING_PROJECT0.md", "ts_issues.md"]
+related = ["../../../Documentation/internal/SECURITY.md", "../../MIGRATION.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`terraform/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md)  
+> **Troubleshooting Guide**: [`TROUBLESHOOTING_PROJECT0.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/modules/project0/TROUBLESHOOTING_PROJECT0.md)  
+> **Security Directives**: [`Documentation/internal/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Primary documentation for Project 0 Foundation Module (VPC, Cloud NAT, WIF, GitHub Actions SAs, Artifact Registry).
+- Questions Answered:
+  1. How are foundational GCP APIs, Workload Identity Federation (WIF), and GitHub Actions service accounts provisioned?
+  2. How is zero-trust networking (VPC, serverless connector) structured in Project 0?
+  3. How do downstream modules consume Project 0 identity outputs?
+- When to Retrieve: Querying GCP base infrastructure, Workload Identity Federation, or VPC connector setups.
+- When NOT to Retrieve: Querying application-level Keycloak realms or Node.js transfer service routes.
+- Prerequisites: [../../README.md]
+- Follow-up Reading: [TROUBLESHOOTING_PROJECT0.md]
+-->
+
+---
+
 # Project 0: Foundation Infrastructure Module
 
 ## Overview

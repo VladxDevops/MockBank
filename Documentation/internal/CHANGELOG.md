@@ -14,6 +14,11 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.8.8] - 2026-07-29
+### Added
+- **Architecture / Identity**: Reviewed and verified THE IDENTITY CONFIG architecture migration state. Decoupled identity deployment (Project 1 runtime & IAM invoker) from identity configuration (Project 3 Keycloak HCL resources via authenticated local proxy / Cloud Build proxy at `http://127.0.0.1:8080`).
+- **Architecture / Environments**: Formally established the standalone **TEST Environment** domain (GitHub Branch: `TEST`), separate from Project 3. Created dedicated documentation directory [Documentation/internal/environments/test/](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/) containing [README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/README.md) and [RUNBOOK.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/RUNBOOK.md), and environment configuration folder [terraform/environments/test/test.tfvars.example](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/environments/test/test.tfvars.example).
+
 ## [0.8.5] - 2026-07-02
 ### Added
 - **Documentation**: Expanded `Documentation/internal/transcripts.md` into the sanitized AI session transcript ledger with usage rules, security constraints, entry template, and the first session entry.

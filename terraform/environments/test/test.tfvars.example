@@ -1,0 +1,16 @@
+# terraform/environments/test/test.tfvars.example
+# HCL Variable Template for the TEST Environment (Branch: TEST)
+# In CI/CD, this file is materialized at runtime from secret TFVARS_TEST into test.tfvars
+
+compute_project_id                        = "bank-test-project-id"
+compute_region                            = "us-south1"
+workforce_identity_federation_pool_id     = "mockbank-pool-test"
+workforce_identity_federation_provider_id = "mockbank-provider-test"
+github_actions_sa_id                      = "github-actions-sa-test"
+github_repository                         = "your-org/bank-repo"
+terraform_deployer_service_account        = "terraform-deployer-test@bank-test-project-id.iam.gserviceaccount.com"
+keycloak_url                              = "http://127.0.0.1:8080"
+keycloak_administrator_username           = "keycloak_admin"
+keycloak_administrator_password           = "REDACTED_TEST_ADMIN_PASSWORD"
+enable_keycloak_identity_config           = true
+bootstrap                                 = false

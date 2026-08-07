@@ -1,3 +1,33 @@
++++
+title = "Project 1: Secure Bank Portal (Identity & Access Management)"
+domain = "identity"
+topics = ["project1", "keycloak", "cloud-run", "cloud-sql", "oidc", "saml"]
+difficulty = "intermediate"
+parent = "../README.md"
+children = ["PROJECT1_DETAILS.md", "SECURITY.md", "ARCHITECTURE.md", "AGENTS.md"]
+related = ["../../Documentation/internal/keycloak.md", "../../terraform/modules/project3/README.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md)  
+> **Technical Details**: [`PROJECT1_DETAILS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/PROJECT1_DETAILS.md)  
+> **Keycloak Global Overview**: [`Documentation/internal/keycloak.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/keycloak.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Primary documentation for Project 1 (Keycloak Identity Provider on Cloud Run with Cloud SQL PostgreSQL).
+- Questions Answered:
+  1. What is the architecture of Project 1 Identity Service?
+  2. How to run Keycloak and the Python app locally or via Docker?
+  3. How are OIDC, SAML, and MFA configured for Project 1?
+- When to Retrieve: Querying Project 1 setup, Keycloak local container execution, or Python identity app.
+- When NOT to Retrieve: Querying Project 2 Node.js transactions or Project 4 Actimize AML rules.
+- Prerequisites: [../README.md]
+- Follow-up Reading: [PROJECT1_DETAILS.md]
+-->
+
+---
+
 # Project 1: Secure Bank Portal (Identity & Access Management)
 
 ## Overview

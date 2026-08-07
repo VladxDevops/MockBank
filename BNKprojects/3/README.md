@@ -1,3 +1,33 @@
++++
+title = "Project 3: Identity Configuration & Release Safety"
+domain = "identity"
+topics = ["project3", "keycloak-config", "saml", "release-safety", "cloud-deploy"]
+difficulty = "intermediate"
+parent = "../README.md"
+children = ["PROJECT3_DETAILS.md", "SAML_INTERVIEW_QA.md", "identity_migration.md"]
+related = ["../../terraform/modules/project3/README.md", "../1/README.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md)  
+> **SAML Architecture**: [`SAML_INTERVIEW_QA.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/3/SAML_INTERVIEW_QA.md)  
+> **Terraform Module 3**: [`terraform/modules/project3/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/modules/project3/README.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Primary documentation for Project 3 declarative Keycloak realm configuration, SAML 2.0 integration, and release safety.
+- Questions Answered:
+  1. How are Keycloak realms and SAML clients provisioned declaratively via Terraform?
+  2. What is the relation between Project 3 identity configs and Project 0 foundational WIF/IAM?
+  3. How do Cloud Deploy pipelines execute releases securely?
+- When to Retrieve: Querying Keycloak declarative Terraform resources, SAML 2.0 configuration, or release safety gates.
+- When NOT to Retrieve: Querying Kafka event pipelines or Actimize AML transaction rules.
+- Prerequisites: [../README.md]
+- Follow-up Reading: [SAML_INTERVIEW_QA.md]
+-->
+
+---
+
 # Project 3: Identity Configuration & Release Safety
 
 ## Overview

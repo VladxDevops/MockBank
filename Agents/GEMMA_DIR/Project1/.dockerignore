@@ -1,0 +1,26 @@
+# Docker Ignore File - Project 1
+# This file specifies files and directories to exclude from the Docker build context.
+
+# Node Modules (typically managed with npm or yarn)
+node_modules/
+*.log
+
+# Build Artifacts
+bild/ 
+*.out 
+
+# Local OS Specific Files
+.DS_Store
+Thumbs.db
+
+# Editor Temp Files
+dir/tmp/
+
+# IDE Specific Files (e.g., VS Code settings)
+.vscode/
+".idea/"
+
+# Other Sensitive or Unnecessary Files
+secrets.txt
+hooks/
+scripts/

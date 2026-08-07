@@ -1,18 +1,40 @@
++++
+title = "Altmtrk2026 Bank Platform - Master Documentation Entrypoint"
+domain = "root"
+topics = ["overview", "index", "getting-started", "security", "architecture"]
+difficulty = "beginner"
+parent = ""
+children = [
+    "Documentation/README.md",
+    "Documentation/internal/README.md",
+    "BNKprojects/README.md",
+    "terraform/README.md"
+]
+related = ["CHANGELOG.md", "CHECKLIST.md"]
+updated_by = "AI Context Specialist"
+version = "1.0"
++++
+
+> **Documentation Navigation**: [`Documentation/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/README.md) | **Internal Policies**: [`Documentation/internal/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Banking Services**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md) | **Terraform IaC**: [`terraform/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md)
+
+---
+
 # Altmtrk2026 Bank Platform
 
 ## Overview
 This repository hosts the source code for the Altmtrk2026 Banking Platform. It is designed as a secure, cloud-native system leveraging GCP, Keycloak (Identity), and MongoDB (Audit).
 
 ## ⚠️ Security Warning
-**Security is the highest priority.** Before contributing, you must read the [Security Policy](./security.md).
+**Security is the highest priority.** Before contributing, you must read the [Security Policy](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md).
 *   No hardcoded secrets.
 *   No PII in logs.
 *   MFA required for all admin actions.
 
 ## Documentation Map
-*   **[Architecture](./Architecture.md):** System topology and component design.
-*   **[Agents & Bots](./AGENTS.md):** Rules for CI/CD and AI usage.
-*   **[Changelog](./CHANGELOG.md):** History of architectural decisions.
+*   **[Architecture](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md):** System topology and component design.
+*   **[Agents & Bots](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md):** Rules for CI/CD and AI usage.
+*   **[Changelog](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/CHANGELOG.md):** History of architectural decisions.
 *   **Projects:**
     *   Project 0: Foundation Infrastructure (Networking, APIs, & Identity)
     *   Project 1: Identity Service

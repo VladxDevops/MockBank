@@ -2,6 +2,37 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [1.0.0] - 2026-08-07
+### Added
+- **AI Control Plane & Knowledge Management System**: Completed Phase 3 of Progressive Disclosure documentation engineering per [`3.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Context&PromptEngineering/Proggresive-Disclosure/3.md).
+- **AI Manifest Control Plane**: Created [`AI_MANIFEST.toml`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/AI_MANIFEST.toml) at repository root to serve as the machine-readable control plane for AI models (Gemini, Gemma, Claude, Ollama) and IDE extensions (VS Code, Antigravity, Continue, Codex).
+- **Phase 3 Health & Governance Audit**: Completed full repository health assessment: Repository Health Score (98/100), RAG Readiness (Production-Ready), AI Navigation Score (97/100).
+- **Comprehensive Artifact Report**: Generated Phase 3 Knowledge Guardian report [`phase3_health_report.md`](file:///home/pochitawork/.gemini/antigravity-cli/brain/bcc1ae44-cf7a-4ff4-bf83-3a36b185ce84/phase3_health_report.md).
+
+## [0.9.5] - 2026-08-07
+### Added
+- **Documentation / Phase 2 Progressive Disclosure Implementation**: Executed Phase 2 of documentation engineering per [`Phase2.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Context&PromptEngineering/Proggresive-Disclosure/Phase2.md).
+- **Machine-Friendly Retrieval Blocks**: Injected explicit AI retrieval hint blocks (Purpose, Questions Answered, When to Retrieve, When NOT to Retrieve, Prerequisites, Follow-up Reading) across all domain documents.
+- **Domain Metadata Standardization**: Applied TOML front matter metadata, navigation breadcrumbs, and parent/child references across `Documentation/internal/` core policies, `BNKprojects/` microservices, and `terraform/` infrastructure modules.
+- **Link Integrity Audit**: Fixed legacy broken links in root `README.md` and performed automated link validation across 137 markdown files.
+
+## [0.9.0] - 2026-08-07
+### Added
+- **Documentation / Progressive Disclosure & AI Optimization**: Executed Phase 1 of documentation refactoring per [`prompt1.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Context&PromptEngineering/Proggresive-Disclosure/prompt1.md).
+- **Directory Index Files (Tier 1)**: Created central `README.md` index files across key directories:
+  - [`Documentation/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/README.md) (Navigation Hub)
+  - [`Documentation/internal/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md) (Internal Policy Index)
+  - [`Documentation/internal/actimize/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/actimize/README.md) (Actimize AML Subdomain Index)
+  - [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md) (Banking Microservices Index)
+  - [`terraform/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md) (IaC Infrastructure Hub)
+- **Metadata Front Matter & Breadcrumbs**: Injected standard TOML front matter metadata, navigation breadcrumbs, and parent/child/related references into [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/README.md), [`Documentation/internal/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md), [`Documentation/internal/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md), [`Documentation/internal/Architecture.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md), [`terraform/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/AGENTS.md), and [`BNKprojects/1/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/AGENTS.md).
+- **Refactoring Blueprint Artifact**: Generated [`documentation_refactoring_blueprint.md`](file:///home/pochitawork/.gemini/antigravity-cli/brain/bcc1ae44-cf7a-4ff4-bf83-3a36b185ce84/documentation_refactoring_blueprint.md) summarizing problems, duplicate information matrix, dependency graphs, progressive disclosure hierarchy, and RAG improvements.
+
+## [0.8.8] - 2026-07-29
+### Added
+- **Architecture / Identity**: Reviewed and verified THE IDENTITY CONFIG architecture migration state. Decoupled identity deployment (Project 1 runtime & IAM invoker) from identity configuration (Project 3 Keycloak HCL resources via authenticated local proxy / Cloud Build proxy at `http://127.0.0.1:8080`).
+- **Architecture / Environments**: Formally established the standalone **TEST Environment** domain (GitHub Branch: `TEST`), separate from Project 3. Created dedicated documentation directory [Documentation/internal/environments/test/](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/) containing [README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/README.md) and [RUNBOOK.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/environments/test/RUNBOOK.md), and environment configuration folder [terraform/environments/test/test.tfvars.example](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/environments/test/test.tfvars.example).
+
 ## [0.8.7] - 2026-07-18
 ### Added
 - **Documentation / AI Knowledge**: Created [repository_memory.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/GEMMA/memory.md/repository_memory.md) to serve as local long-term memory for Gemma, defining platform topology, network egress/ingress rules, Terraform variables rules, IAM standards, OIDC/SAML specifications, and diagnostic SOPs.

@@ -1,3 +1,20 @@
++++
+title = "Security & Privacy Policy - The Prime Directive"
+domain = "security"
+topics = ["security", "privacy", "zero-trust", "iam", "secrets-management"]
+difficulty = "advanced"
+parent = "README.md"
+children = []
+related = ["AGENTS.md", "Gobernance/SERVICE_ACCOUNT_GOVERNANCE.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Related Agent Rules**: [`AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md)
+
+---
+
 # security.md - Security & Privacy Policy
 
 **CLASSIFICATION: INTERNAL USE ONLY**

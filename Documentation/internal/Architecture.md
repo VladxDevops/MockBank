@@ -1,3 +1,21 @@
++++
+title = "System Architecture & Topology"
+domain = "architecture"
+topics = ["architecture", "gcp", "topology", "cloud-run", "keycloak", "actimize"]
+difficulty = "advanced"
+parent = "README.md"
+children = []
+related = ["INFRASTRUCTURE.md", "TERRAFORM_VS_CLOUD_DEPLOY.md", "../../BNKprojects/README.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Infrastructure Setup**: [`INFRASTRUCTURE.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/INFRASTRUCTURE.md)  
+> **Microservices Hub**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md)
+
+---
+
 # Architecture.md - System Design & Topology
 
 **CLASSIFICATION: INTERNAL USE ONLY**

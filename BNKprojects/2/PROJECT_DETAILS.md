@@ -1,3 +1,32 @@
++++
+title = "Project 2: Transaction Journey & MongoDB Diagnostics"
+domain = "transactions"
+topics = ["project2", "mongodb", "step-up-auth", "journey-orchestration", "cloud-run"]
+difficulty = "intermediate"
+parent = "../README.md"
+children = ["container/README.md"]
+related = ["../../README.md", "../1/README.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md)  
+> **Container Documentation**: [`BNKprojects/2/container/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/2/container/README.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Outlines Project 2 Node.js money transfer microservice, $10,000 threshold step-up authentication, and MongoDB Atlas diagnostic queries.
+- Questions Answered:
+  1. What is the orchestration logic for $10k+ transfer step-up auth?
+  2. How to run MongoDB queries for MFA failure inspection?
+  3. How is Project 2 deployed to Cloud Run with MONGO_URI secrets?
+- When to Retrieve: Querying Project 2 logic, step-up MFA thresholds, or MongoDB audit queries.
+- When NOT to Retrieve: Querying Keycloak container builds or Terraform foundation modules.
+- Prerequisites: [../README.md]
+- Follow-up Reading: [container/README.md]
+-->
+
+---
+
 # Project 2: Transaction Journey & MongoDB Diagnostics
 
 **CLASSIFICATION: INTERNAL**

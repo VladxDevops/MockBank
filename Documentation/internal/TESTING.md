@@ -1,3 +1,33 @@
++++
+title = "Testing Strategy & Automated Test Protocols"
+domain = "testing"
+topics = ["testing", "jest", "supertest", "mocking", "journeys", "security-testing"]
+difficulty = "intermediate"
+parent = "README.md"
+children = ["TEST_ENVIRONMENT_STRATEGY.md", "TESTING-KEYCLOAK-INTERNAL.md"]
+related = ["SECURITY.md", "../../BNKprojects/1/README-TESTING.md"]
+updated_by = "AI Context Specialist"
+version = "1.1"
++++
+
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Security Directives**: [`SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)  
+> **Keycloak Integration Testing**: [`BNKprojects/1/README-TESTING.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/README-TESTING.md)
+
+<!-- AI RETRIEVAL HINTS
+- Purpose: Outlines testing layers (Unit, Integration, Security Journeys) and mocking rules for the banking platform.
+- Questions Answered:
+  1. What test frameworks and coverage mandates are required?
+  2. How are MongoDB and Keycloak identity providers mocked during tests?
+  3. What are the core rules for testing Auth and Journey logic?
+- When to Retrieve: Writing test suites, setting up mocks, or reviewing testing guidelines.
+- When NOT to Retrieve: Querying production deployment pipelines or Terraform IaC logic.
+- Prerequisites: [SECURITY.md]
+- Follow-up Reading: [TEST_ENVIRONMENT_STRATEGY.md]
+-->
+
+---
+
 # Testing Strategy
 
 **CLASSIFICATION: INTERNAL USE ONLY**
