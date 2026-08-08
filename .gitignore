@@ -122,3 +122,6 @@ mirror-keycloak.yaml
 #Governance files: 
 SERVICE_ACCOUNT_GOVERNANCE.md
 RESOURCE_TAGGING_POLICY.md
+#Project5:
+BNKprojects/5/PROJECT5_DETAILS.md
+BNKprojects/5/SECURITY.md

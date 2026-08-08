@@ -124,3 +124,17 @@ Specialized AI personas and meta-prompts are managed in the externalized library
 This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.
 
 This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.
+
+
+
+Context and Documentation Policy
+
+Before generating or modifying code or documentation:
+
+1. Identify the relevant project/domain.
+2. Follow the repository documentation entry points.
+3. Apply the Progressive Disclosure skill.
+4. Load only the context required for the current task.
+5. Follow documentation breadcrumbs before performing broad searches.
+6. Do not read entire documentation trees unless explicitly necessary.
+7. Create or update documentation according to the same navigation and retrieval conventions.

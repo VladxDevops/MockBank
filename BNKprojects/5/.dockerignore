@@ -1,0 +1,61 @@
+# Version control
+.git
+.gitattributes
+.github/
+
+# Docker itself
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Docs
+README*
+CHANGELOG*
+LICENSE*
+docs/
+
+# Editors / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Secrets (defense in depth -- not a substitute for real secret management)
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
