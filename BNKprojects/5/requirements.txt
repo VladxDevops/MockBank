@@ -1,0 +1,5 @@
+# Kafka for Banking — Python Dependencies
+# Install: pip install -r requirements.txt
+
+confluent-kafka>=2.5.0     # Production-grade Kafka client (librdkafka-based)
+faker>=28.0.0              # Realistic mock data generation
