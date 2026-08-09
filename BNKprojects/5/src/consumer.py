@@ -24,6 +24,7 @@ INTERVIEW TIP — Consumer Groups:
 
 import argparse
 import json
+import os
 import signal
 import sys
 from datetime import datetime
@@ -32,7 +33,7 @@ from confluent_kafka import Consumer, KafkaError, KafkaException
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-KAFKA_BOOTSTRAP_SERVERS = "localhost:9092"
+KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 TOPIC = "bank.transactions"
 
 # ── Stats Tracking ────────────────────────────────────────────────────────────

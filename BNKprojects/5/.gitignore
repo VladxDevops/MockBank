@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local log files
+*.log
+logs/
+
+# Secrets and local configurations
+.env
+.env.*
+
+# Internal / Local Project Documentation (should not be committed to GitHub)
+PROJECT5_DETAILS.md
+SECURITY.md
+agents.md
+Kafka_in_Banking.md
+concepts/README.md
+interview/kafka_interview_guide.md

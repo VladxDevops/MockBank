@@ -8,14 +8,14 @@ children = [
     "Agents/skills/agents.md",
     "Agents/GEMMA/GEMMA.md"
 ]
-related = ["SECURITY.md", "GEMINI.md", "../../terraform/AGENTS.md", "../../BNKprojects/1/AGENTS.md"]
+related = ["SECURITY.md", "GEMINI.md", "../../terraform/AGENTS.md", "../../BNKprojects/1/AGENTS.md", "../../BNKprojects/5/agents.md"]
 updated_by = "AI Context Specialist"
-version = "1.1"
+version = "1.2"
 +++
 
 > **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
 > **Security Prime Directive**: [`SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md)  
-> **Sub-Agent Protocols**: [`terraform/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/AGENTS.md) | [`BNKprojects/1/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/AGENTS.md)
+> **Sub-Agent Protocols**: [`terraform/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/AGENTS.md) | [`BNKprojects/1/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/1/AGENTS.md) | [`BNKprojects/5/agents.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/agents.md)
 
 ---
 

@@ -19,6 +19,7 @@ Key Kafka Concepts Demonstrated:
 
 import argparse
 import json
+import os
 import random
 import sys
 import time
@@ -30,7 +31,7 @@ from faker import Faker
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-KAFKA_BOOTSTRAP_SERVERS = "localhost:9092"
+KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 TOPIC = "bank.transactions"
 
 # Producer configuration

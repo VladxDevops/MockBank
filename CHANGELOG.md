@@ -220,7 +220,6 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Build**: Resolved Keycloak build failure by using a placeholder `realm-export.json` to satisfy Docker context requirements while maintaining Terraform as the source of truth for config.
 - **Dependencies**: Fixed `npm ci` failures in Project 2 by implementing a fallback to `npm install` when `package-lock.json` is absent.
 - **IAM**: Resolved `403 Forbidden` errors for Cloud Build by granting `Service Usage Consumer` and `Storage Admin` roles to the GitHub Actions Service Account.
-- **SAML**: Hardened `teller_portal.py` to use dynamic `APP_BASE_URL`, fixing redirect loops in Cloud Run.
 ### Security
 - **IAM**: Enforced Least Privilege by mapping specific roles (Cloud Build Editor, Cloud Deploy Releaser) to the ephemeral WIF principal. 
 
@@ -245,7 +244,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **GitOps**: Initialized Keycloak Terraform provider and migrated the `AltmtrkBank` realm to HCL.
 - **GitOps**: Implemented SAML 2.0 integration for `teller-portal` with automated self-signed certificate generation and Secret Manager storage.
 - **GitOps**: Implemented the `retail-app` OIDC client and the new `risk` scope in Terraform to satisfy Fraud Team requirements.
-- **Documentation**: Created `BNKprojects/3/SAML_INTERVIEW_QA.md` detailing interview questions and answers for the SAML implementation.
+- **Documentation**: 
 ### Changed
 - **Configuration**: Updated Project 3 variables to support Keycloak admin credentials and URL.
 
