@@ -1,33 +1,45 @@
-# Docker Ignore File for Project 1
+# Docker ignore file for Project 2
+# Exclude files that should not be sent to the Docker build context.
 
-# Exclude virtual environments
-*.venv
-env/
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# Python specific exclusions (adjust as needed)
-__pycache__/
-*.pyc
-*.swp
-.DS_Store
+# Local environment and secret files
+.env
+.env.*
 
-# Exclusion of IDE specific files and folders
-.idea/
+# Editor and IDE files
 .vscode/
+.idea/
+
+# VCS metadata
 .git/
 .hg/
-*~
 
-# Exclude build artifacts
-target/
-build/
-dist/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Exclude logs
+# Logs, temporary files, and build artifacts
 logs/
-
-# Exclude temporary files (adjust based on project needs)
+*.log
 tmp/
 *.tmp
+dist/
+build/
+coverage/
 
-#Exclude Node.js Dependencies:
-node_modules/
+# Swap and editor temp files
+*.swp
+*~
+
+# Local Docker/CICD and documentation files not needed for image build
+docker-compose.yml
+cloudbuild.yaml
+README.md
+
+# Keep the build context lean
+

@@ -1,1 +1,59 @@
-"# Docker Ignore File - Project 1\n# This file specifies files and directories to exclude from the Docker build context.\n\n# Node Modules (typically managed with npm or yarn)\nnode_modules/\n*.log\n\n# Build Artifacts\nbild/ \n*.out \n\n# Local OS Specific Files\n.DS_Store\nThumbs.db\n\n# Editor Temp Files\ndir/tmp/\n\n# IDE Specific Files (e.g., VS Code settings)\n.vscode/\n".idea/\n\n# Other Sensitive or Unnecessary Files\nsecrets.txt\nhooks/\nscripts/\n"
+# Docker ignore file for Project 1 container build
+# Exclude files and directories that are not needed in the Docker build context.
+
+# Git and local project metadata
+.git
+.gitignore
+.gcloudignore
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Dependencies and build artifacts
+node_modules
+dist/
+build/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Terraform and cloud artifacts
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+.terraform.lock.hcl
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local data, logs, and temporary files
+logs/
+data/
+tmp/
+*.sqlite
+
+# Local scripts and tooling not required for image runtime
+start_local.sh
+test-env.sh
+
+# CI / deployment files not needed in runtime image
+cloudbuild.yaml
+cloudbuild-keycloak.yaml
+mirror-keycloak.yaml
+docker-compose.yaml
+
+# Documentation and troubleshooting artifacts
+*.md
+TROUBLESHOOTING/
+
+# Keep the realm export file needed by the container build
+!realm-export.json

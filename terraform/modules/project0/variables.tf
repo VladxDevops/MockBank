@@ -96,3 +96,43 @@ variable "remote_terraform_state_gcp_project" {
 
 
 #Habia una vez un barco chiquito...
+# ------------------------------------------------------------------------------
+# Monitoring & Observability Variables (Foundation / Project 0)
+# Reference: Documentation/internal/MONITORING.md
+# ------------------------------------------------------------------------------
+
+variable "enable_alerting" {
+  description = "Whether to provision Cloud Monitoring alert policies"
+  type        = bool
+  default     = true
+}
+
+variable "notification_channels" {
+  description = "List of Cloud Monitoring notification channel IDs for alert routing"
+  type        = list(string)
+  default     = []
+}
+
+variable "mfa_timeout_threshold" {
+  description = "Threshold count for MFA timeout failures in a 5-minute evaluation window (Severity 2)"
+  type        = number
+  default     = 5
+}
+
+variable "latency_threshold_ms" {
+  description = "Threshold in milliseconds for p95 Cloud Run request latency (Severity 2)"
+  type        = number
+  default     = 1500
+}
+
+variable "project1_service_name" {
+  description = "The name of the project 1 identity service (e.g., retail-app)"
+  type        = string
+  default     = "retail-app"
+}
+
+variable "transaction_service_name" {
+  description = "The name of the project 2 transaction service"
+  type        = string
+  default     = "transaction-service"
+}
