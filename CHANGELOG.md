@@ -85,6 +85,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Centralized Severity 2 Warning Alert Policies for elevated MFA timeouts, Cloud SQL connection pool saturation, p95 request latency degradation (> 1500ms), and container CPU/memory saturation (> 80%).
     - Deployed unified Platform Observability Dashboard (`google_monitoring_dashboard`) for monitoring all core banking services.
     - Cleaned up [`terraform/modules/project2/`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/terraform/modules/project2/) to keep application modules decoupled from global monitoring.
+- **Documentation / Event Streaming (Project 5)**: Created comprehensive architectural guide [`BNKprojects/5/PUBSUB.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/PUBSUB.md) detailing how Google Cloud Pub/Sub and Apache Kafka complement each other in enterprise banking, covering edge ingress, serverless egress, hybrid cloud bridging, and architectural decision matrices.
 - **Documentation**: Reviewed `Documentation/internal/AGENTS.md` (2026-07-08); appended a sanitized transcript ledger entry to `Documentation/internal/transcripts.md` and noted the `trasnscripts.md` filename typo for a planned rename.
 
 ### Fixed
