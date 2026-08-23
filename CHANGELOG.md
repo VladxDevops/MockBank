@@ -13,6 +13,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 ### Changed
 - **Documentation Cross-Linking**: Updated the internal and user-facing documentation indexes to reflect the OpenTelemetry, MuleSoft, and Redis caching resources and to keep the repository navigation consistent.
 - **CI/CD**: Added repository gitignore rules targeting local Redis cache sandbox files.
+- **Architecture**: Updated [`Architecture.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md) with new planned subsections for Event Streaming (Pub/Sub, Kafka), Caching (Redis/Memorystore), Integration Layer (MuleSoft), and Observability (OpenTelemetry), all marked as `Planning / Not Started / Pending`.
+- **Infrastructure**: Updated [`INFRASTRUCTURE.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/INFRASTRUCTURE.md) with new planned infrastructure sections for Event Streaming, Caching, Integration Platform, and Observability. Fixed duplicate Section 4 heading.
 
 ---
 

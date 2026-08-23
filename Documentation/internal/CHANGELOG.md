@@ -20,6 +20,8 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Caching / Redis Integration**: Formulated client connection standards, dynamic environment configurations, and Python connection pooling blueprints in [Documentation/redis_integration.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/redis_integration.md).
 - **CI/CD**: Added repository gitignore rules targeting local Redis cache sandbox files.
 - **Documentation Cross-Linking**: Integrated the new Redis caching resources into root and internal README/Navigation indexes.
+- **Architecture**: Updated [`Architecture.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md) with new planned subsections for Event Streaming (Pub/Sub, Kafka), Caching (Redis/Memorystore), Integration Layer (MuleSoft), and Observability (OpenTelemetry), all marked as `Planning / Not Started / Pending`.
+- **Infrastructure**: Updated [`INFRASTRUCTURE.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/INFRASTRUCTURE.md) with new planned infrastructure sections (§4–§7) for Event Streaming, Caching, Integration Platform, and Observability. Fixed duplicate Section 4 heading.
 
 ## [0.8.9] - 2026-08-21
 ### Added

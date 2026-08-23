@@ -1,7 +1,7 @@
 +++
 title = "Common Infrastructure & Shared GCP Resources"
 domain = "infrastructure"
-topics = ["gcp", "terraform-state", "networking", "vpc", "artifact-registry", "cloud-nat"]
+topics = ["gcp", "terraform-state", "networking", "vpc", "artifact-registry", "cloud-nat", "redis", "memorystore", "pubsub", "kafka", "mulesoft", "opentelemetry"]
 difficulty = "intermediate"
 parent = "README.md"
 children = []
@@ -107,12 +107,33 @@ This document lists the foundational Google Cloud Platform (GCP) infrastructure 
 *   **Cloud Build**: Primary CI engine for image creation and security scanning (SAST).
 *   **Google Kubernetes Engine (GKE) Autopilot**: Cost-optimized Kubernetes cluster to host ArgoCD for future Kubernetes-native GitOps.
 
-## 4. Observability
+## 4. Observability(Current:)
 *   **Cloud Logging**: Centralized log aggregation.
     *   *Requirement:* Must capture structured JSON logs from Node.js apps for the "Audit Agents".
 *   **Cloud Monitoring**: Metrics collection for system health and alerting.
 
-## 4. Observability
+## 4.01 Event Streaming & Messaging *(Status: Planning / Not Started / Pending)*
+*   **Google Cloud Pub/Sub**: Serverless event ingestion and fan-out. Serves as the primary GCP-native messaging backbone for real-time banking pipelines (transaction notifications, fraud alerts).
+    *   *Terraform:* Provisioned via Project 0 foundation module.
+*   **Apache Kafka (Project 5)**: Durable, high-throughput event streaming log for cross-service event sourcing, audit replay, and compliance-grade data retention.
+    *   *Terraform:* Infrastructure managed separately under Project 5.
+    *   *Reference:* [`BNKprojects/5/PUBSUB.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/PUBSUB.md)
+
+## 5. Caching & Session Store *(Status: Planning / Not Started / Pending)*
+*   **GCP Memorystore for Redis**: Managed in-memory cache deployed inside the private VPC with no public IP.
+    *   *Use Cases:* Session state management, rate-limiting counters, hot-path query acceleration (Cache-Aside pattern).
+    *   *Terraform:* Provisioned via Project 0 foundation module (`terraform/modules/project0/`).
+    *   *Client Configuration:* See [`Documentation/redis_integration.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/redis_integration.md) for environment variables and connection pooling standards.
+
+## 6. Integration Platform *(Status: Planning / Not Started / Pending)*
+*   **MuleSoft Anypoint Platform (Project 7)**: Enterprise integration layer for API-led connectivity between internal microservices and external banking partners.
+    *   *Boundary:* MuleSoft operates as a separate integration domain. GCP-side prerequisites (network, IAM, DNS, secrets) remain under Project 0/Terraform.
+    *   *Reference:* [`Documentation/internal/mulesoft/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/mulesoft/README.md)
+
+## 7. Observability *(Status: Planning / Not Started / Pending)*
+*   **OpenTelemetry (OTel)**: Vendor-neutral observability framework for instrumenting distributed traces, metrics, and logs across all microservices.
+    *   *GCP Mapping:* OTel Collector → Cloud Trace (traces), Cloud Monitoring (metrics), Cloud Logging (logs).
+    *   *Reference:* [`Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md)
 *   **Cloud Logging**: Centralized log aggregation.
     *   *Requirement:* Must capture structured JSON logs from Node.js apps for the "Audit Agents".
 *   **Cloud Monitoring**: Metrics collection for system health and alerting.

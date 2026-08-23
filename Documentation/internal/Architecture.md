@@ -1,7 +1,7 @@
 +++
 title = "System Architecture & Topology"
 domain = "architecture"
-topics = ["architecture", "gcp", "topology", "cloud-run", "keycloak", "actimize"]
+topics = ["architecture", "gcp", "topology", "cloud-run", "keycloak", "actimize", "redis", "kafka", "pubsub", "mulesoft", "opentelemetry"]
 difficulty = "advanced"
 parent = "README.md"
 children = []
@@ -43,8 +43,28 @@ This architecture describes a secure, cloud-native banking platform designed for
     *   `audit`: Read-only access to MongoDB logs and system metrics for compliance agents.
 
 ### Application Layer
-*   **API Gateway:** Entry point for all client traffic. Enforces rate limiting, TLS termination, and initial JWT validation.
+*   **API Gateway / Integration Layer:** Entry point for all client traffic. Enforces rate limiting, TLS termination, and initial JWT validation.
 *   **Microservices:** Containerized services (Python) running on GCP.
+
+### Event Streaming & Messaging *(Status: Planning / Not Started / Pending)*
+*   **Google Cloud Pub/Sub:** Serverless event ingestion and fan-out for real-time banking event pipelines (e.g., transaction notifications, fraud alerts). Handles edge ingress and serverless egress within GCP.
+*   **Apache Kafka (Confluent / Self-Managed):** Durable, high-throughput event log for cross-service event sourcing, audit replay, and compliance-grade data retention. Deployed via Project 5.
+*   *Decision:* Pub/Sub and Kafka complement each other — Pub/Sub for serverless GCP-native event distribution, Kafka for durable, replayable audit streams. See [`BNKprojects/5/PUBSUB.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/PUBSUB.md) for the architectural decision matrix.
+
+### Caching & Session Store *(Status: Planning / Not Started / Pending)*
+*   **GCP Memorystore for Redis:** In-memory cache for session state, rate-limiting counters, and hot-path query acceleration. Deployed inside the private VPC with no public IP.
+*   *Pattern:* Cache-Aside (Lazy Loading) with graceful fallback to PostgreSQL on cache miss or Redis unavailability.
+*   *Decision:* Redis is treated as a volatile store. Applications must never depend on Redis availability for correctness — only for performance. See [`Documentation/internal/redis/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/README.md).
+
+### Integration Layer *(Status: Planning / Not Started / Pending)*
+*   **MuleSoft Anypoint Platform:** Enterprise integration platform for orchestrating API-led connectivity between internal microservices and external banking partners (e.g., payment networks, credit bureaus).
+*   *Boundary:* MuleSoft operates as a separate integration-layer domain (Project 7). GCP-side prerequisites (network, IAM, DNS, secrets) remain under Project 0/Terraform.
+*   *Decision:* See [`Documentation/internal/mulesoft/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/mulesoft/README.md).
+
+### Observability *(Status: Planning / Not Started / Pending)*
+*   **OpenTelemetry (OTel):** Vendor-neutral observability framework for instrumenting distributed traces, metrics, and logs across all microservices.
+*   *GCP Mapping:* OTel Collector exports to Cloud Trace (traces), Cloud Monitoring (metrics), and Cloud Logging (logs).
+*   *Decision:* OTel is the instrumentation standard; GCP backends are the storage/query layer. See [`Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md).
 
 ## 3. Infrastructure & Operations
 *   **Cloud Provider:** Google Cloud Platform (GCP).
