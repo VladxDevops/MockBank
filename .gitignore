@@ -60,8 +60,13 @@ data/db/
 
 #.md and documentation files: 
 internal/
+!Documentation/internal/
+Documentation/internal/*
+!Documentation/internal/mulesoft/
+!Documentation/internal/mulesoft/**
 internal/GEMMA
-internalREADME.md
+internal/README.md
+Documentation/internal/OPEN_TELEMETRY.md
 spec.md
 Bank/BNKprojects/1/OIDC_IMPLEMENTATION_internal.md
 PYTHON_CODE_EXPLANATION.md
@@ -119,6 +124,35 @@ cloudbuild.yaml
 cloudrun.yaml
 mirror-keycloak.yaml
 
+# Project7 Sieti--- MuleSoft / Anypoint Platform ---
+# Keep Mule application source, API specs, pom.xml, and mule-artifact.json tracked.
+# Ignore local IDE metadata, generated packages, local runtime state, and secret properties.
+.mule/
+.mule-cache/
+.muleServer/
+.anypoint/
+.studio/
+.classpath
+.project
+.settings/
+target/
+*.jar
+*.zip
+*.mule
+*.secure.properties
+*.secure.yaml
+*.secure.yml
+*-secure.properties
+*-secure.yaml
+*-secure.yml
+anypoint-cli.json
+anypoint-credentials*
+connected-app*.json
+!**/mule-artifact.json
+!**/*.example.properties
+!**/*.example.yaml
+!**/*.example.yml
+
 #Governance files: 
 SERVICE_ACCOUNT_GOVERNANCE.md
 RESOURCE_TAGGING_POLICY.md
@@ -129,3 +163,7 @@ BNKprojects/5/agents.md
 BNKprojects/5/Kafka_in_Banking.md
 BNKprojects/5/concepts/
 BNKprojects/5/interview/
+
+# Redis:
+Documentation/internal/redis/
+

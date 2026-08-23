@@ -10,6 +10,9 @@ Project 0 establishes the "Zero Trust" foundation for the Altmtrk2026 Bank Platf
 - **Artifact Registry**: Centralized Docker repository for all microservices.
 - **Workload Identity Federation (WIF)**: Keyless authentication for GitHub Actions.
 - **GCP Service APIs**: Centralized enablement of 16+ required services.
+- **Memory Store (GCP Memorystore for Redis)** [PENDING]: Caching and session store infrastructure.
+  - **Status**: Planning / Not Implemented / Pending
+
 
 ## Getting Started
 

@@ -2,6 +2,20 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [Unreleased]
+### Added
+- **Caching / Redis**: Created internal Redis integration guide and local Docker compose sandbox tutorial in [Documentation/internal/redis/README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/README.md) and technical interview helper questions in [Documentation/internal/redis/interview_guide.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/interview_guide.md).
+- **Caching / Redis Integration**: Formulated client connection standards, dynamic environment configurations, and Python connection pooling blueprints in [Documentation/redis_integration.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/redis_integration.md).
+- **Observability / OpenTelemetry**: Documented the OpenTelemetry learning path in [Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md) and the internal notes in [Documentation/internal/OPEN_TELEMETRY.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/OPEN_TELEMETRY.md), covering traces, metrics, logs, GCP mapping, and governance constraints for a banking environment.
+- **Integration / MuleSoft**: Confirmed the repository’s MuleSoft integration planning and learning path in [Documentation/internal/mulesoft/README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/mulesoft/README.md), clarifying its role as a separate integration-layer domain rather than a foundation-infrastructure concern.
+- **Session Record**: Added a sanitized transcript ledger entry in [Documentation/internal/transcripts.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/transcripts.md).
+
+### Changed
+- **Documentation Cross-Linking**: Updated the internal and user-facing documentation indexes to reflect the OpenTelemetry, MuleSoft, and Redis caching resources and to keep the repository navigation consistent.
+- **CI/CD**: Added repository gitignore rules targeting local Redis cache sandbox files.
+
+---
+
 ## [1.0.0] - 2026-08-07
 ### Added
 - **AI Control Plane & Knowledge Management System**: Completed Phase 3 of Progressive Disclosure documentation engineering per [`3.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Context&PromptEngineering/Proggresive-Disclosure/3.md).
@@ -845,6 +859,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 - **Database**: MongoDB selected for Audit/Log storage; requires customer-managed encryption keys.
 
 ### Pending
+
 - Implementation of Keycloak on Cloud Run.
 - Creation of Terraform scripts for base infrastructure.
 

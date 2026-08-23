@@ -4,7 +4,7 @@ domain = "documentation"
 topics = ["index", "navigation", "internal", "architecture", "security"]
 difficulty = "beginner"
 parent = "../README.md"
-children = ["internal/README.md"]
+children = ["internal/README.md", "redis_integration.md"]
 related = ["../BNKprojects/README.md", "../terraform/README.md"]
 updated_by = "AI Documentation Specialist"
 version = "1.0"
@@ -43,3 +43,6 @@ graph TD
 | **AI Agent Protocols** | Instructions for AI assistants (Antigravity, Gemini, Gemma) | [`internal/AGENTS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md) |
 | **Security Prime Directive** | Zero-trust mandates and access controls | [`internal/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md) |
 | **Actimize Integration** | AML, fraud prevention, and transaction monitoring | [`internal/actimize/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/actimize/README.md) |
+| **MuleSoft Integration** | Beginner learning path and integration-layer planning | [`internal/mulesoft/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/mulesoft/README.md) |
+| **Redis Integration** | Client configuration, connection pooling, and health checking | [`redis_integration.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/redis_integration.md) |
+| **Observability Primer** | OpenTelemetry basics, signals, and GCP mapping | [`OPEN_TELEMETRY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/OPEN_TELEMETRY.md) |

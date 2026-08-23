@@ -36,9 +36,11 @@ graph TD
     ProjectsRoot --> P3["3/ (SAML & Legacy Migration)"]
     ProjectsRoot --> P4["4/ (Actimize AML & Fraud Engine)"]
     ProjectsRoot --> P5["5/ (Kafka Event Streaming Platform)"]
+    ProjectsRoot --> P7["7/ (MuleSoft Integration Layer)"]
 
     P1 --> KeycloakTS["1/container/TROUBLESHOOTING/"]
     P4 --> ActimizeDoc["Documentation/internal/actimize/"]
+    P7 --> MuleSoftDoc["Documentation/internal/mulesoft/"]
 ```
 
 ## Microservice Catalog
@@ -51,11 +53,13 @@ graph TD
 | **Project 3** | SAML & Identity Migration | Keycloak, SAML 2.0 | Migration of legacy auth protocols to SAML 2.0 & OIDC. [`3/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/3/README.md) |
 | **Project 4** | Actimize AML & Fraud | Actimize Engine | Anti-money laundering & transaction monitoring engine. [`4/Actimize.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/4/Actimize.md) |
 | **Project 5** | Event Streaming | Apache Kafka, Zookeeper | Real-time banking event pipeline & message broker. [`5/Kafka_in_Banking.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/Kafka_in_Banking.md) |
+| **Project 7** | Integration Platform | MuleSoft Anypoint Platform | Planned API-led integration layer for bank service facades, partner ingress, transformations, and API governance. [`7/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/7/README.md) |
 
 ---
 
 <!-- AI RETRIEVAL TRIGGERS:
 - Where is Keycloak authentication located? -> BNKprojects/1/README.md
 - Where is Kafka event streaming documented? -> BNKprojects/5/Kafka_in_Banking.md
+- Where is MuleSoft integration planning documented? -> BNKprojects/7/README.md and Documentation/internal/mulesoft/README.md
 - How to troubleshoot Project 1 containers? -> BNKprojects/1/container/TROUBLESHOOTING/TROUBLESHOOTING.md
 -->

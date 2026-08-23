@@ -14,6 +14,22 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.9.0] - 2026-08-22
+### Added
+- **Caching / Redis**: Created internal Redis integration guide and local Docker compose sandbox tutorial in [Documentation/internal/redis/README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/README.md) and technical interview helper questions in [Documentation/internal/redis/interview_guide.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/interview_guide.md).
+- **Caching / Redis Integration**: Formulated client connection standards, dynamic environment configurations, and Python connection pooling blueprints in [Documentation/redis_integration.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/redis_integration.md).
+- **CI/CD**: Added repository gitignore rules targeting local Redis cache sandbox files.
+- **Documentation Cross-Linking**: Integrated the new Redis caching resources into root and internal README/Navigation indexes.
+
+## [0.8.9] - 2026-08-21
+### Added
+- **MuleSoft Planning**: Added internal MuleSoft learning and implementation planning documentation under `Documentation/internal/mulesoft/`, including a beginner learning path and bank integration plan.
+- **Project 7**: Created `BNKprojects/7/README.md` as the planned MuleSoft Integration Layer project anchor.
+- **Repository Hygiene**: Added MuleSoft / Anypoint Studio local metadata, generated packages, runtime state, and local secure property files to `.gitignore`.
+
+### Decisions
+- **Architecture Boundary**: MuleSoft will be treated as a separate integration-layer project/subproject rather than part of Project 0 foundation infrastructure. Project 0/Terraform still owns GCP-side prerequisites such as network, IAM, DNS, and secrets.
+
 ## [0.8.8] - 2026-07-29
 ### Added
 - **Architecture / Identity**: Reviewed and verified THE IDENTITY CONFIG architecture migration state. Decoupled identity deployment (Project 1 runtime & IAM invoker) from identity configuration (Project 3 Keycloak HCL resources via authenticated local proxy / Cloud Build proxy at `http://127.0.0.1:8080`).
@@ -250,3 +266,13 @@ All notable changes to the "Bank" project will be documented in this file. This 
     - Updated `BNKprojects/1/localTSkeycloakContainer.md` with Docker socket permission fixes.
     - Enhanced `BNKprojects/1/localTSkeycloakContainer.md` with an explanation of Docker Compose's detached (`-d`) mode.
     - Updated `BNKprojects/1/localTSkeycloakContainer.md` to reflect successful verification steps.
+## [Unreleased]
+### Added
+- **Observability / OpenTelemetry**: Documented the OpenTelemetry learning path in [Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/INFRASTRUCTURE/MONITORING/OPEN_TELEMETRY.md) and the internal notes in [Documentation/internal/OPEN_TELEMETRY.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/OPEN_TELEMETRY.md), covering traces, metrics, logs, GCP mapping, and governance constraints for a banking environment.
+- **Integration / MuleSoft**: Confirmed the repository’s MuleSoft integration planning and learning path in [Documentation/internal/mulesoft/README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/mulesoft/README.md), clarifying its role as a separate integration-layer domain rather than a foundation-infrastructure concern.
+- **Session Record**: Added a sanitized transcript ledger entry in [Documentation/internal/transcripts.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/transcripts.md).
+
+### Changed
+- **Documentation Cross-Linking**: Updated the internal and user-facing documentation indexes to reflect the OpenTelemetry and MuleSoft learning material and to keep the repository navigation consistent.
+
+---
