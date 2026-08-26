@@ -41,6 +41,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 
 ---
 
+
 ## 2. Business Drivers
 
 ### Why MuleSoft?
@@ -64,6 +65,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 - **Project 6**: ArgoCD GitOps; if Runtime Fabric chosen, MuleSoft becomes Kubernetes workload
 
 ---
+
 
 ## 3. Scope & Ownership
 
@@ -107,9 +109,10 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 | Cloud Run deployment | Terraform (Project 0) | Project 7 (provides image) |
 | Health checks / probes | Project 7 | Project 0 (Terraform) |
 | Monitoring dashboards | Project 7 + Project 0 | — |
-| On-call support | Project 7 | Project 0 (infrastructure) |
+| On-call support | Project 7 | Project 0 (infrastructure) | Lowest status/priority. Do not implement. 
 
 ---
+
 
 ## 4. Architectural Decisions
 
@@ -117,13 +120,28 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 
 | Option | Decision Status | Rationale |
 |:---|:---|:---|
-| **CloudHub 2.0** | ⏳ Pending | Fast managed service; easiest for multi-cloud; requires VPN to GCP services. |
-| **CloudHub 1.0** | ⏳ Pending | Legacy option; only if organizational constraints require. |
-| **Runtime Fabric on GKE** | ⏳ Pending | Maximum control; aligns with Project 6 GitOps; higher operational overhead. |
-| **Hybrid Standalone** | ⏳ Pending | Only for legacy/on-premise constraints. |
+| **CloudHub 2.0** | ⏳ Available for POC | Fast managed service; easiest for multi-cloud; requires VPN to GCP services. |
+| **CloudHub 1.0** | ⏳ Legacy | Legacy option; only if organizational constraints require. |
+| **Runtime Fabric on GKE** | ✅ Selected | Chosen for Project 7 to meet private-network, compliance, and GitOps requirements. Aligns with Project 6 (ArgoCD) and Project 0 (GKE provisioning). |
+| **Hybrid Standalone** | ⏳ Optional | Only for legacy/on-premise constraints. |
+
 
 **Owner:** MuleSoft admin + Architecture team  
-**Target Decision Date:** 2026-09-01
+**Decision:** Runtime Fabric selected for Project7  
+**Decision Date:** 2026-08-26
+
+**Notes on Cloud Run compatibility:** Runtime Fabric is a Kubernetes-hosted Mule runtime (GKE, on-prem). It does *not* run on GCP Cloud Run—Cloud Run is a serverless container platform optimized for stateless HTTP containers and does not provide the underlying long-running process and OS-level controls that Mule's Runtime Fabric requires. For Project7 we will deploy Mule runtime into GKE (Runtime Fabric) and use Cloud Run only for other non-Mule microservices (e.g., Project2 transaction service).
+
+**Notes on CloudHub (pricing / trials):** CloudHub is MuleSoft's managed SaaS runtime. MuleSoft does not provide an ongoing no-cost production tier for CloudHub; however, Anypoint Platform trials or time-limited evaluation accounts are commonly available for POCs. Licensing and ongoing usage of CloudHub are commercial (subscription-based) and should be evaluated with procurement. For Phase 1 rapid POC we still recommend considering a short CloudHub trial if the team wants an experiment with minimal ops, but the strategic deployment for production will be Runtime Fabric per the decision above.
+
+#### CloudHub vs Runtime Fabric
+
+We maintain a focused comparison document to help decide between CloudHub and Runtime Fabric. See: [CloudHub vs Runtime Fabric — Comparative Guide](../Documentation/internal/mulesoft/CLOUDHUB_RUNTIMEFABRIC_COMPARISON.md) or the canonical copy in `Documentation/internal/mulesoft/`.
+
+Key summary:
+- CloudHub: faster onboarding, MuleSoft-managed runtime, good for POC and lower ops footprint.
+- Runtime Fabric: Kubernetes-based, better for private-network requirements and GitOps integration, higher operational responsibility.
+
 
 ### 4.2 Event Backbone Strategy (TBD - Phase 1)
 
@@ -133,7 +151,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 | **Cloud Pub/Sub (GCP)** | ⏳ Pending | Native GCP service; simpler operations; less event replay capability. |
 | **Both (hybrid)** | ⏳ Pending | MuleSoft bridges between Kafka and Pub/Sub; highest complexity. |
 
-**Owner:** Platform architect + Project 5 team  
+**Owner:** Platform architect + Project5 team  
 **Target Decision Date:** 2026-09-15
 
 ### 4.3 API Authentication Strategy (TBD - Phase 2)
@@ -152,7 +170,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 **Current Plan:**
 - Use GCP Secret Manager for all sensitive data
 - Bind MuleSoft service account to Secret Manager via IAM
-- No secrets in git, `.env`, or Dockerfile
+- No secrets in git, `.env`, or Dockerfile. Github actions secrets can be used if necessary. 
 - Injected at runtime via Cloud Run environment variables
 
 **Alternative:** Use Anypoint Secrets Manager for MuleSoft-specific secrets (additional licensing may apply)
@@ -185,7 +203,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 | **Startup CPU Boost** | Enabled (reduces cold-start latency) |
 | **Min Instances** | 0 (scale to zero when idle) |
 | **Max Instances** | TBD (determine based on load testing) |
-| **Region** | us-south1 (primary); europe-west1 (secondary, if applicable) |
+| **Region** | us-south1 (primary) |
 | **VPC Connector** | Required for private access to Project 0 resources (networking, databases) |
 
 ### 5.3 API Endpoints
@@ -309,6 +327,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 
 **Dependencies:** Anypoint account provisioning (may take 1-2 weeks)
 
+
 ### Phase 1: Non-Sensitive POC (Sep 16 - Oct 15, 2026)
 
 **Objective:** Build health API proof of concept
@@ -323,6 +342,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 **Acceptance Criteria:**
 - Local build: `mvn clean package && docker build && docker-compose up`
 - Health endpoint responds: `curl http://localhost:8081/api/health` → 200 OK
+
 
 ### Phase 2: Identity & Policy Proto (Oct 16 - Nov 15, 2026)
 
@@ -354,6 +374,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 - Transforms to Project 2 contract
 - Handles Project 2 errors gracefully (retry + circuit breaker)
 
+
 ### Phase 4: Event Ingress (Dec 16, 2026 - Jan 15, 2027)
 
 **Objective:** Partner event ingestion and normalization
@@ -368,6 +389,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 - Partner event received and transformed
 - Published to Kafka/Pub/Sub topic
 - Invalid events routed to DLQ
+
 
 ### Phase 5: Production Hardening (Jan 16 - Feb 28, 2027)
 
@@ -387,6 +409,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 - Zero security findings from audit
 
 ---
+
 
 ## 9. Success Metrics (KPIs)
 
@@ -439,7 +462,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 2. **Keycloak (Project 1) is stable** and accessible from MuleSoft
 3. **Kafka or Pub/Sub (Project 5) is available** for event publishing
 4. **GCP VPC Connector is configured** between MuleSoft and internal services
-5. **Team has MuleSoft expertise** or can hire/train quickly
+5. **Team has MuleSoft expertise** or can hire/train quickly. Currently 1 man army with Ai Assitants. 
 6. **CloudHub or Runtime Fabric is supported** in the organization
 7. **No restriction on Anypoint Platform cost** (managed service pricing)
 
@@ -465,6 +488,7 @@ Project 7 does **not** replace Project 0 infrastructure or Project 5 event backb
 | **DevOps Lead** | — | — | ⏳ Pending |
 
 ---
+
 
 ## 14. Appendices
 

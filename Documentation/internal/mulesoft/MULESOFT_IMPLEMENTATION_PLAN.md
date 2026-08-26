@@ -47,6 +47,8 @@ Use this decision tree:
 
 Recommendation for first proof of concept: **CloudHub 2.0 or CloudHub sandbox**, unless private connectivity requirements force Runtime Fabric.
 
+See the detailed comparison: [CloudHub vs Runtime Fabric — Comparative Guide](CLOUDHUB_RUNTIMEFABRIC_COMPARISON.md) for pros/cons, decision criteria, and implementation notes tailored to Altmtrk2026.
+
 ## 4. Bank Integration Patterns
 
 ### Pattern A: System API Facade for Project 2

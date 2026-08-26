@@ -1,5 +1,5 @@
 +++
-title = "Container Structure and Build Planning for Project 7 (MuleSoft)"
+title = "Container Structure and Build Planning for Project7 (MuleSoft)"
 domain = "mulesoft-containers"
 topics = ["containerization", "mulesoft", "docker", "cloud-run", "deployment"]
 difficulty = "intermediate"
@@ -15,11 +15,11 @@ version = "1.0"
 
 ---
 
-# Container Structure and Build Planning - Project 7 (MuleSoft Integration Layer)
+# Container Structure and Build Planning - Project7 (MuleSoft Integration Layer)
 
 ## Overview
 
-This document defines the Docker container structure, build process, and required files for deploying MuleSoft Mule applications in Project 7. The container is optimized for GCP Cloud Run deployment with security, modularity, and operational best practices.
+This document defines the Docker container structure, build process, and required files for deploying MuleSoft Mule applications in Project7. The container is optimized for GCP Cloud Run deployment with security, modularity, and operational best practices.
 
 ---
 
