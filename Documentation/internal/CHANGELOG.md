@@ -14,6 +14,12 @@ All notable changes to the "Bank" project will be documented in this file. This 
     *   `Security` in case of vulnerabilities.
 4.  **Decisions:** Explicitly log *why* a decision was made (e.g., "Selected Cloud Run for cost reasons") to prevent re-litigating settled debates.
 
+## [0.9.1] - 2026-08-24
+### Added
+- **AI Memory**: Created `Documentation/internal/Agents/skills/REMMEMBERING/SKILL.md` to formalize the repository's durable memory process for AI agents and future maintainers.
+- **Documentation**: Registered the new remembering skill in the internal skills catalog and linked it from the internal docs index and agent protocol guidance.
+- **Governance**: Captured the repository memory standard in the project documentation: sanitize before storing, preserve `TOON` summaries, and promote durable rules into authoritative docs instead of keeping them only in transcript notes.
+
 ## [0.9.0] - 2026-08-22
 ### Added
 - **Caching / Redis**: Created internal Redis integration guide and local Docker compose sandbox tutorial in [Documentation/internal/redis/README.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/README.md) and technical interview helper questions in [Documentation/internal/redis/interview_guide.md](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/redis/interview_guide.md).

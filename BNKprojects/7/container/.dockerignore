@@ -1,0 +1,203 @@
+# Docker ignore file for Project 7: MuleSoft Integration Layer
+# Exclude files and directories that are not needed in the Docker build context.
+# This keeps the build context lean and speeds up image builds.
+
+# ============================================================================
+# Version Control and Repository Metadata
+# ============================================================================
+.git
+.gitignore
+.gitattributes
+.gcloudignore
+.githubactions
+
+# ============================================================================
+# Environment and Secret Files (CRITICAL: Never include in image)
+# ============================================================================
+.env
+.env.local
+.env.*.local
+.env-* 
+# Keep template file for reference, but not actual secrets
+!.env.example
+!.env.template
+
+# ============================================================================
+# MuleSoft-Specific Files (Development/Local Only)
+# ============================================================================
+# Anypoint-related local files
+.anypoint/
+.settings/
+.classpath
+.project
+.cache/
+
+# MUnit test results and coverage
+mule-workspace-cache/
+target/munit-reports/
+target/test-mule/
+.mule/
+
+# Studio-specific files
+.mule/mule.lock
+studio-logs/
+studio-data/
+
+# Anypoint credentials and tokens
+credentials.json
+token.json
+mule-credentials.properties
+
+# Local development Exchange artifacts
+.exchange-cache/
+
+# ============================================================================
+# Build Artifacts and Dependencies
+# ============================================================================
+# Maven
+target/
+*.jar
+*.war
+!libs/**/*.jar  # Keep necessary JARs in libs/
+pom.xml.tag
+pom.xml.releaseBackup
+release.properties
+.m2/
+m2-error.log*
+
+# Gradle
+build/
+gradle-app.setting
+.gradletasknamecache
+
+# npm/Node (if using Node-based tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+
+# ============================================================================
+# IDE and Editor Files
+# ============================================================================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.eclipse/
+.settings/
+*.iml
+*.iws
+*.ipr
+
+# ============================================================================
+# Local Data, Logs, and Temporary Files
+# ============================================================================
+logs/
+*.log
+data/
+tmp/
+temp/
+*.tmp
+local-db/
+*.sqlite
+*.db
+
+# ============================================================================
+# Terraform and Cloud Infrastructure (Not Runtime Dependencies)
+# ============================================================================
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfplan
+terraform.log
+
+# ============================================================================
+# GCP and Cloud-Specific (CI/CD, not runtime)
+# ============================================================================
+cloudbuild.yaml
+cloudbuild*.yaml
+cloud-deploy*.yaml
+app.yaml
+.gcp-auth/
+
+# ============================================================================
+# Documentation and Local References (Not Runtime)
+# ============================================================================
+README.md
+CHANGELOG.md
+*.md
+docs/
+doc/
+
+# ============================================================================
+# OS and System Files
+# ============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.AppleDouble
+.LSOverride
+.netrwhist
+*~
+
+# ============================================================================
+# CI/CD and Local Development Scripts
+# ============================================================================
+# Shell and deployment scripts for local/CI only
+docker-compose.yml
+docker-compose.*.yml
+docker-compose-dev.yml
+docker-compose-test.yml
+Makefile
+*.sh
+!entrypoint.sh  # Keep custom entrypoint scripts
+!startup.sh
+
+# GitHub Actions workflows (not needed at runtime)
+.github/
+.gitlab-ci.yml
+.gitlab/
+
+# ============================================================================
+# Test Files and Coverage Reports (Dev Only)
+# ============================================================================
+test/
+tests/
+**/*-test.xml
+**/*-tests.jar
+coverage/
+html-report/
+xunit-report/
+surefire-reports/
+
+# ============================================================================
+# Swap and Lock Files
+# ============================================================================
+*.swp
+*.swo
+*~
+.lock
+*.lock.json
+
+# ============================================================================
+# Archive and Compressed Files
+# ============================================================================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ============================================================================
+# IDE Run Configurations (Local Development Only)
+# ============================================================================
+.run/
+launch.json

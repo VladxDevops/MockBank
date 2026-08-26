@@ -6,6 +6,8 @@ difficulty = "intermediate"
 parent = "README.md"
 children = [
     "Agents/skills/agents.md",
+    "Agents/skills/building-docker-images/SKILL.md",
+    "Agents/skills/REMMEMBERING/SKILL.md",
     "Agents/GEMMA/GEMMA.md"
 ]
 related = ["SECURITY.md", "GEMINI.md", "../../terraform/AGENTS.md", "../../BNKprojects/1/AGENTS.md", "../../BNKprojects/5/agents.md"]
@@ -119,9 +121,22 @@ Please keep the changelog.md up to date.
 *   **Consistency:** Use the service account's email attribute for the `member` field to ensure the dependency graph is correctly built by Terraform.
 ## 8. AI Skill Development
 Specialized AI personas and meta-prompts are managed in the externalized library:
-*   **Registry:** `/home/pochitawork/InterviewCloud Projects/Altmtrk2026/Bank/Documentation/internal/skills/agents.md`
+*   **Registry:** `/home/pochitawork/InterviewCloud Projects/Altmtrk2026/Bank/Documentation/internal/Agents/skills/`
 
-This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.
+This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, architectural design, and container engineering.
+
+### Skill Usage Directive
+Agents MUST check the skill registry before generating new solution guidance or creating ad hoc implementation patterns.
+
+When a task matches an existing skill, the agent should use that skill instead of inventing a separate workflow.
+
+Examples:
+*   If the task is to create or update a `Dockerfile`, use the `building-docker-images` skill.
+*   If the task involves container build context hygiene and secret exclusion, use the relevant `.dockerignore` guidance before building the image.
+*   If the task is a deployment, infrastructure, or pipeline concern, use the relevant project-specific skill instead of a generic recommendation.
+*   If the task is to preserve durable session context, repository memory, or transcript notes, use the `remembering` skill.
+
+This is mandatory for consistency, reuse, and secure implementation patterns across the repo.
 
 This registry provides the framework for initializing specialized skills for troubleshooting, security auditing, and architectural design.
 
