@@ -15,8 +15,8 @@ updated_by = "AI Context Specialist"
 version = "1.0"
 +++
 
-> **Documentation Navigation**: [`Documentation/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/README.md) | **Internal Policies**: [`Documentation/internal/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/README.md)  
-> **Banking Services**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/README.md) | **Terraform IaC**: [`terraform/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/terraform/README.md)
+> **Documentation Navigation**: [`Documentation/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/README.md) | **Internal Policies**: [`Documentation/internal/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/README.md)  
+> **Banking Services**: [`BNKprojects/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/README.md) | **Terraform IaC**: [`terraform/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/terraform/README.md)
 
 ---
 
@@ -26,21 +26,24 @@ version = "1.0"
 This repository hosts the source code for the Altmtrk2026 Banking Platform. It is designed as a secure, cloud-native system leveraging GCP, Keycloak (Identity), and MongoDB (Audit).
 
 ## ⚠️ Security Warning
-**Security is the highest priority.** Before contributing, you must read the [Security Policy](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md).
+**Security is the highest priority.** Before contributing, you must read the [Security Policy](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY.md).
 *   No hardcoded secrets.
 *   No PII in logs.
 *   MFA required for all admin actions.
 
 ## Documentation Map
-*   **[Architecture](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/Architecture.md):** System topology and component design.
-*   **[Agents & Bots](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md):** Rules for CI/CD and AI usage.
-*   **[Changelog](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/CHANGELOG.md):** History of architectural decisions.
+*   **[Architecture](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/Architecture.md):** System topology and component design.
+*   **[Agents & Bots](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/AGENTS.md):** Rules for CI/CD and AI usage.
+*   **[Changelog](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/CHANGELOG.md):** History of architectural decisions.
 *   **Projects:**
     *   Project 0: Foundation Infrastructure (Networking, APIs, & Identity)
-    *   Project 1: Identity Service
-    *   Project 2: Transaction Service
-    *   Project 3: CI/CD & Release Safety
-    *   Project 4: NICE Actimize Integration (Status: Not Started)
+    *   Project 1: Identity Service (Keycloak OIDC)
+    *   Project 2: Transaction Service (Core Banking & MongoDB Audit)
+    *   Project 3: CI/CD & Release Safety (SAML Legacy Migration)
+    *   Project 4: NICE Actimize Integration (Status: Planning)
+    *   Project 5: Event Streaming (Apache Kafka & Cloud Pub/Sub)
+    *   Project 6: ArgoCD GitOps Engine (Continuous Delivery & Drift Detection)
+    *   Project 7: MuleSoft Integration Layer (API-led Connectivity & Runtime Fabric on GKE)
 
 ## Getting Started
 

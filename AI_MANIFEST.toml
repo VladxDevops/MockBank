@@ -4,7 +4,7 @@
 [repository]
 name = "Altmtrk2026 Bank Platform"
 purpose = "Secure, cloud-native banking platform with zero-trust GCP architecture, Keycloak OIDC IAM, and MongoDB audit logging."
-primary_technologies = ["GCP", "Terraform", "Keycloak", "Node.js", "Python", "MongoDB", "Apache Kafka", "NICE Actimize"]
+primary_technologies = ["GCP", "Terraform", "Keycloak", "Node.js", "Python", "MongoDB", "Apache Kafka", "NICE Actimize", "ArgoCD", "MuleSoft"]
 supported_ai_models = ["Gemini 1.5 Pro / Flash", "Gemma 2", "Claude 3.5 Sonnet", "Ollama Local LLMs"]
 supported_ides = ["VS Code", "Antigravity", "Continue", "Codex"]
 documentation_version = "1.0.0"
