@@ -10,13 +10,18 @@ children = [
     "2/PROJECT_DETAILS.md",
     "3/README.md",
     "4/Actimize.md",
+    "5/README.md",
+    "5/PROJECT5_DETAILS.md",
+    "5/PUBSUB.md",
+    "5/CHECKLIST.md",
+    "5/TODO.md",
     "5/Kafka_in_Banking.md",
     "6/README.md",
     "7/README.md"
 ]
 related = ["../terraform/README.md", "../Documentation/internal/README.md"]
 updated_by = "AI Context Specialist"
-version = "1.1"
+version = "1.2"
 +++
 
 > **Parent**: [`../README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/README.md)  
@@ -38,12 +43,13 @@ graph TD
     ProjectsRoot --> P2["2/ (Account & Core Banking Service)"]
     ProjectsRoot --> P3["3/ (SAML & Legacy Migration)"]
     ProjectsRoot --> P4["4/ (Actimize AML & Fraud Engine)"]
-    ProjectsRoot --> P5["5/ (Kafka Event Streaming Platform)"]
+    ProjectsRoot --> P5["5/ (Kafka & Pub/Sub Event Streaming)"]
     ProjectsRoot --> P6["6/ (ArgoCD GitOps Engine)"]
     ProjectsRoot --> P7["7/ (MuleSoft Integration Layer)"]
 
     P1 --> KeycloakTS["1/container/TROUBLESHOOTING/"]
     P4 --> ActimizeDoc["Documentation/internal/actimize/"]
+    P5 --> P5Doc["BNKprojects/5/"]
     P6 --> ArgoCDDoc["BNKprojects/6/"]
     P7 --> MuleSoftDoc["Documentation/internal/mulesoft/"]
 ```
@@ -57,7 +63,7 @@ graph TD
 | **Project 2** | Core Banking Backend | Containers, Microservices | Core banking business logic and account management. [`2/PROJECT_DETAILS.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/2/PROJECT_DETAILS.md) |
 | **Project 3** | SAML & Identity Migration | Keycloak, SAML 2.0 | Migration of legacy auth protocols to SAML 2.0 & OIDC. [`3/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/3/README.md) |
 | **Project 4** | Actimize AML & Fraud | Actimize Engine | Anti-money laundering & transaction monitoring engine. [`4/Actimize.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/4/Actimize.md) |
-| **Project 5** | Event Streaming | Apache Kafka, Zookeeper | Real-time banking event pipeline & message broker. [`5/Kafka_in_Banking.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/Kafka_in_Banking.md) |
+| **Project 5** | Event Streaming | Apache Kafka 3.8 (KRaft), GCP Pub/Sub | Real-time banking event pipeline, hybrid Pub/Sub edge ingress, and message broker. [`5/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/README.md) |
 | **Project 6** | ArgoCD GitOps Engine | ArgoCD, GKE Autopilot, Kustomize | Declarative GitOps continuous delivery & drift detection. [`6/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/6/README.md) |
 | **Project 7** | Integration Platform | MuleSoft Anypoint Platform, Runtime Fabric on GKE | API-led integration layer for bank service facades, partner ingress, transformations, and API governance. [`7/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/7/README.md) |
 

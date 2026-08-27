@@ -1,31 +1,33 @@
 +++
 title = "GCP Pub/Sub & Apache Kafka: Complementary Architecture Guide"
 domain = "event-streaming"
-topics = ["pubsub", "gcp", "kafka", "event-streaming", "architecture", "hybrid-cloud", "banking"]
+topics = ["pubsub", "gcp", "kafka", "event-streaming", "architecture", "hybrid-cloud", "banking", "dataflow"]
 difficulty = "intermediate"
 parent = "README.md"
 children = []
-related = ["PROJECT5_DETAILS.md", "Kafka_in_Banking.md", "SECURITY.md", "concepts/README.md"]
+related = [
+    "README.md",
+    "PROJECT5_DETAILS.md",
+    "CHECKLIST.md",
+    "TODO.md",
+    "SECURITY.md",
+    "Kafka_in_Banking.md",
+    "concepts/README.md"
+]
 updated_by = "AI Context Specialist"
-version = "1.0"
+version = "1.1"
 +++
 
-> **Parent**: [`BNKprojects/5/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/README.md)  
-> **Project Overview**: [`PROJECT5_DETAILS.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/PROJECT5_DETAILS.md)  
-> **Kafka Core Concepts**: [`concepts/README.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/concepts/README.md)
+> **Parent**: [`README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/README.md)  
+> **Project Overview**: [`PROJECT5_DETAILS.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/PROJECT5_DETAILS.md)  
+> **Implementation Checklist**: [`CHECKLIST.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/CHECKLIST.md)  
+> **Actionable Backlog**: [`TODO.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/TODO.md)
 
 ---
 
 # GCP Pub/Sub & Apache Kafka: Complementary Architecture in Banking
 
 **CLASSIFICATION: INTERNAL**
-
-## [AAAK_CONTEXT]
-*   **FEATURE:** GCP Pub/Sub & Kafka Hybrid Integration
-*   **STATUS:** Not Started
-*   **DOMAIN:** Event Streaming & Messaging Integration (Project 5)
-*   **PRIME_DIRECTIVE:** Security First / VPC Isolation & Authenticated Ingress
-*   **DOC_ANCHOR:** `BNKprojects/5/PROJECT5_DETAILS.md`
 
 ## Executive Summary
 
@@ -152,26 +154,32 @@ graph LR
 
 ---
 
-## 3. Key Benefits of Using Both Technologies
+## 3. Concrete Implementation Blueprint for Project 5
 
-### 1. Zero-Maintenance Ingress with Elastic Burst Protection
-*   **Problem**: Exposing Apache Kafka brokers directly to internet traffic requires complex ingress setups, public load balancers, SASL authentication management, and manual broker cluster scaling for unexpected traffic spikes.
-*   **Solution**: GCP Pub/Sub provides a fully managed, globally distributed API endpoint with automated auto-scaling (from 0 to gigabytes per second). It serves as an elastic shock absorber in front of Kafka.
+### 3.1 Pub/Sub Topic Topology
 
-### 2. Strict Partition Ordering & Replayability Where It Matters
-*   **Problem**: Financial accounting and ledger updates require strict event sequencing and the ability to re-read historical transactions from any arbitrary point in time (event sourcing).
-*   **Solution**: Kafka stores events in partitioned append-only logs with deterministic key hashing (`key=account_id`). If an accounting microservice crashes or is refactored, consumers can rewind offsets and reprocess the ledger.
+| GCP Pub/Sub Topic | Ingress Source | Target Kafka Topic | Dead Letter Topic (DLT) |
+| :--- | :--- | :--- | :--- |
+| `bnk-tx-ingress-topic` | Mobile Apps / Edge Gateways | `bank.transactions` | `bnk-tx-ingress-dlt` |
+| `bnk-partner-ingress-topic` | MuleSoft (Project 7) Partner APIs | `bank.transactions` | `bnk-partner-ingress-dlt` |
+| `bnk-auth-telemetry-topic` | Keycloak (Project 1) Log Drains | `bank.auth-events` | `bnk-auth-telemetry-dlt` |
+| `bnk-analytics-egress-topic` | Kafka Connect Sink | Google BigQuery Streaming Table | `bnk-analytics-dlt` |
 
-### 3. Serverless Integration Without Custom Polling Workers
-*   **Problem**: Connecting Kafka to serverless platforms like Google Cloud Run or Cloud Functions requires running always-on consumer bridge containers to poll Kafka and invoke endpoints.
-*   **Solution**: GCP Pub/Sub native **Push Subscriptions** automatically deliver messages as HTTP POST requests to private Cloud Run services (e.g., [`BNKprojects/2`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/2)), handling retries and backoff automatically.
+### 3.2 Dead Letter Topic (DLT) & Retry Policy
+*   **Max Delivery Attempts**: `5`
+*   **Backoff Delay**: Exponential (minimum 10s, maximum 600s)
+*   **Dead Letter Destination**: Malformed or unprocessable payloads automatically route to the corresponding `-dlt` topic with custom user attributes:
+    *   `CloudPubSubDeadLetterSourceDeliveryAttempt`
+    *   `CloudPubSubDeadLetterSourceSubscription`
+    *   `CloudPubSubDeadLetterSourceTopic`
+*   **Alerting**: Cloud Monitoring alerts trigger if DLT queue depth exceeds `0` unacknowledged messages.
 
-### 4. Zero-Code Analytics Pipeline with BigQuery Subscriptions
-*   **Problem**: Writing streaming data from Kafka to BigQuery typically requires managing external workers, Spark jobs, or third-party sink connectors.
-*   **Solution**: Pub/Sub offers direct **BigQuery Subscriptions** that stream events directly into BigQuery tables with zero middleman code and automatic schema mapping.
-
-### 5. Multi-Cloud and Hybrid Portability
-*   **Benefit**: Kafka provides open-source, vendor-agnostic streaming standards across on-premise datacenters, AWS, Azure, and GCP. GCP Pub/Sub delivers cloud-native optimization for Google Cloud services. Combining them provides cloud flexibility without lock-in at the core data layer.
+### 3.3 Security & IAM Permissions
+*   **Service Account Isolation**: Dedicated service account `sa-pubsub-kafka-bridge@${PROJECT_ID}.iam.gserviceaccount.com`.
+*   **Least Privilege Roles**:
+    *   `roles/pubsub.subscriber` on Ingress Topics
+    *   `roles/pubsub.publisher` on Egress & Dead-Letter Topics
+    *   `roles/secretmanager.secretAccessor` for retrieving Kafka SASL/TLS truststore certificates.
 
 ---
 
@@ -206,7 +214,10 @@ graph LR
 
 ---
 
-## 5. Summary Reference
+## 5. Related Documentation
 
-*   **Complementary Nature**: Pub/Sub handles serverless, event-driven integration at the cloud perimeter and downstream fan-out; Kafka powers the core stateful event backbone and deterministic banking stream processing.
-*   **Related Policies**: See [`Documentation/internal/MONITORING.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/Documentation/internal/MONITORING.md) for telemetry standards and [`BNKprojects/5/SECURITY.md`](file:///home/pochitawork/InterviewCloud%20Projects/Altmtrk2026/Bank/BNKprojects/5/SECURITY.md) for Kafka network isolation rules.
+*   [`README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/README.md) — Master navigation hub
+*   [`PROJECT5_DETAILS.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/PROJECT5_DETAILS.md) — Technical specifications & RACI matrix
+*   [`CHECKLIST.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/CHECKLIST.md) — Implementation checklist
+*   [`TODO.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/TODO.md) — Actionable task backlog
+*   [`SECURITY.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/SECURITY.md) — Security & zero-trust policy
