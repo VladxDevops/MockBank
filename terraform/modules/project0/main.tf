@@ -205,6 +205,7 @@ resource "google_project_iam_member" "sql_private_ip_permissions" {
   member  = "serviceAccount:service-${var.compute_project_number}@service-networking.iam.gserviceaccount.com"
 }
 
+
 # --- Workload Identity Federation (Migrated from Project 3) ---
 
 resource "google_iam_workload_identity_pool" "github_pool" {
@@ -250,6 +251,7 @@ resource "google_service_account_iam_member" "workload_identity_federation_bindi
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_pool.name}/attribute.repository/${var.github_repository}"
 }
+
 
 # --- Centralized CI/CD IAM Roles (Migrated from Project 3) ---
 # Following AGENTS.md standards for explicit IAM declaration.
@@ -411,6 +413,7 @@ resource "google_project_iam_member" "terraform_sa_logging_writer" {
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${var.terraform_deployer_service_account}"
 }
+
 
 # GitHub Actions Service Account Roles: 
 
@@ -630,6 +633,7 @@ resource "google_service_account_iam_member" "github_actions_sa_impersonate_keyc
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.github_actions_sa.email}"
 }
+
 
 # Allow the Keycloak service account to invoke Cloud Run services
 # Required if Keycloak needs to call other Cloud Run services
