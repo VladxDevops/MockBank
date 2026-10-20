@@ -20,7 +20,7 @@ version = "1.0"
 
 ---
 
-# Altmtrk2026 Bank Platform
+# Mock Bank Platform
 
 ## Overview
 This repository hosts the source code for the Altmtrk2026 Banking Platform. It is designed as a secure, cloud-native system leveraging GCP, Keycloak (Identity), and MongoDB (Audit).
