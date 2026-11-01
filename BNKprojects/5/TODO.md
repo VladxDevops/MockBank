@@ -54,6 +54,7 @@ This document tracks immediate actionable engineering tasks, backlog items, prio
 | **TSK-P5-010** | 🔴 P0 | **Strimzi Kafka Operator on GKE Manifests**<br/>Create Kubernetes CRD manifests (`Kafka`, `KafkaTopic`, `KafkaUser`) managed via Project 6 (ArgoCD). | GitOps / Platform | Phase 5 | 📋 Todo |
 | **TSK-P5-011** | 🔴 P0 | **SASL/SCRAM-SHA-512 & TLS 1.3 Configuration**<br/>Secure broker listeners with mutual TLS and SASL authentication; integrate secrets with GCP Secret Manager. | Security Eng | Phase 5 | 📋 Todo |
 | **TSK-P5-012** | 🟢 P2 | **Prometheus JMX Exporter & Grafana Dashboards**<br/>Expose broker JMX metrics, consumer lag, and under-replicated partitions to Google Cloud Monitoring & Grafana. | Observability Eng | Phase 5 | 📋 Todo |
+| **TSK-P5-013** | 🔴 P0 | **Automated SAST & SCA Scanning for Event Stream Engine**<br/>Enforce Semgrep (`p/python`, `p/secrets`) and `pip-audit` on `BNKprojects/5/requirements.txt` per [`SECURITY_SCANNING.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY_SCANNING.md). | Security / QA | Phase 2 | 📋 Todo |
 
 ---
 
@@ -82,6 +83,14 @@ This document tracks immediate actionable engineering tasks, backlog items, prio
     1. Consumes from `bank.transactions` (group: `fraud-detection-engine`).
     2. Flags transactions > $10,000 or > 3 transactions within 60 seconds on the same `account_id`.
     3. Produces alert to `bank.fraud-alerts` with `risk_score` and `action_required`.
+
+### TSK-P5-013: Automated SAST & Dependency SCA
+*   **Goal**: Ensure event streaming Python codebase and Docker base images meet bank security standards.
+*   **Files**: `BNKprojects/5/src/`, `BNKprojects/5/requirements.txt`, `BNKprojects/5/Dockerfile`
+*   **Acceptance Criteria**:
+    1. Pass Semgrep scan with zero high/critical issues (no hardcoded secrets or unhandled deserialization bugs).
+    2. Zero critical vulnerabilities in `requirements.txt` via `pip-audit`.
+    3. Docker base image scanned via `trivy` before pushing to Artifact Registry.
 
 ---
 

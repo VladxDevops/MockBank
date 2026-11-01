@@ -47,9 +47,21 @@ We test to prove **security** and **reliability**, not just functionality.
 *   **Focus:** Verifying that MongoDB audit logs are written correctly after a transaction.
 *   **Mocking:** External Identity Providers (IdP) and GCP Services must be mocked to avoid cost and dependency.
 
-### C. Security Scans (SAST/DAST)
-*   **Static Analysis:** Code is scanned for vulnerabilities (e.g., ReDoS, Injection) on every commit.
-*   **Dependency Check:** `npm audit` runs in the CI pipeline to block vulnerable packages.
+### C. Security Scans (SAST, SCA, DAST)
+*Detailed specifications, SLAs, and execution runbooks are documented in [`SECURITY_SCANNING.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY_SCANNING.md).*
+
+*   **Static Application Security Testing (SAST):**
+    *   Application source code (Python, Node.js, Java) is scanned with Semgrep OSS on every pull request (`ci.yaml`).
+    *   Rule sets include `p/owasp-top-ten`, `p/secrets`, `p/security-audit`, `p/python`, and `p/javascript`.
+    *   Zero tolerance for hardcoded GCP keys, credentials, or injection vulnerabilities.
+*   **Software Composition Analysis (SCA):**
+    *   **Node.js**: `npm audit --audit-level=high` blocks PRs containing high/critical package CVEs.
+    *   **Python**: `pip-audit -r requirements.txt` scans pip dependencies against CVE/OSV registries.
+    *   **Containers**: Aqua Trivy scans all built Docker images (Keycloak, Transaction Service) in CD (`cd.yaml`) prior to Artifact Registry pushing or Cloud Deploy releases.
+    *   **Automated Updates**: Dependabot (`.github/dependabot.yml`) scans dependencies weekly.
+*   **Dynamic Application Security Testing (DAST):**
+    *   Automated OWASP ZAP Baseline and API scans run against target service endpoints (`.github/workflows/dast.yaml`).
+    *   Verifies HTTP security headers (CSP, HSTS), secure cookie flags, and endpoint fuzzing against unauthenticated access.
 
 ## 3. The "Bank Simulation"
 To simulate the bank environment described in the JD:

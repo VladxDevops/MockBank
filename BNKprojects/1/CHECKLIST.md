@@ -38,6 +38,10 @@
 - [x] **Automated Verification:** Execute `test-keycloak.sh` for deployment validation (Verified via Report [2024-05-24]).
 - [ ] **Admin Hardening:** Enable MFA on the Keycloak admin account.
 - [ ] **Audit Logging:** Verify no PII is exposed in Cloud Logging.
+- [ ] **SAST Gate (Semgrep):** Automated scan of Python source (`src/app.py`, `src/teller_portal.py`) with `p/python`, `p/secrets`, and `p/owasp-top-ten` rules.
+- [ ] **SCA Gate - Python Dependencies (`pip-audit`):** Automated check of `requirements.txt` against PyPA/OSV vulnerability databases (zero Critical/High CVEs).
+- [ ] **SCA Gate - Container Vulnerability Scan (`trivy`):** Vulnerability scanning of Keycloak container image prior to Artifact Registry push.
+- [ ] **DAST Verification (OWASP ZAP):** Dynamic scan of Keycloak public/internal HTTP endpoints for CSP, cookie flags (`HttpOnly`, `Secure`), and auth bypasses.
 
 ## 5. Development Plan Status
 Based on `PROJECT1_DETAILS.md`, the following steps track the final integration:

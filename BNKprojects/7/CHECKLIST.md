@@ -271,11 +271,14 @@ version = "1.1"
 - [ ] Build stage (Cloud Build / GitHub Actions):
   - [ ] Compile: `mvn clean package`
   - [ ] Test: `mvn test`
-  - [ ] SAST (static analysis) and dependency scan
+  - [ ] SAST static analysis (Semgrep) for Java and XML flow definitions per [`SECURITY_SCANNING.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY_SCANNING.md)
+  - [ ] SCA dependency scan (Trivy fs / OWASP Dependency-Check) on Maven dependencies
 - [ ] Image build & push stage:
   - [ ] Build Docker image with build args (`JAVA_MAX_HEAP`, `LOG_LEVEL`, etc.)
-  - [ ] Scan image for vulnerabilities: `trivy`
+  - [ ] Scan image for vulnerabilities: `trivy` (block on Critical CVEs)
   - [ ] Push to Artifact Registry (tag: git commit SHA)
+- [ ] DAST verification stage:
+  - [ ] Run OWASP ZAP API scan against MuleSoft API Gateway routes before release promotion
 - [ ] Deployment stage (GitOps via Project 6 ArgoCD):
   - [ ] Deploy to DEV automatically on merge to `main`
   - [ ] Manual approval required for TEST → PROD promotion

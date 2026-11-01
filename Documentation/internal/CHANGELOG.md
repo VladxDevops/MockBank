@@ -2,6 +2,13 @@
 
 All notable changes to the "Bank" project will be documented in this file. This log serves to track architectural decisions, successful implementations, and failed experiments to avoid regression.
 
+## [Unreleased]
+### Added
+- **Security Scanning Architecture (SAST, SCA, DAST)**: Authored comprehensive specification `Documentation/internal/SECURITY_SCANNING.md` (and policy mirror `Documentation/POLICIES/SECURITY/SECURITY_SCANNING.md`) establishing tool selection (Semgrep, pip-audit, npm audit, Aqua Trivy, OWASP ZAP), vulnerability SLAs, remediation workflows, and developer runbooks.
+- **Master Security Quality Gates**: Initialized root `CHECKLIST.md` with phased implementation tasks and ownership matrix across all microservices (Projects 0-7).
+- **Policy & Testing Alignment**: Updated `Documentation/internal/RELEASE_SAFETY.MD` to mandate SAST, SCA, and DAST automated gates, updated `Documentation/internal/TESTING.md` Section 2.C, updated `Documentation/internal/DOCUMENTATION_HIERARCHY.md`, and added security tasks to `BNKprojects/1`, `2`, `3`, `5`, and `7` checklists and task backlogs.
+- **DEV Backup Plan**: Added `Documentation/internal/Backup-Recovery/Backup/Backup.md`, a staged, resume/demo-appropriate plan covering Terraform state, MongoDB Atlas audit data, Keycloak Cloud SQL, artifact digests, Secret Manager metadata, isolated recovery, and a restore rehearsal.
+
 ## Usage Guide
 1.  **Update Frequency:** Update this file immediately after any significant architectural decision or code merge.
 2.  **Format:** Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.

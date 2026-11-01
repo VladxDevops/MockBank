@@ -16,11 +16,12 @@
 - [x] **Workflow Creation:** Integrated Project 3 plan/apply jobs into `.github/workflows/cd.yaml`.
 - [x] **Pull Request Job:** Integrated `terraform-plan` job into the workflow.
 - [x] **DEV Deployment:** Automate release creation via Cloud Deploy upon merging.
-- [x] **Security Gate:** Implemented SAST scanning in the pipeline.
+- [ ] **Security Gate (SAST & SCA):** Implement automated Semgrep and dependency auditing in CI per [`SECURITY_SCANNING.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY_SCANNING.md).
 
 ## 4. Release Safety & Validation - PENDING
 - [ ] **Live Pipeline Execution & Verification:** Execute CD workflow or Cloud Build submit to verify identity apply against live Cloud Run.
 - [ ] **Automated Smoke Test:** Implement `smoke-test-identity` step in GHA to fetch OIDC token via `retail-app` client.
+- [ ] **DAST Endpoint Validation:** Execute OWASP ZAP baseline scan against Keycloak identity endpoints before promotion.
 - [ ] **Drift Detection:** Configure a scheduled job to detect manual changes made in the Keycloak UI that aren't in Git.
 - [ ] **Rollback & Breaking Change Procedure:** Document and test the `git revert` flow and simulate a breaking change.
 - [ ] **Phased Environment Promotion:** Promote and verify changes across `DEV`, `TEST`, and `PROD` realms.

@@ -117,6 +117,13 @@ db.journeys.find({
 2.  [x] Create `docker-compose.yml` for MongoDB.
 3.  [x] Implement `POST /transfer` endpoint with the logic above.
 
+### 6.1 Security Scanning & Quality Gates (SAST, SCA, DAST)
+In accordance with [`SECURITY_SCANNING.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/Documentation/internal/SECURITY_SCANNING.md):
+*   [ ] **SAST Gate (Semgrep)**: Scan `container/src/index.js` for NoSQL injection, prototype pollution, and hardcoded connection strings (`p/javascript`, `p/owasp-top-ten`, `p/secrets`).
+*   [ ] **SCA Gate (npm audit)**: Enforce `npm audit --audit-level=high` on all packages in `container/package.json`.
+*   [ ] **Container SCA (Trivy)**: Scan `transaction-service` Docker image for base image CVEs prior to Cloud Deploy release creation.
+*   [ ] **DAST Verification (OWASP ZAP)**: Run automated API scan against `/transfer` to verify payload validation and rejection of unauthenticated requests.
+
 ## 7. Connecting to the Database
 
 The MongoDB database is deployed on MongoDB Atlas. The Terraform configuration will create a new project and a free-tier cluster. It will also create a database user with read/write access to the `transaction-db` database.
