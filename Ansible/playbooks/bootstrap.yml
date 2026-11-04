@@ -1,0 +1,93 @@
+---
+# Stage 1 entrypoint. Read-only. This playbook does not create or change
+# realms, clients, roles, flows, or any other Keycloak configuration.
+#
+# Required runtime environment (inject from Secret Manager or the runner;
+# never commit values):
+#   KEYCLOAK_ENV                  dev | test | prod
+#   KEYCLOAK_BASE_URL             private base URL, no userinfo and no query secrets
+#   KEYCLOAK_ADMIN_USERNAME
+#   KEYCLOAK_ADMIN_PASSWORD
+#   KEYCLOAK_PROD_CHANGE_APPROVED set to true only inside an approved prod window
+#
+# Optional:
+#   KEYCLOAK_REALM                default Mockbankrealm
+#   KEYCLOAK_REQUIRED_CLIENTS     comma-separated, default retail-app,teller-portal
+#   KEYCLOAK_TRUST_PRIVATE_DNS    true when the base URL hostname is private DNS
+#                                 rather than loopback or an RFC1918 address
+#
+#   ansible-playbook Ansible/playbooks/bootstrap.yml
+
+- name: Stage 1 preflight for the Keycloak validation gate
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  any_errors_fatal: true
+  vars:
+    keycloak_env: "{{ lookup('env', 'KEYCLOAK_ENV') | trim | lower }}"
+    keycloak_base_url: "{{ lookup('env', 'KEYCLOAK_BASE_URL') | trim | regex_replace('/+$', '') }}"
+    keycloak_admin_username: "{{ lookup('env', 'KEYCLOAK_ADMIN_USERNAME') | trim }}"
+    keycloak_admin_password: "{{ lookup('env', 'KEYCLOAK_ADMIN_PASSWORD') }}"
+    keycloak_prod_approved: "{{ lookup('env', 'KEYCLOAK_PROD_CHANGE_APPROVED') | trim | lower }}"
+    keycloak_trust_private_dns: "{{ lookup('env', 'KEYCLOAK_TRUST_PRIVATE_DNS') | trim | lower }}"
+  tasks:
+    - name: Confirm the target environment is explicit
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_env in ['dev', 'test', 'prod']
+        fail_msg: >-
+          KEYCLOAK_ENV must be dev, test, or prod.
+          Stage 1 will not choose an environment for you.
+
+    - name: Confirm production runs carry an approval marker
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_env != 'prod' or keycloak_prod_approved == 'true'
+        fail_msg: >-
+          Refusing to run Stage 1 against prod without
+          KEYCLOAK_PROD_CHANGE_APPROVED=true. Stage 1 is read-only,
+          and production execution still requires an approved change window.
+
+    - name: Confirm the private base URL and admin credentials were injected
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_base_url | length > 0
+          - keycloak_admin_username | length > 0
+          - keycloak_admin_password | length > 0
+          - keycloak_base_url is match('^https?://[^\\s]+$')
+          - keycloak_base_url is not search('://[^/@\\s]+:[^/@\\s]+@')
+          - keycloak_base_url is not search('[?&](password|client_secret|access_token)=')
+        fail_msg: >-
+          KEYCLOAK_BASE_URL, KEYCLOAK_ADMIN_USERNAME, and KEYCLOAK_ADMIN_PASSWORD
+          must be injected at runtime. The base URL must be http or https,
+          must not embed userinfo, and must not carry secret query parameters.
+          Values are not printed.
+
+    - name: Confirm the admin base URL is loopback, RFC1918, or an attested private DNS name
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - >-
+            keycloak_trust_private_dns == 'true'
+            or keycloak_base_url is match('^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])([:/]|$)')
+            or keycloak_base_url is match('^https?://10\\.')
+            or keycloak_base_url is match('^https?://192\\.168\\.')
+            or keycloak_base_url is match('^https?://172\\.(1[6-9]|2[0-9]|3[0-1])\\.')
+        fail_msg: >-
+          Stage 1 admin checks must use a private Keycloak endpoint
+          (loopback, RFC1918, or KEYCLOAK_TRUST_PRIVATE_DNS=true for private DNS).
+          Do not point this gate at a public admin route.
+
+    - name: Record the Stage 1 gate boundary
+      ansible.builtin.debug:
+        msg: >-
+          Stage 1 preflight passed for environment {{ keycloak_env }}.
+          Next plays check /health/live, admin access, realm {{ lookup('env', 'KEYCLOAK_REALM') | default('Mockbankrealm', true) }},
+          required clients, and the OIDC discovery document.
+          No Keycloak configuration will be changed.
+
+- import_playbook: verify-reachability.yml
+- import_playbook: verify-identity.yml

@@ -4,6 +4,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Added
+- **Ansible / Stage 1 Keycloak gate**: Added read-only playbooks `Ansible/playbooks/bootstrap.yml`, `verify-reachability.yml`, and `verify-identity.yml`. They prove a private Keycloak base URL, `/health/live`, admin access, the target realm, required clients, and OIDC discovery without changing Keycloak configuration. Documented the gate in `Ansible/README.md`, `Ansible/Agents.md`, and `Documentation/internal/ANSIBLE/Stage1/Stage1.md`.
 - **Event Streaming / Project 5 Master Hub**: Created [`BNKprojects/5/README.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/README.md) as the central entrypoint and topology overview for the Kafka & GCP Pub/Sub streaming platform.
 - **Event Streaming / Project 5 Technical Details**: Updated [`BNKprojects/5/PROJECT5_DETAILS.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/PROJECT5_DETAILS.md) with full event contracts (JSON Schema), partition strategies, KRaft broker specifications, reliability guarantees, and cross-project RACI matrix.
 - **Event Streaming / GCP Pub/Sub Integration**: Expanded [`BNKprojects/5/PUBSUB.md`](file:///home/pochitawork/InterviewCloudProjects/Altmtrk2026/Bank/BNKprojects/5/PUBSUB.md) with concrete Pub/Sub topic naming topologies, dead-letter topic policies, Cloud Dataflow bridge designs, and IAM service account definitions.

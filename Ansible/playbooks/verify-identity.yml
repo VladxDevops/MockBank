@@ -1,0 +1,191 @@
+---
+# Stage 1 identity prerequisite check. Read-only.
+# Proves admin access, that the target realm exists and is enabled,
+# that each required client exists and is enabled, and that the realm
+# OIDC discovery document is served.
+#
+# The password grant creates a short-lived admin token. It does not
+# change realm or client configuration. Token material is not logged.
+#
+# Requires the same runtime environment as bootstrap.yml.
+#   ansible-playbook Ansible/playbooks/verify-identity.yml
+
+- name: Verify Keycloak identity prerequisites
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  any_errors_fatal: true
+  vars:
+    keycloak_base_url: "{{ lookup('env', 'KEYCLOAK_BASE_URL') | trim | regex_replace('/+$', '') }}"
+    keycloak_admin_username: "{{ lookup('env', 'KEYCLOAK_ADMIN_USERNAME') | trim }}"
+    keycloak_admin_password: "{{ lookup('env', 'KEYCLOAK_ADMIN_PASSWORD') }}"
+    keycloak_realm: "{{ lookup('env', 'KEYCLOAK_REALM') | default('Mockbankrealm', true) | trim }}"
+    keycloak_required_clients: >-
+      {{
+        (
+          lookup('env', 'KEYCLOAK_REQUIRED_CLIENTS')
+          | default('retail-app,teller-portal', true)
+        ).split(',')
+        | map('trim')
+        | reject('equalto', '')
+        | list
+      }}
+    keycloak_trust_private_dns: "{{ lookup('env', 'KEYCLOAK_TRUST_PRIVATE_DNS') | trim | lower }}"
+  tasks:
+    - name: Confirm admin credentials, realm, and client baseline were provided
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_base_url | length > 0
+          - keycloak_base_url is match('^https?://[^\\s]+$')
+          - keycloak_base_url is not search('://[^/@\\s]+:[^/@\\s]+@')
+          - keycloak_base_url is not search('[?&](password|client_secret|access_token)=')
+          - >-
+            keycloak_trust_private_dns == 'true'
+            or keycloak_base_url is match('^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])([:/]|$)')
+            or keycloak_base_url is match('^https?://10\\.')
+            or keycloak_base_url is match('^https?://192\\.168\\.')
+            or keycloak_base_url is match('^https?://172\\.(1[6-9]|2[0-9]|3[0-1])\\.')
+          - keycloak_admin_username | length > 0
+          - keycloak_admin_password | length > 0
+          - keycloak_realm is match('^[A-Za-z0-9_-]+$')
+          - keycloak_required_clients | length > 0
+        fail_msg: >-
+          Identity checks need a private KEYCLOAK_BASE_URL (loopback, RFC1918,
+          or KEYCLOAK_TRUST_PRIVATE_DNS=true), KEYCLOAK_ADMIN_USERNAME, and
+          KEYCLOAK_ADMIN_PASSWORD, plus a realm name limited to letters, numbers,
+          underscore, and hyphen, and at least one required client id.
+          Secret values are not printed.
+
+    - name: Request an admin access token from the master realm
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/realms/master/protocol/openid-connect/token"
+        method: POST
+        body_format: form-urlencoded
+        body:
+          grant_type: password
+          client_id: admin-cli
+          username: "{{ keycloak_admin_username }}"
+          password: "{{ keycloak_admin_password }}"
+        status_code: [200, 400, 401, 403]
+        return_content: true
+        timeout: 20
+        headers:
+          Accept: application/json
+      register: keycloak_token_response
+      no_log: true
+      failed_when: false
+
+    - name: Fail when admin access is not valid
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_token_response.status | default(0) == 200
+          - (keycloak_token_response.json | default({})).access_token | default('') | length > 0
+        fail_msg: >-
+          Admin access check failed
+          (HTTP {{ keycloak_token_response.status | default('no-status') }}
+          from the master realm token endpoint).
+          Confirm the injected admin username, the private base URL,
+          and that admin-cli password grant is allowed.
+          The token response is not logged.
+
+    - name: Hold the admin token for the read-only checks
+      ansible.builtin.set_fact:
+        keycloak_admin_token: "{{ keycloak_token_response.json.access_token }}"
+      no_log: true
+
+    - name: Read the target realm
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/admin/realms/{{ keycloak_realm }}"
+        method: GET
+        status_code: [200, 401, 403, 404]
+        return_content: true
+        timeout: 20
+        headers:
+          Authorization: "Bearer {{ keycloak_admin_token }}"
+          Accept: application/json
+      register: keycloak_realm_response
+      no_log: true
+      failed_when: false
+
+    - name: Fail when the target realm is missing or disabled
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_realm_response.status | default(0) == 200
+          - (keycloak_realm_response.json | default({})).realm | default('') == keycloak_realm
+          - (keycloak_realm_response.json | default({})).enabled | default(false) | bool
+        fail_msg: >-
+          Realm '{{ keycloak_realm }}' is not present and enabled
+          (HTTP {{ keycloak_realm_response.status | default('no-status') }}).
+          Stage 1 does not create realms. Response body is omitted.
+
+    - name: Read each required client
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/admin/realms/{{ keycloak_realm }}/clients?clientId={{ item | urlencode }}"
+        method: GET
+        status_code: [200, 401, 403, 404]
+        return_content: true
+        timeout: 20
+        headers:
+          Authorization: "Bearer {{ keycloak_admin_token }}"
+          Accept: application/json
+      loop: "{{ keycloak_required_clients }}"
+      loop_control:
+        label: "{{ item }}"
+      register: keycloak_client_responses
+      no_log: true
+      failed_when: false
+
+    - name: Fail when a required client is missing or disabled
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - item.status | default(0) == 200
+          - item.json | default([]) | length == 1
+          - (item.json | default([]) | map(attribute='clientId') | list) == [item.item]
+          - (item.json | default([]) | map(attribute='enabled') | map('bool') | list) == [true]
+        fail_msg: >-
+          Required client '{{ item.item }}' is not present and enabled in realm
+          '{{ keycloak_realm }}'
+          (HTTP {{ item.status | default('no-status') }},
+          matches {{ item.json | default([]) | length }}).
+          Stage 1 does not create clients. Response body is omitted.
+      loop: "{{ keycloak_client_responses.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    - name: Request the realm OIDC discovery document
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/realms/{{ keycloak_realm }}/.well-known/openid-configuration"
+        method: GET
+        status_code: [200, 404]
+        return_content: true
+        timeout: 20
+        headers:
+          Accept: application/json
+      register: keycloak_oidc
+      failed_when: false
+
+    - name: Fail when OIDC discovery is incomplete
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_oidc.status | default(0) == 200
+          - (keycloak_oidc.json | default({})).issuer | default('') is search('/realms/' ~ keycloak_realm ~ '$')
+          - (keycloak_oidc.json | default({})).authorization_endpoint | default('') | length > 0
+          - (keycloak_oidc.json | default({})).token_endpoint | default('') | length > 0
+          - (keycloak_oidc.json | default({})).jwks_uri | default('') | length > 0
+        fail_msg: >-
+          OIDC discovery for realm '{{ keycloak_realm }}' did not return HTTP 200
+          with issuer, authorization_endpoint, token_endpoint, and jwks_uri
+          (HTTP {{ keycloak_oidc.status | default('no-status') }}).
+          Discovery field values are omitted.
+
+    - name: Record the Stage 1 identity result
+      ansible.builtin.debug:
+        msg: >-
+          Stage 1 identity checks passed for realm {{ keycloak_realm }}
+          and clients {{ keycloak_required_clients | join(', ') }}.
+          Admin token material was not logged. No configuration was changed.

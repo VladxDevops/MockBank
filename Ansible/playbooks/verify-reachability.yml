@@ -1,0 +1,59 @@
+---
+# Stage 1 reachability check. Read-only.
+# Proves the Keycloak process answers /health/live with HTTP 200 and status UP.
+# This matches the Cloud Build gate in BNKprojects/1/container/cloudbuild-keycloak.yaml.
+#
+# Requires KEYCLOAK_BASE_URL. Safe to run on its own:
+#   ansible-playbook Ansible/playbooks/verify-reachability.yml
+
+- name: Verify Keycloak is reachable
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  any_errors_fatal: true
+  vars:
+    keycloak_base_url: "{{ lookup('env', 'KEYCLOAK_BASE_URL') | trim | regex_replace('/+$', '') }}"
+    keycloak_trust_private_dns: "{{ lookup('env', 'KEYCLOAK_TRUST_PRIVATE_DNS') | trim | lower }}"
+  tasks:
+    - name: Confirm KEYCLOAK_BASE_URL is a private endpoint with no embedded secret
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_base_url | length > 0
+          - keycloak_base_url is match('^https?://[^\\s]+$')
+          - keycloak_base_url is not search('://[^/@\\s]+:[^/@\\s]+@')
+          - keycloak_base_url is not search('[?&](password|client_secret|access_token)=')
+          - >-
+            keycloak_trust_private_dns == 'true'
+            or keycloak_base_url is match('^https?://(localhost|127\\.0\\.0\\.1|\\[::1\\])([:/]|$)')
+            or keycloak_base_url is match('^https?://10\\.')
+            or keycloak_base_url is match('^https?://192\\.168\\.')
+            or keycloak_base_url is match('^https?://172\\.(1[6-9]|2[0-9]|3[0-1])\\.')
+        fail_msg: >-
+          KEYCLOAK_BASE_URL must be injected at runtime as a private http or https URL
+          (loopback, RFC1918, or KEYCLOAK_TRUST_PRIVATE_DNS=true for private DNS)
+          with no userinfo and no secret query parameters.
+
+    - name: Request the Keycloak live health endpoint
+      ansible.builtin.uri:
+        url: "{{ keycloak_base_url }}/health/live"
+        method: GET
+        status_code: [200]
+        return_content: true
+        timeout: 20
+        headers:
+          Accept: application/json
+      register: keycloak_live
+      failed_when: false
+
+    - name: Fail when the live health endpoint is not HTTP 200 and UP
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - keycloak_live.status | default(0) == 200
+          - (keycloak_live.json | default({})).status | default('') == 'UP'
+        fail_msg: >-
+          Keycloak /health/live did not return HTTP 200 with status UP
+          (HTTP {{ keycloak_live.status | default('no-status') }},
+          reported status {{ (keycloak_live.json | default({})).status | default('absent') }}).
+          Stage 1 stops before identity checks. Response body is omitted.

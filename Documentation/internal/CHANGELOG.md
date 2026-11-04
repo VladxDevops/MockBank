@@ -4,6 +4,7 @@ All notable changes to the "Bank" project will be documented in this file. This 
 
 ## [Unreleased]
 ### Added
+- **Ansible / Stage 1**: Documented the read-only Keycloak validation gate and linked the new `Ansible/playbooks/` entrypoint from `Documentation/internal/ANSIBLE/Stage1/Stage1.md`, `ansible.md`, and the internal documentation index.
 - **Security Scanning Architecture (SAST, SCA, DAST)**: Authored comprehensive specification `Documentation/internal/SECURITY_SCANNING.md` (and policy mirror `Documentation/POLICIES/SECURITY/SECURITY_SCANNING.md`) establishing tool selection (Semgrep, pip-audit, npm audit, Aqua Trivy, OWASP ZAP), vulnerability SLAs, remediation workflows, and developer runbooks.
 - **Master Security Quality Gates**: Initialized root `CHECKLIST.md` with phased implementation tasks and ownership matrix across all microservices (Projects 0-7).
 - **Policy & Testing Alignment**: Updated `Documentation/internal/RELEASE_SAFETY.MD` to mandate SAST, SCA, and DAST automated gates, updated `Documentation/internal/TESTING.md` Section 2.C, updated `Documentation/internal/DOCUMENTATION_HIERARCHY.md`, and added security tasks to `BNKprojects/1`, `2`, `3`, `5`, and `7` checklists and task backlogs.
